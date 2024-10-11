@@ -31,7 +31,7 @@ class Light():
 
         self.light_box.get_light(self.light).set_color(self.light_color, True)
         self.light_box.get_light(self.light).position = [player.rect.centerx, player.rect.centery] 
-        self.light_box.get_light(self.light).set_size(300)
+        self.light_box.get_light(self.light).set_size(player.view_radius*0.75)
 
         self.offset.y = self.offset.y - 30
         self.offset.x = self.offset.x - 30

@@ -33,10 +33,10 @@ class Map:
             (90, 75, 55),   # Light brown
         ]
         wall_colors = [
-            (50, 50, 50),   # Dark gray
-            (60, 60, 60),   # Gray
-            (70, 70, 70),   # Light gray
-            (40, 40, 40),   # Darker gray
+            (10, 10, 10),   # Dark gray
+            (5, 5, 5),   # Gray
+            (0, 0, 0),   # Light gray
+            (15, 15, 15),   # Darker gray
         ]
 
         color_map = []

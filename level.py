@@ -62,8 +62,8 @@ class YSortCameraGroup(pygame.sprite.Group):
         self.offset.y =  player.rect.centery - self.half_height
 
         # Clamp the camera offset
-        self.offset.x = max(MIN_X_OFFSET, min(self.offset.x, MAX_X_OFFSET - WIDTH))
-        self.offset.y = max(MIN_Y_OFFSET, min(self.offset.y, MAX_Y_OFFSET - HEIGHT))
+        self.offset.x = max(MIN_X_OFFSET, min(self.offset.x -32, MAX_X_OFFSET - WIDTH))
+        self.offset.y = max(MIN_Y_OFFSET, min(self.offset.y -32, MAX_Y_OFFSET - HEIGHT))
 
         # Create a surface for the circular area
         circular_area = pygame.Surface((player.view_radius * 2, player.view_radius * 2), pygame.SRCALPHA)
@@ -90,7 +90,7 @@ class YSortCameraGroup(pygame.sprite.Group):
         for sprite in sorted(self.sprites(), key=lambda sprite: sprite.rect.centery):
             if sprite.sprite_type != 'tile':
 
-                offset_pos = sprite.rect.center - self.offset
+                offset_pos = sprite.rect.center - self.offset + (-16, 16) 
                 self.display_surface.blit(sprite.image, offset_pos)
         
         # Draw the transparent circle on top of the rectangular clipping region
