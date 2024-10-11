@@ -7,6 +7,7 @@ from debug import debug
 class Player(Entity):
     def __init__(self, pos, groups, obstacle_sprites, background):
         super().__init__(groups)
+        self.sprite_type = 'player'
         self.image = pygame.image.load('graphics/test/player.png').convert_alpha()
         self.rect = self.image.get_rect(topleft = pos)
         self.hitbox = self.rect.inflate(-10, HITBOX_OFFSET['player'])
@@ -15,6 +16,9 @@ class Player(Entity):
         self.obstacle_sprites = obstacle_sprites
         self.speed = 20
         self.background = background
+
+        self.view_radius = 300
+          # Fill with opaque black
 
     def input(self):
         keys = pygame.key.get_pressed()
