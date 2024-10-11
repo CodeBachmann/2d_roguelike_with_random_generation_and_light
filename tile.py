@@ -16,4 +16,4 @@ class Tile(pygame.sprite.Sprite):
             raise ValueError("Either img_path or color must be provided")
         
         self.rect = self.image.get_rect(topleft = pos)
-        self.hitbox = self.rect.inflate(0, HITBOX_OFFSET['object'])
+        self.hitbox = self.rect.inflate(0, 0)

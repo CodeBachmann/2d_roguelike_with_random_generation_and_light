@@ -11,16 +11,19 @@ class Player(Entity):
         self.image = pygame.image.load('graphics/test/player.png').convert_alpha()
         self.rect = self.image.get_rect(topleft = pos)
         self.hitbox = self.rect.inflate(-10, HITBOX_OFFSET['player'])
+        self.map_toggle_cooldown = 0
 
         self.mouse_direction = pygame.math.Vector2()
         self.obstacle_sprites = obstacle_sprites
-        self.speed = 20
+        self.speed = 7
         self.background = background
 
         self.view_radius = 300
+        self.show_map = False
           # Fill with opaque black
 
     def input(self):
+        self.map_toggle_cooldown -= 1
         keys = pygame.key.get_pressed()
         if keys[pygame.K_w]:
             self.direction.y = -1
@@ -35,6 +38,11 @@ class Player(Entity):
             self.direction.x = 1
         else:
             self.direction.x = 0
+        
+        if keys[pygame.K_m] and self.map_toggle_cooldown <= 0:
+            self.show_map = not self.show_map
+            self.map_toggle_cooldown = 20  # Adjust this value to set the cooldown duration
+
     
     def mouse_position(self):
         self.mouse_direction = pygame.math.Vector2(pygame.mouse.get_pos()) - self.rect.center
