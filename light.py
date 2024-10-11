@@ -29,6 +29,9 @@ class Light():
         self.light_box.get_light(self.light).set_color(LIGHT_COLOR, True)
         self.light_box.get_light(self.light).position = [player.rect.centerx, player.rect.centery] 
         self.light_box.get_light(self.light).set_size(300)
+
+        self.offset.y = self.offset.y - 30
+        self.offset.x = self.offset.x - 30
         visible_walls =  self.light_box.render(self.display_surface, list(self.offset))
 
         # # wall lines

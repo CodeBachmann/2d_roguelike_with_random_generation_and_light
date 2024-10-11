@@ -78,13 +78,14 @@ class YSortCameraGroup(pygame.sprite.Group):
         clip_rect = pygame.Rect(area_topleft, (player.view_radius * 2, player.view_radius * 2))
         self.display_surface.set_clip(clip_rect)
 
+        # Draws the background
         background_offset = self.offset.x, self.offset.y
         self.display_surface.blit(player.background, (-background_offset[0], -background_offset[1]))
 
         light.cast_light(player)
         # Draw the scene (sprites, background, etc.)
         for sprite in sorted(self.sprites(), key=lambda sprite: sprite.rect.centery):
-            if sprite.sprite_type == "player":
+            if sprite.sprite_type != 'tile':
                 offset_pos = sprite.rect.center - self.offset
                 self.display_surface.blit(sprite.image, offset_pos)
         
