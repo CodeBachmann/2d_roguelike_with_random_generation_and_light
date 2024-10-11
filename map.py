@@ -190,8 +190,8 @@ class Map:
                     placed += 1
 
         # Place entities
-        place_entity('m', NUM_MELEE)
-        place_entity('r', NUM_RANGED)
+        place_entity('391', NUM_MELEE)
+        place_entity('390', NUM_RANGED)
         place_entity('o', NUM_OBJECT)
         place_entity('t', NUM_TREASURE)
         
@@ -199,7 +199,7 @@ class Map:
         while True:
             x, y = random.randint(0, self.width - 1), random.randint(0, self.height - 1)
             if is_valid_position(x, y):
-                entity_map[y][x] = 'p'
+                entity_map[y][x] = '394'
                 break
 
         return entity_map
