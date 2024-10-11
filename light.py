@@ -25,14 +25,13 @@ class Light():
         self.offset.x = max(MIN_X_OFFSET, min(self.offset.x, MAX_X_OFFSET - WIDTH))
         self.offset.y = max(MIN_Y_OFFSET, min(self.offset.y, MAX_Y_OFFSET - HEIGHT))
 
-        self.display_surface.fill((0, 0, 0))
 
         self.light_box.get_light(self.light).set_color(LIGHT_COLOR, True)
         self.light_box.get_light(self.light).position = [player.rect.centerx, player.rect.centery] 
         self.light_box.get_light(self.light).set_size(300)
-        self.light_box.render(self.display_surface, list(self.offset))
+        visible_walls =  self.light_box.render(self.display_surface, list(self.offset))
 
         # # wall lines
-        # for wall in visible_walls:
-        #     wall.render(self.display_surface)
+        for wall in visible_walls:
+            wall.render(self.display_surface)
         

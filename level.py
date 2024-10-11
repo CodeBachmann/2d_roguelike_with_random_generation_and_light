@@ -77,16 +77,16 @@ class YSortCameraGroup(pygame.sprite.Group):
         area_topleft = (player.rect.centerx - player.view_radius - self.offset.x, player.rect.centery - player.view_radius - self.offset.y)
         clip_rect = pygame.Rect(area_topleft, (player.view_radius * 2, player.view_radius * 2))
         self.display_surface.set_clip(clip_rect)
-        
+
         background_offset = self.offset.x, self.offset.y
         self.display_surface.blit(player.background, (-background_offset[0], -background_offset[1]))
+
         light.cast_light(player)
         # Draw the scene (sprites, background, etc.)
         for sprite in sorted(self.sprites(), key=lambda sprite: sprite.rect.centery):
             if sprite.sprite_type == "player":
                 offset_pos = sprite.rect.center - self.offset
                 self.display_surface.blit(sprite.image, offset_pos)
-
         
         # Draw the transparent circle on top of the rectangular clipping region
         self.display_surface.blit(circular_area, area_topleft)
