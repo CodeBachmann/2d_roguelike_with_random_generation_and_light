@@ -13,6 +13,9 @@ class Light():
         self.half_height = self.display_surface.get_size()[1] // 2
         self.light_box = lighting.LightBox((WIDTH, HEIGHT))
         
+
+        # Light Power
+        self.light_color = [v * 0.2 for v in LIGHT_COLOR]
         self.light = self.light_box.add_light(lighting.Light([0, 0], 40, self.light_img, (100, 50, 255)))
         lighting.generate_walls(self.light_box, light_map, TILE_SIZE)
 
@@ -26,7 +29,7 @@ class Light():
         self.offset.y = max(MIN_Y_OFFSET, min(self.offset.y, MAX_Y_OFFSET - HEIGHT))
 
 
-        self.light_box.get_light(self.light).set_color(LIGHT_COLOR, True)
+        self.light_box.get_light(self.light).set_color(self.light_color, True)
         self.light_box.get_light(self.light).position = [player.rect.centerx, player.rect.centery] 
         self.light_box.get_light(self.light).set_size(300)
 

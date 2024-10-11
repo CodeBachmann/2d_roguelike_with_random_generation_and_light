@@ -52,6 +52,7 @@ class YSortCameraGroup(pygame.sprite.Group):
         self.half_width = self.display_surface.get_size()[0] // 2
         self.half_height = self.display_surface.get_size()[1] // 2
         self.offset = pygame.math.Vector2()
+       
 
 
     def custom_draw(self, player, light):
@@ -83,9 +84,12 @@ class YSortCameraGroup(pygame.sprite.Group):
         self.display_surface.blit(player.background, (-background_offset[0], -background_offset[1]))
 
         light.cast_light(player)
+
+
         # Draw the scene (sprites, background, etc.)
         for sprite in sorted(self.sprites(), key=lambda sprite: sprite.rect.centery):
             if sprite.sprite_type != 'tile':
+
                 offset_pos = sprite.rect.center - self.offset
                 self.display_surface.blit(sprite.image, offset_pos)
         
