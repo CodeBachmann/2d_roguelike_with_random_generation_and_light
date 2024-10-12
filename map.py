@@ -100,7 +100,7 @@ class Map:
         def carve_vertical_corridor(y1, y2, x):
             for y in range(min(y1, y2), max(y1, y2) + 1):
                 # Randomize the corridor width (1 to 3 tiles)
-                width = random.randint(1, 3)
+                width = random.randint(2, 3)
                 # Randomize the horizontal position within the width
                 offset = random.randint(0, width - 1)
                 

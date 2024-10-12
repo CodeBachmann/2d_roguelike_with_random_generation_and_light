@@ -20,6 +20,7 @@ class Enemy(Entity):
 		self.rect = self.image.get_rect(topleft = pos)
 		self.hitbox = self.rect.inflate(0,-10)
 		self.obstacle_sprites = obstacle_sprites
+		self.view_radius = 100
 
 		# stats
 		self.monster_name = monster_name
@@ -59,6 +60,9 @@ class Enemy(Entity):
 		main_path = f'graphics/monsters/{name}/'
 		for animation in self.animations.keys():
 			self.animations[animation] = import_folder(main_path + animation)
+			for x, i in enumerate(self.animations[animation]):
+				img = pygame.transform.scale(i, (int(i.get_width() * IMG_SCALE), int(i.get_height() * IMG_SCALE)))
+				self.animations[animation][x] = img
 
 	def get_player_distance_direction(self,player):
 		enemy_vec = pygame.math.Vector2(self.rect.center)

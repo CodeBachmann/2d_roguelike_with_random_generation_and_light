@@ -23,8 +23,9 @@ class Entity(pygame.sprite.Sprite):
 
     def animate(self):
         self.frame_index += self.animation_speed
-        if self.frame_index >= len(self.frames):
+        if self.frame_index >= len(self.animations[self.status]):
             self.frame_index = 0
+        self.image = self.animations[self.status][int(self.frame_index)]
 
     def collision(self, direction):
         if direction == 'horizontal':

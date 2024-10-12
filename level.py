@@ -15,23 +15,24 @@ class Level:
         self.visible_sprites = YSortCameraGroup()
         self.obstacle_sprites = pygame.sprite.Group()
         self.attackable_sprites = pygame.sprite.Group()
-        self.light = Light()
-        self.show_map = False
 
+        # light setup
+        self.light = Light()
         
         # create map
+        self.show_map = False
         self.create_map()
         self.ui = UI(self.player)  # Add this line
 
-    def run(self):
+    def run(self, mouse_buttons):
         self.ui.update_explored_area(tile_map)
-        
+        self.player.mouse_buttons = mouse_buttons
         if self.player.show_map:
             self.ui.display(tile_map)
-            self.player.input()
         else:
             self.visible_sprites.custom_draw(self.player, self.light)
-            self.visible_sprites.update()
+
+        self.visible_sprites.update()
 
     def create_map(self):
         self.background = pygame.Surface((MAP_SIZE_X * TILE_SIZE, MAP_SIZE_Y * TILE_SIZE))
@@ -101,24 +102,14 @@ class YSortCameraGroup(pygame.sprite.Group):
         self.offset.x = max(MIN_X_OFFSET, min(self.offset.x, MAX_X_OFFSET - WIDTH ))
         self.offset.y = max(MIN_Y_OFFSET, min(self.offset.y, MAX_Y_OFFSET - HEIGHT))
 
-        # Create a surface for the circular area
-        circular_area = pygame.Surface((player.view_radius * 2, player.view_radius * 2), pygame.SRCALPHA)
-        circular_area.fill((0, 0, 0, 255))  # Fill with opaque black
-        pygame.draw.circle(circular_area, (0, 0, 0, 0), (player.view_radius, player.view_radius), player.view_radius)  # Draw transparent circle
-
         # Remove clipping region and clear the entire screen
         self.display_surface.set_clip(None)
         self.display_surface.fill((0, 0, 0))  # Clear the screen
 
-        # Set the clipping region to a square around the circular area
-        area_topleft = (player.rect.centerx - player.view_radius - self.offset.x + player.rect.width/2, player.rect.centery - player.view_radius - self.offset.y + player.rect.height/2)
-        clip_rect = pygame.Rect(area_topleft, (player.view_radius * 2, player.view_radius * 2))
-        self.display_surface.set_clip(clip_rect)
-
         # Draws the background
-        background_offset = self.offset.x - 32, self.offset.y - 32
+        background_offset = self.offset.x - TILE_SIZE/2, self.offset.y - TILE_SIZE/2
         self.display_surface.blit(player.background, (-background_offset[0], -background_offset[1]))
-        light.cast_light(player)
+        
 
 
         # Draw the scene (sprites, background, etc.)
@@ -126,13 +117,7 @@ class YSortCameraGroup(pygame.sprite.Group):
             if sprite.sprite_type != "tile":
                 offset_pos = sprite.rect.center - self.offset
                 self.display_surface.blit(sprite.image, offset_pos)                
-        
-        # Draw the transparent circle on top of the rectangular clipping region
-        self.display_surface.blit(circular_area, area_topleft)
-
-        
-        # Clear the clipping region and draw any other things that should be visible
-        self.display_surface.set_clip(None)
+        light.cast_light(player)
 
             
 

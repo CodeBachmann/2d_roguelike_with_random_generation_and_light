@@ -9,6 +9,7 @@ class Tile(pygame.sprite.Sprite):
         
         if img_path:
             self.image = pygame.image.load(img_path).convert_alpha()
+            self.image = pygame.transform.scale(self.image, (TILE_SIZE, TILE_SIZE))
         elif color:
             self.image = pygame.Surface((TILE_SIZE, TILE_SIZE))
             self.image.fill(color)
