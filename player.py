@@ -39,6 +39,7 @@ class Player(Entity):
 
         # lighting
         self.view_radius = int(500 * IMG_SCALE)
+        print(self.view_radius)
         self.cone = True
         self.circle = True
 
@@ -132,9 +133,8 @@ class Player(Entity):
         self.get_offset()
         self.cooldowns()
         self.get_status()
-
-            
         self.animate()
+        
         debug(f'ANGLE:{self.angle}', y = 10*IMG_SCALE)
         debug(f'RIGHT MOUSE:{self.mouse_buttons[2]}', y = 40*IMG_SCALE)
         debug(f'MOUSE DIRECTION:{self.mouse_direction}', y = 70*IMG_SCALE)
@@ -170,40 +170,24 @@ class Player(Entity):
         x = self.mouse_position[0] - (self.rect.centerx - self.offset.x)
         y = self.mouse_position[1] - (self.rect.centery - self.offset.y)
 
-        if x > 0:
-            x_c = x
-        else:
-            x_c = (x*-1)
-        
-        if y > 0:
-            y_c = y
-        else:
-            y_c = (y*-1) 
+        x_c = x if x > 0 else (x*-1)
+        y_c = y if y > 0 else (y*-1)
 
         if x_c > y_c:
-            if x > 0:
-                self.status = 'right'
-            else:
-                self.status = 'left'
+            self.status = 'right' if x > 0 else 'left'
         else:
-            if y > 0:
-                self.status = 'down'
-            else:
-                self.status = 'up'
-
+            self.status = 'down' if y > 0 else 'up'
+    
         if self.attacking:
-            self.status = self.status + '_attack'
+            self.status += '_attack'
 
         elif self.direction == [0,0]:
-            self.status = self.status + '_idle'
+            self.status += '_idle'
 
-
-
-    def create_arc_projectile(self, weapon):
+    def create_arc_projectile(self, name):
 
         velocity = self.mouse_direction.normalize() * 5  # Adjust speed as needed
 
         # Create a new Projectile instance
-        Projectile(pos=self.rect.center, groups=[self.projectile_group], type='arc', 
-                angle=self.angle, velocity=velocity, movable=True, 
-                range=150, speed_modifier=1.5, missile=True, width=20)
+        Projectile(pos=self.rect.center, groups=[self.projectile_group], name='sword', 
+                angle=self.angle, velocity=velocity, hostile=False)

@@ -1,18 +1,17 @@
 import pygame
 import math
 import random
-from settings import TILE_SIZE
+from settings import TILE_SIZE, projectile_data
 
 class Projectile(pygame.sprite.Sprite):
-    def __init__(self, pos, groups, type, angle=None, velocity=None, 
-                 range=1000, movable=False, initial_color=(255, 255, 255), final_color=None, width=30, height=20, speed_modifier=1, 
-                 dispersion=0, missile=True, image_path=None, hostile=False):
+    def __init__(self, pos, groups, angle=None, velocity=None, hostile=False, name=None):
         
 
         super().__init__(groups)
         """ TYPES """
+        self.projectile_info = projectile_data[name]
         self.sprite_type = 'projectile'
-        self.type = type
+        self.type = self.projectile_info['type']
 
         """ CALC PARAMETERS"""
         self.angle = angle
@@ -21,33 +20,34 @@ class Projectile(pygame.sprite.Sprite):
         self.distance_from_the_player = 40
 
         angle_rad = math.radians(self.angle)
-        offset_x = self.distance_from_the_player * math.cos(angle_rad) - width//4
-        offset_y = -self.distance_from_the_player * math.sin(angle_rad) + width//4
+        offset_x = self.distance_from_the_player * math.cos(angle_rad) - self.projectile_info['width']//4
+        offset_y = -self.distance_from_the_player * math.sin(angle_rad) + self.projectile_info['width']//4
 
         self.initial_pos = pygame.math.Vector2(pos[0] + offset_x, pos[1] + offset_y)
         self.pos = self.initial_pos.copy()
 
-        self.range = range
-        self.speed_modifier = speed_modifier
-        self.dispersion = math.radians(dispersion)
+        self.range = self.projectile_info['range']
+        self.speed_modifier = self.projectile_info['speed_modifier']
+        self.dispersion = math.radians(self.projectile_info['dispersion'])
         if self.dispersion != 0:
             self.velocity = self.calculate_dispersed_velocity(velocity)
         self.start_time = pygame.time.get_ticks()
 
         """ PARAMETERS"""
-        self.movable = movable
-        self.initial_color = initial_color
-        self.final_color = final_color
-        self.missile = missile
-        self.width = width
-        self.height = height
+        self.movable = self.projectile_info['movable']
+        self.initial_color = self.projectile_info['initial_color']
+        self.final_color = self.projectile_info['final_color']
+        self.missile = self.projectile_info['missile']
+        self.width = self.projectile_info['width']
+        self.height = self.projectile_info['height']
+        self.image_path = self.projectile_info['image_path']
 
         """ IMAGE """
-        if image_path == None:
-            self.original_image = self.create_arc(width, height) if self.type == 'arc' else self.create_bar(width, height)
+        if self.image_path is None:
+            self.original_image = self.create_arc(self.width, self.height) if self.type == 'arc' else self.create_bar(self.width, self.height)
 
         else:
-            self.original_image = pygame.image.load(image_path).convert_alpha()
+            self.original_image = pygame.image.load(self.image_path).convert_alpha()
 
         self.image = self.original_image
 
@@ -120,12 +120,9 @@ class Projectile(pygame.sprite.Sprite):
 
         # Calculate the new velocity vector
         speed = original_velocity.length() * self.speed_modifier
-        new_velocity = pygame.math.Vector2(
-            speed * math.cos(dispersed_angle),
-            speed * math.sin(dispersed_angle)
+        return pygame.math.Vector2(
+            speed * math.cos(dispersed_angle), speed * math.sin(dispersed_angle)
         )
-
-        return new_velocity
     
     def update_missile_speed(self):
         elapsed_time = (pygame.time.get_ticks() - self.start_time) / 1000.0  # Convert to seconds

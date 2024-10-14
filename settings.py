@@ -5,7 +5,6 @@ QUALITY_NUM = 1
 WIDTH = int(660 * QUALITY_NUM)
 HEIGHT = int(WIDTH / 1.83)
 TILE_SIZE = int(WIDTH / 20.625)
-print(TILE_SIZE)
 FPS = 60
 IMG_SCALE = TILE_SIZE / 96
 SCREEN_SCALE = 64 / TILE_SIZE
@@ -17,7 +16,7 @@ HITBOX_OFFSET = {
 
 MAP_SIZE_X = 100
 MAP_SIZE_Y = MAP_SIZE_X
-ROOM_COUNT = int(MAP_SIZE_X /5)
+ROOM_COUNT = MAP_SIZE_X // 5
 MIN_ROOM_SIZE = 5
 MAX_ROOM_SIZE = 12
 
@@ -80,10 +79,67 @@ monster_data = {
 
 
 projectile_data = {
-    'fireball': {'image_path': 'graphics/particles/flame/fire.png', 'missile': True, 'width': 32, 'height': 32, 'movable': True, 'speed_modifier': 1.5},
-    'sword': {'image_path': 'graphics/weapons/sword/full.png', 'missile': False, 'width': 32, 'height': 32, 'movable': True, 'speed_modifier': 1},
-    'lance': {'image_path': 'graphics/weapons/lance/full.png', 'missile': False, 'width': 32, 'height': 32, 'movable': True, 'speed_modifier': 1},
-    'axe': {'image_path': 'graphics/weapons/axe/full.png', 'missile': False, 'width': 32, 'height': 32, 'movable': True, 'speed_modifier': 1},
-    'rapier': {'image_path': 'graphics/weapons/rapier/full.png', 'missile': False, 'width': 32, 'height': 32, 'movable': True, 'speed_modifier': 1},
-    'sai': {'image_path': 'graphics/weapons/sai/full.png', 'missile': False, 'width': 32, 'height': 32, 'movable': True, 'speed_modifier': 1},
-    'slash': {'image_path': None, 'missile': True, 'width': 16, 'height': 16, 'movable': False}}
+    'fireball': {'image_path': 'graphics/particles/flame/fire.png', 'missile': True, 'width': 32,
+                  'height': 32, 'movable': True, 'speed_modifier': 1.5, 'range': 400, 'dispersion': 0,
+                    'initial_color': (255, 0, 0), 'final_color': (255, 255, 0), 'type': 'arc'},
+
+    'sword': {'image_path': 'graphics/weapons/sword/full.png', 'missile': False, 'width': 32, 
+              'height': 32, 'movable': True, 'speed_modifier': 1, 'range': 100, 'dispersion': 0,
+                'initial_color': (255, 255, 255), 'final_color': (255, 255, 255), 'type': 'arc'},
+
+    'lance': {'image_path': 'graphics/weapons/lance/full.png', 'missile': False, 'width': 32, 
+              'height': 32, 'movable': True, 'speed_modifier': 1, 'range': 100, 'dispersion': 0,
+                'initial_color': (255, 255, 255), 'final_color': (255, 255, 255), 'type': 'arc'},
+
+    'axe': {'image_path': 'graphics/weapons/axe/full.png', 'missile': False, 'width': 32,
+             'height': 32, 'movable': True, 'speed_modifier': 1, 'range': 100, 'dispersion': 0,
+               'initial_color': (255, 255, 255), 'final_color': (255, 255, 255), 'type': 'arc'},
+
+    'rapier': {'image_path': 'graphics/weapons/rapier/full.png', 'missile': False, 'width': 32, 
+               'height': 32, 'movable': True, 'speed_modifier': 1, 'range': 100, 'dispersion': 0,
+                 'initial_color': (255, 255, 255), 'final_color': (255, 255, 255), 'type': 'bar'},
+
+    'sai': {'image_path': 'graphics/weapons/sai/full.png', 'missile': False, 'width': 32,
+             'height': 32, 'movable': True, 'speed_modifier': 1, 'range': 100, 'dispersion': 0, 
+             'initial_color': (255, 255, 255), 'final_color': (255, 255, 255), 'type': 'bar'},
+
+    'slash': {
+        'image_path': None, 'missile': True, 'width': 16, 'height': 16, 'movable': True,
+        'speed_modifier': 0.2, 'range': 100, 'dispersion': 0, 'initial_color': (255, 255, 255),
+          'final_color': (255, 255, 255), 'type': 'arc'}}
+ 
+
+"""
+Upside Down
+Descendo essa tiroleza
+Ouvindo Oasis
+Vendo o distante tomando forma
+E o mundo disformando
+ 
+Down... Down, DOWN!
+below, down!
+Upside down travelling this line
+
+No reasons to be
+
+
+Killer on the run
+sometimes...
+You going fast..
+
+But is not enough
+U need to STOP!
+And face the truth
+
+I made my cage
+Theres no age
+To get out of this
+
+Upside down
+the distant is growing
+And the World is crumbling
+
+
+
+
+"""
