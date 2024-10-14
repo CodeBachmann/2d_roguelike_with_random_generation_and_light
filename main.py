@@ -1,5 +1,5 @@
 import pygame, sys
-from settings import WIDTH, HEIGHT, MOUSE_BUTTONS, IMG_SCALE
+from settings import WIDTH, HEIGHT, MOUSE_BUTTONS, IMG_SCALE, FULLSCREEN
 from level import Level
 from debug import debug
 
@@ -7,7 +7,10 @@ class Game:
     def __init__(self):
         
         pygame.init()
-        self.screen = pygame.display.set_mode((WIDTH, HEIGHT), pygame.FULLSCREEN|pygame.SCALED)
+        if FULLSCREEN:
+            self.screen = pygame.display.set_mode((WIDTH, HEIGHT), pygame.FULLSCREEN|pygame.SCALED)
+        else:
+            self.screen = pygame.display.set_mode((WIDTH, HEIGHT), pygame.SCALED)
         self.clock = pygame.time.Clock()
         self.level = Level()
         self.mouse_buttons = MOUSE_BUTTONS

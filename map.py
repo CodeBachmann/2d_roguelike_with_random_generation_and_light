@@ -83,7 +83,7 @@ class Map:
         def carve_horizontal_corridor(x1, x2, y):
             for x in range(min(x1, x2), max(x1, x2) + 1):
                 # Randomize the corridor width (1 to 3 tiles)
-                width = random.randint(2, 3)
+                width = random.randint(3, 4)
                 # Randomize the vertical position within the width
                 offset = random.randint(0, width - 1)
                 
@@ -100,7 +100,7 @@ class Map:
         def carve_vertical_corridor(y1, y2, x):
             for y in range(min(y1, y2), max(y1, y2) + 1):
                 # Randomize the corridor width (1 to 3 tiles)
-                width = random.randint(2, 3)
+                width = random.randint(3, 4)
                 # Randomize the horizontal position within the width
                 offset = random.randint(0, width - 1)
                 
@@ -194,6 +194,7 @@ class Map:
         place_entity('390', NUM_RANGED)
         place_entity('o', NUM_OBJECT)
         place_entity('t', NUM_TREASURE)
+        place_entity('l', NUM_LIGHT)
         
         # Place player
         while True:

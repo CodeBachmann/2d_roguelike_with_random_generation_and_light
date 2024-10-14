@@ -47,7 +47,7 @@ class UI:
                     color = 'black'
                 
                 pygame.draw.rect(self.map_surface, color, 
-                                 (map_x, map_y, self.map_tile_size, self.map_tile_size))
+                                 (map_x, map_y, self.map_tile_size * SCREEN_SCALE, self.map_tile_size * SCREEN_SCALE))
 
         # Draw player position
         player_map_x = int(self.player.rect.centerx / TILE_SIZE * self.map_tile_size)
