@@ -62,3 +62,6 @@ class UI:
         # This method can be called to show/hide the map
         # You'll need to implement the logic to actually show/hide the map in your game loop
         pass
+
+    def draw_inventory(self):
+        pass

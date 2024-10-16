@@ -5,6 +5,7 @@ from enemy import Enemy
 from settings import *
 from ui import UI
 from light import Light
+from particles import AnimationPlayer
 
 
 class Level:
@@ -16,7 +17,7 @@ class Level:
         self.visible_sprites = YSortCameraGroup()
         self.obstacle_sprites = pygame.sprite.Group()
         self.attackable_sprites = pygame.sprite.Group()
-
+        self.animation_player = AnimationPlayer()
         # light setup
         self.light = Light()
         
@@ -43,6 +44,7 @@ class Level:
             self.ui.display(tile_map)
         else:
             self.visible_sprites.custom_draw(self.player, self.light)
+            self.visible_sprites.enemy_update(self.player)
 
         self.visible_sprites.update()
 
@@ -156,7 +158,10 @@ class YSortCameraGroup(pygame.sprite.Group):
         light.cast_light(player)
 
 
-
+    def enemy_update(self,player):
+        enemy_sprites = [sprite for sprite in self.sprites() if hasattr(sprite,'sprite_type') and sprite.sprite_type == 'enemy']
+        for enemy in enemy_sprites:
+            enemy.enemy_update(player)
             
 
 

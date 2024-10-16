@@ -14,7 +14,7 @@ HITBOX_OFFSET = {
 	'grass': -10,
 	'invisible': 0}
 
-MAP_SIZE_X = 100
+MAP_SIZE_X = 50
 MAP_SIZE_Y = MAP_SIZE_X
 ROOM_COUNT = MAP_SIZE_X // 5
 MIN_ROOM_SIZE = 5
@@ -44,18 +44,29 @@ light_map = map_generator.light_map
 
 classes_data = {
 
-    'fighter': {
-        'hp': 180, 'mana': 30, 'speed': 6, 'dexterity': 5, 'attack': 8, 'defense': 8
+    'Fighter': {
+        'hp': 500, 'mana': 50, 'stamina': 80, 'speed': 6, 'wisdom': 10, 'dexterity': 11, 'strength': 11, 'endurance': 10,
+        'intelligence': 9, 'vigor': 14, 'faith': 8, 'level': 5
     },
 
-    'mage': {
-         'hp': 100, 'mana': 100, 'speed': 4, 'dexterity': 6, 'attack': 7, 'defense': 3
+    'Mage': {
+         'hp': 500, 'mana': 50, 'stamina': 80, 'speed': 6, 'wisdom': 15, 'dexterity': 11, 'strength': 9, 'endurance': 8,
+        'intelligence': 15, 'vigor': 8, 'faith': 8, 'level': 3
     },
 
-    'rogue': {
-        'hp': 120, 'mana': 40, 'speed': 9, 'dexterity': 9, 'attack': 6, 'defense': 4
+    'Rogue': {
+        'hp': 500, 'mana': 50, 'stamina': 80, 'speed': 6, 'wisdom': 9, 'dexterity': 14, 'strength': 12, 'endurance': 11,
+        'intelligence': 9, 'vigor': 11, 'faith': 9, 'level': 4
+    },
+
+    'Priest': {
+        'hp': 500, 'mana': 50, 'stamina': 80, 'speed': 6, 'wisdom': 11, 'dexterity': 8, 'strength': 12, 'endurance': 9,
+        'intelligence': 8, 'vigor': 11, 'faith': 14, 'level': 2
     }
+
+
 }
+
 
 # weapons 
 weapon_data = {
@@ -81,32 +92,36 @@ monster_data = {
 projectile_data = {
     'fireball': {'image_path': 'graphics/particles/flame/fire.png', 'missile': True, 'width': 32,
                   'height': 32, 'movable': True, 'speed_modifier': 1.5, 'range': 400, 'dispersion': 0,
-                    'initial_color': (255, 0, 0), 'final_color': (255, 255, 0), 'type': 'arc'},
+                    'initial_color': (255, 0, 0), 'final_color': (255, 255, 0), 'type': 'arc', 'shield': False},
 
     'sword': {'image_path': 'graphics/weapons/sword/full.png', 'missile': False, 'width': 32, 
               'height': 32, 'movable': True, 'speed_modifier': 1, 'range': 100, 'dispersion': 0,
-                'initial_color': (255, 255, 255), 'final_color': (255, 255, 255), 'type': 'arc'},
+                'initial_color': (255, 255, 255), 'final_color': (255, 255, 255), 'type': 'arc', 'shield': False},
 
     'lance': {'image_path': 'graphics/weapons/lance/full.png', 'missile': False, 'width': 32, 
               'height': 32, 'movable': True, 'speed_modifier': 1, 'range': 100, 'dispersion': 0,
-                'initial_color': (255, 255, 255), 'final_color': (255, 255, 255), 'type': 'arc'},
+                'initial_color': (255, 255, 255), 'final_color': (255, 255, 255), 'type': 'arc', 'shield': False},
 
     'axe': {'image_path': 'graphics/weapons/axe/full.png', 'missile': False, 'width': 32,
              'height': 32, 'movable': True, 'speed_modifier': 1, 'range': 100, 'dispersion': 0,
-               'initial_color': (255, 255, 255), 'final_color': (255, 255, 255), 'type': 'arc'},
+               'initial_color': (255, 255, 255), 'final_color': (255, 255, 255), 'type': 'arc', 'shield': False},
 
     'rapier': {'image_path': 'graphics/weapons/rapier/full.png', 'missile': False, 'width': 32, 
                'height': 32, 'movable': True, 'speed_modifier': 1, 'range': 100, 'dispersion': 0,
-                 'initial_color': (255, 255, 255), 'final_color': (255, 255, 255), 'type': 'bar'},
+                 'initial_color': (255, 255, 255), 'final_color': (255, 255, 255), 'type': 'bar', 'shield': False},
 
     'sai': {'image_path': 'graphics/weapons/sai/full.png', 'missile': False, 'width': 32,
              'height': 32, 'movable': True, 'speed_modifier': 1, 'range': 100, 'dispersion': 0, 
-             'initial_color': (255, 255, 255), 'final_color': (255, 255, 255), 'type': 'bar'},
+             'initial_color': (255, 255, 255), 'final_color': (255, 255, 255), 'type': 'bar', 'shield': False},
 
     'slash': {
         'image_path': None, 'missile': True, 'width': 16, 'height': 16, 'movable': True,
         'speed_modifier': 0.2, 'range': 100, 'dispersion': 0, 'initial_color': (255, 255, 255),
-          'final_color': (255, 255, 255), 'type': 'arc'}}
+          'final_color': (255, 255, 255), 'type': 'arc', 'shield': False},
+
+    'buckler': {'image_path': 'graphics/weapons/wood_buckler/Wood_Buckler.png', 'missile': False, 'width': 32,
+                'height': 16, 'movable': False, 'speed_modifier': 1, 'range': 0, 'dispersion': 0,
+                'initial_color': (255, 255, 255), 'final_color': (255, 255, 255), 'type': 'bar', 'shield': True}}
  
 
 """

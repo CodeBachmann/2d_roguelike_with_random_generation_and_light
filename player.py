@@ -6,42 +6,60 @@ from debug import debug
 from projectile import Projectile
 
 class Player(Entity):
-    def __init__(self, pos, groups, obstacle_sprites, background, projectile_group):
+    def __init__(self, pos, groups, obstacle_sprites, background, projectile_group, player_class='Fighter'):
         super().__init__(groups)
+        
+        # Define Sprite and Position
         self.sprite_type = 'player'
         self.import_player_assets()
         self.image = self.animations['down'][0]
         self.rect = self.image.get_rect(topleft = pos)
         self.hitbox = self.rect.inflate(-10, HITBOX_OFFSET['player'])
+        
         self.offset = pygame.math.Vector2(0, 0)
         self.status = 'down'
+        
+        # Define Class
+        self.player_class = player_class
 
+        # Define Stats
+        self.base_stats()
+        self.max_stats()
+        self.actual_stats()
+
+        # Define Weapon
         self.weapon_data = weapon_data
-        self.weapon = 'sword'
+        self.m1 = 'sword'
+        self.m2 = 'buckler'
         self.mouse_direction = pygame.math.Vector2()
         self.angle =  math.degrees(math.atan2(self.mouse_direction.y, self.mouse_direction.x))
         self.obstacle_sprites = obstacle_sprites
-        self.speed = 7 * IMG_SCALE
-        self.background = background
         self.projectile_group = projectile_group
-
-        self.show_map = False
         self.mouse_buttons = MOUSE_BUTTONS
+
+        # Define Map
+        self.show_map = False
+        self.background = background
 
         # timers
         self.map_toggle_timer = 0
 
         # cooldowns
         self.attacking = False
+        self.defending = False
         self.map_toggled = False
         self.c_cooldown = False
         self.v_cooldown = False
 
         # lighting
         self.view_radius = int(500 * IMG_SCALE)
-        print(self.view_radius)
         self.cone = True
         self.circle = True
+
+        #vulnerability
+        self.vulnerable = True
+        self.hurt_time = None
+        self.invulnerability_duration = 500
 
 
     def input(self):
@@ -82,19 +100,40 @@ class Player(Entity):
             if self.mouse_buttons[0]:
                 self.attacking = True
                 self.attack_time = pygame.time.get_ticks()
-                self.create_arc_projectile(self.weapon)  # Add this line
+                self.create_arc_projectile(self.m1)  # Add this line
                 print("left mouse button pressed")
 
                 print("left mouse button pressed")
             elif self.mouse_buttons[2]:
-                self.attacking = True
-                self.attack_time = pygame.time.get_ticks()
-                #self.view_radius -= 10
+                if projectile_data[self.m2]['shield']:
+                    self.defending = True
+                    self.attack_time = pygame.time.get_ticks()
+                    self.create_arc_projectile(self.m2)
+                    #self.view_radius -= 10
 
                 print("right mouse button pressed")
         else:
             self.direction.x = 0
-            self.direction.y = 0    
+            self.direction.y = 0  
+
+    def animate(self):
+        animation = self.animations[self.status]
+
+        # loop over the frame index 
+        self.frame_index += self.animation_speed
+        if self.frame_index >= len(animation):
+            self.frame_index = 0
+
+        # set the image
+        self.image = animation[int(self.frame_index)]
+        self.rect = self.image.get_rect(center = self.hitbox.center)
+
+        # flicker 
+        if not self.vulnerable:
+            alpha = self.wave_value()
+            self.image.set_alpha(alpha)
+        else:
+            self.image.set_alpha(255)  
     
     def get_mouse_position(self):
         mouse_pos = pygame.mouse.get_pos()
@@ -126,10 +165,15 @@ class Player(Entity):
             if pygame.time.get_ticks() - self.v_time > 200:
                 self.v_cooldown = False
 
+        if not self.vulnerable:
+            if pygame.time.get_ticks() - self.hurt_time >= self.invulnerability_duration:
+                self.vulnerable = True
+
+
     def update(self):
         self.input()
         self.get_mouse_position()        
-        self.move(self.speed)
+        self.move(self.actual_speed)
         self.get_offset()
         self.cooldowns()
         self.get_status()
@@ -189,5 +233,49 @@ class Player(Entity):
         velocity = self.mouse_direction.normalize() * 5  # Adjust speed as needed
 
         # Create a new Projectile instance
-        Projectile(pos=self.rect.center, groups=[self.projectile_group], name='sword', 
+        Projectile(entity=self, groups=[self.projectile_group], name=name, 
                 angle=self.angle, velocity=velocity, hostile=False)
+        
+    def base_stats(self):
+        self.health = classes_data[self.player_class]['hp']
+        self.mana = classes_data[self.player_class]['mana']
+        self.stamina = classes_data[self.player_class]['stamina']
+        self.speed = int(classes_data[self.player_class]['speed'] * IMG_SCALE)
+        self.wisdom = classes_data[self.player_class]['wisdom']
+        self.dexterity = classes_data[self.player_class]['dexterity']
+        self.strength = classes_data[self.player_class]['strength']
+        self.endurance = classes_data[self.player_class]['endurance']
+        self.intelligence = classes_data[self.player_class]['intelligence']
+        self.vigor = classes_data[self.player_class]['vigor']
+        self.faith = classes_data[self.player_class]['faith']
+        self.level = classes_data[self.player_class]['level']
+        self.xp = 0
+        self.xp_to_next_level = 100
+        
+    def max_stats(self):
+        self.max_health = self.health + (22 * self.vigor)
+        self.max_mana = self.mana + (1 * self.wisdom)
+        self.max_stamina = self.stamina + (2 * self.endurance)
+        self.max_speed = self.speed
+        self.max_wisdom = self.wisdom 
+        self.max_dexterity = self.dexterity
+        self.max_strength = self.strength
+        self.max_endurance = self.endurance
+        self.max_intelligence = self.intelligence
+        self.max_vigor = self.vigor
+        self.max_faith = self.faith
+
+    def actual_stats(self):
+        self.actual_health = self.max_health
+        self.actual_mana = self.max_mana
+        self.actual_stamina = self.max_stamina
+        self.actual_speed = self.max_speed
+        self.actual_wisdom = self.max_wisdom
+        self.actual_dexterity = self.max_dexterity
+        self.actual_strength = self.max_strength
+        self.actual_endurance = self.max_endurance
+        self.actual_intelligence = self.max_intelligence
+        self.actual_vigor = self.max_vigor
+        self.actual_faith = self.max_faith
+        
+        

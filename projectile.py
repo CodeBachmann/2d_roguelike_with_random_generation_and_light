@@ -1,10 +1,11 @@
 import pygame
 import math
 import random
-from settings import TILE_SIZE, projectile_data
+from settings import TILE_SIZE, projectile_data, IMG_SCALE
+from debug import debug
 
 class Projectile(pygame.sprite.Sprite):
-    def __init__(self, pos, groups, angle=None, velocity=None, hostile=False, name=None):
+    def __init__(self, entity, groups, angle=None, velocity=None, hostile=False, name=None):
         
 
         super().__init__(groups)
@@ -18,47 +19,54 @@ class Projectile(pygame.sprite.Sprite):
         self.velocity = velocity
         self.hostile = hostile
         self.distance_from_the_player = 40
-
-        angle_rad = math.radians(self.angle)
-        offset_x = self.distance_from_the_player * math.cos(angle_rad) - self.projectile_info['width']//4
-        offset_y = -self.distance_from_the_player * math.sin(angle_rad) + self.projectile_info['width']//4
-
-        self.initial_pos = pygame.math.Vector2(pos[0] + offset_x, pos[1] + offset_y)
-        self.pos = self.initial_pos.copy()
-
-        self.range = self.projectile_info['range']
-        self.speed_modifier = self.projectile_info['speed_modifier']
-        self.dispersion = math.radians(self.projectile_info['dispersion'])
-        if self.dispersion != 0:
-            self.velocity = self.calculate_dispersed_velocity(velocity)
-        self.start_time = pygame.time.get_ticks()
+        self.entity = entity
 
         """ PARAMETERS"""
         self.movable = self.projectile_info['movable']
+        self.shield = self.projectile_info['shield']
         self.initial_color = self.projectile_info['initial_color']
         self.final_color = self.projectile_info['final_color']
         self.missile = self.projectile_info['missile']
         self.width = self.projectile_info['width']
         self.height = self.projectile_info['height']
         self.image_path = self.projectile_info['image_path']
-
+        self.range = self.projectile_info['range']
         """ IMAGE """
+        
+        
         if self.image_path is None:
-            self.original_image = self.create_arc(self.width, self.height) if self.type == 'arc' else self.create_bar(self.width, self.height)
-
+            self.image = self.create_arc(self.width, self.height) if self.type == 'arc' else self.create_bar(self.width, self.height)
         else:
-            self.original_image = pygame.image.load(self.image_path).convert_alpha()
+            self.image = pygame.image.load(self.image_path).convert_alpha()
+            self.image = pygame.transform.scale(self.image, (self.image.get_width() * IMG_SCALE, self.image.get_height() * IMG_SCALE))
+            self.width = self.image.get_width()
+            self.height = self.image.get_height()
 
-        self.image = self.original_image
+        self.original_image = self.image.copy()
+        self.angle = angle
+        self.initial_angle = angle
+        self.mask = pygame.mask.from_surface(self.image)
 
-        self.rect = self.image.get_rect()
+        # Calculate spawn position
+        spawn_angle_rad = math.radians(self.angle)
+        distance_from_entity = 40  # Adjust as needed
+        entity_center = entity.rect.center
+        self.x = entity_center[0] + distance_from_entity * math.cos(spawn_angle_rad)
+        self.y = entity_center[1] - distance_from_entity * math.sin(spawn_angle_rad)
+        
+        self.rect = self.image.get_rect(center=(self.x, self.y))
+        self.initial_pos = pygame.math.Vector2(self.x, self.y)
 
-        self.hitbox = self.rect.inflate(0, -10)
-
+        self.rotate_projectile(self.angle)
+        self.entity = entity
+        self.initial_distance = self.calculate_distance_from_entity()
 
         if not self.movable:
             self.missile = False
             self.lifetime = 0.5
+        
+        if self.shield:
+            self.lifetime = 0.01
 
         elif self.missile:
             self.missile_phase = 0
@@ -66,47 +74,57 @@ class Projectile(pygame.sprite.Sprite):
             self.current_speed = self.original_speed * 0.2
             self.velocity = self.velocity.normalize() * self.current_speed
 
-        self.update_image()
+        self.start_time = pygame.time.get_ticks()
+        self.draw_debug
 
-    def create_arc(self, width, height):
-        surface = pygame.Surface((width, height), pygame.SRCALPHA)
-        pygame.draw.arc(surface, self.initial_color, (0, 0, width, height * 4), 0, math.pi, 2)
-        return surface
-
-    def create_bar(self, width, height):
-        surface = pygame.Surface((width, height))
-        surface.fill((0, 255, 0))
-        return surface
-
-    def update_image(self):
+    def create_projectile_surface(self):
         if self.type == 'arc':
-            rotated_image = pygame.transform.rotate(self.original_image,self.angle - 90)
+            surface = pygame.Surface((self.projectile_info['width'], self.projectile_info['height']), pygame.SRCALPHA)
+            pygame.draw.arc(surface, self.projectile_info['initial_color'], 
+                            (0, 0, self.projectile_info['width'], self.projectile_info['height'] * 4), 0, math.pi, 2)
+        else:
+            surface = pygame.Surface((self.projectile_info['width'], self.projectile_info['height']))
+            surface.fill(self.projectile_info['initial_color'])
+        return surface
 
-        elif self.type == 'bar':
-            rotated_image = pygame.transform.rotate(self.original_image, self.angle )
+    def calculate_distance_from_entity(self):
+        entity_center = pygame.math.Vector2(self.entity.rect.center)
+        projectile_pos = pygame.math.Vector2(self.x, self.y)
+        return (projectile_pos - entity_center).length()
+    
+    def rotate_projectile(self, angle):
+        self.image = pygame.transform.rotate(self.original_image, angle - 90)
+        self.rect = self.image.get_rect(center=(self.x, self.y))
+        self.mask = pygame.mask.from_surface(self.image)
 
-        self.image = rotated_image
-        self.rect = self.image.get_rect(center=self.pos)
-        self.hitbox = self.rect.inflate(0, -10)
+    def move(self):
+        if self.movable:
+            self.x += self.velocity.x
+            self.y += self.velocity.y
+            self.rect.center = (self.x, self.y)
+
+
 
     def update(self):
         if self.missile:
             self.update_missile_speed()
         if self.hostile:
             self.check_collision()
-        if self.movable:
-            self.pos += self.velocity
-            self.update_image()
-
         
-
-            distance_traveled = (self.pos - self.initial_pos).length()
+        self.move()
+        
+        current_distance = self.calculate_distance_from_entity()
+        print(f"Initial distance: {self.initial_distance:.2f}, Current distance: {current_distance:.2f}")
+        
+        if self.movable:
+            distance_traveled = pygame.math.Vector2(self.x, self.y).distance_to(self.initial_pos)
             if distance_traveled >= self.range:
                 self.kill()
         else:
             elapsed_time = (pygame.time.get_ticks() - self.start_time) / 1000.0
             if elapsed_time >= self.lifetime:
                 self.kill()
+
 
 
 
@@ -137,3 +155,15 @@ class Projectile(pygame.sprite.Sprite):
 
         # Update velocity magnitude while keeping direction
         self.velocity = self.velocity.normalize() * self.current_speed
+
+
+    def draw_debug(self, screen):
+        # Draw a dot at the projectile's position
+        pygame.draw.circle(screen, (255, 0, 0), (int(self.pos.x), int(self.pos.y)), 3)
+        
+        # Draw the rect outline
+        pygame.draw.rect(screen, (0, 255, 0), self.rect, 1)
+        
+        # Draw a line from the projectile's position in the direction it's facing
+        end_point = self.pos + pygame.math.Vector2(30, 0).rotate(-self.angle)
+        pygame.draw.line(screen, (0, 0, 255), self.pos, end_point, 2)
