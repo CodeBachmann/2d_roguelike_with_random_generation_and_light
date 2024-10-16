@@ -3,8 +3,7 @@ from settings import *
 from entity import Entity
 from support import import_folder
 from debug import debug
-from projectile import Projectile
-
+from projectile_2 import SpikeBall
 class Player(Entity):
     def __init__(self, pos, groups, obstacle_sprites, background, projectile_group, player_class='Fighter'):
         super().__init__(groups)
@@ -33,6 +32,7 @@ class Player(Entity):
         self.m2 = 'buckler'
         self.mouse_direction = pygame.math.Vector2()
         self.angle =  math.degrees(math.atan2(self.mouse_direction.y, self.mouse_direction.x))
+        self.vector_angle = pygame.Vector2(1, 0)
         self.obstacle_sprites = obstacle_sprites
         self.projectile_group = projectile_group
         self.mouse_buttons = MOUSE_BUTTONS
@@ -142,7 +142,7 @@ class Player(Entity):
         self.mouse_direction = pygame.math.Vector2(mouse_pos[0] - player_screen_pos[0], 
                                                 mouse_pos[1] - player_screen_pos[1])
         self.mouse_position = mouse_pos
-        
+        self.angle = (mouse_pos - pygame.Vector2(self.rect.center)).angle_to(pygame.Vector2(1, 0)) - 90
         # Calculate angle, adjusting for PyGame's coordinate system
         self.angle = math.degrees(math.atan2(-self.mouse_direction.y, self.mouse_direction.x))
         
@@ -229,12 +229,7 @@ class Player(Entity):
             self.status += '_idle'
 
     def create_arc_projectile(self, name):
-
-        velocity = self.mouse_direction.normalize() * 5  # Adjust speed as needed
-
-        # Create a new Projectile instance
-        Projectile(entity=self, groups=[self.projectile_group], name=name, 
-                angle=self.angle, velocity=velocity, hostile=False)
+        SpikeBall(self.projectile_group, self.rect.center)
         
     def base_stats(self):
         self.health = classes_data[self.player_class]['hp']

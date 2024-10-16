@@ -18,7 +18,6 @@ class Projectile(pygame.sprite.Sprite):
         self.angle = angle
         self.velocity = velocity
         self.hostile = hostile
-        self.distance_from_the_player = 40
         self.entity = entity
 
         """ PARAMETERS"""
@@ -88,13 +87,16 @@ class Projectile(pygame.sprite.Sprite):
         return surface
 
     def calculate_distance_from_entity(self):
-        entity_center = pygame.math.Vector2(self.entity.rect.center)
+        entity_center = pygame.math.Vector2(self.entity.rect.bottomright)
         projectile_pos = pygame.math.Vector2(self.x, self.y)
         return (projectile_pos - entity_center).length()
     
     def rotate_projectile(self, angle):
         self.image = pygame.transform.rotate(self.original_image, angle - 90)
-        self.rect = self.image.get_rect(center=(self.x, self.y))
+        
+        # Calculate the new rect and adjust its center to the original position
+        self.rect = self.image.get_rect(center=self.rect.center)  # Keep the center fixed
+
         self.mask = pygame.mask.from_surface(self.image)
 
     def move(self):
