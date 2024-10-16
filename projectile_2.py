@@ -11,7 +11,8 @@ class SpikeBall(pygame.sprite.Sprite):
         
         self.pivot = Vector2(screen_center)
         self.angle = 0
-        
+        self.lifetime = 1000
+        self.start_time = pygame.time.get_ticks()
         offset = Vector2()
         offset.from_polar((self.chain_length,- 90))
         
@@ -22,6 +23,8 @@ class SpikeBall(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(center = self.pos)
         
     def update(self):
+        if pygame.time.get_ticks() - self.start_time > self.lifetime:
+            self.kill()
         # Get the mouse position
         mouse_pos = pygame.mouse.get_pos()
         

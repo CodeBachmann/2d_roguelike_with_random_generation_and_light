@@ -3,9 +3,6 @@ import pygame
 from settings import IMG_SCALE
 from pygame import Vector2
 
-screen_size = Vector2(400, 220)
-screen_center = screen_size // 2
-print(screen_center)
 
 reference_dict = {}
 

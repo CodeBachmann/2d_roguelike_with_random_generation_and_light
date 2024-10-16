@@ -148,7 +148,7 @@ class Light():
         circle_light = self.light_box.get_light(self.circle_light)
         circle_light.set_color(self.light_color, True)
         circle_light.position = [player.rect.centerx, player.rect.centery]
-        circle_light.set_size(player.view_radius // 5)
+        circle_light.set_size(player.view_radius)
 
 
 

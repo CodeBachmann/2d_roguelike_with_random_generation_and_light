@@ -41,24 +41,12 @@ class Projectile(pygame.sprite.Sprite):
             self.width = self.image.get_width()
             self.height = self.image.get_height()
 
-        self.original_image = self.image.copy()
-        self.angle = angle
-        self.initial_angle = angle
-        self.mask = pygame.mask.from_surface(self.image)
+        self.original_image = self.image.copy()  # Keep a copy of the original image for rotation
+        self.rect = self.image.get_rect(center=(self.x, self.y))  # Center rect at spawn position
+        self.pos = pygame.math.Vector2(self.rect.center)  # The original center position/pivot point.
+        self.offset = pygame.math.Vector2(50, 0)  # Shift the sprite 50 px to the right.
+        self.angle = angle  # Initialize angle
 
-        # Calculate spawn position
-        spawn_angle_rad = math.radians(self.angle)
-        distance_from_entity = 40  # Adjust as needed
-        entity_center = entity.rect.center
-        self.x = entity_center[0] + distance_from_entity * math.cos(spawn_angle_rad)
-        self.y = entity_center[1] - distance_from_entity * math.sin(spawn_angle_rad)
-        
-        self.rect = self.image.get_rect(center=(self.x, self.y))
-        self.initial_pos = pygame.math.Vector2(self.x, self.y)
-
-        self.rotate_projectile(self.angle)
-        self.entity = entity
-        self.initial_distance = self.calculate_distance_from_entity()
 
         if not self.movable:
             self.missile = False
@@ -76,34 +64,14 @@ class Projectile(pygame.sprite.Sprite):
         self.start_time = pygame.time.get_ticks()
         self.draw_debug
 
-    def create_projectile_surface(self):
-        if self.type == 'arc':
-            surface = pygame.Surface((self.projectile_info['width'], self.projectile_info['height']), pygame.SRCALPHA)
-            pygame.draw.arc(surface, self.projectile_info['initial_color'], 
-                            (0, 0, self.projectile_info['width'], self.projectile_info['height'] * 4), 0, math.pi, 2)
-        else:
-            surface = pygame.Surface((self.projectile_info['width'], self.projectile_info['height']))
-            surface.fill(self.projectile_info['initial_color'])
-        return surface
-
-    def calculate_distance_from_entity(self):
-        entity_center = pygame.math.Vector2(self.entity.rect.bottomright)
-        projectile_pos = pygame.math.Vector2(self.x, self.y)
-        return (projectile_pos - entity_center).length()
-    
-    def rotate_projectile(self, angle):
-        self.image = pygame.transform.rotate(self.original_image, angle - 90)
-        
-        # Calculate the new rect and adjust its center to the original position
-        self.rect = self.image.get_rect(center=self.rect.center)  # Keep the center fixed
-
-        self.mask = pygame.mask.from_surface(self.image)
-
-    def move(self):
-        if self.movable:
-            self.x += self.velocity.x
-            self.y += self.velocity.y
-            self.rect.center = (self.x, self.y)
+    def rotate(self):
+        """Rotate the image of the sprite around a pivot point."""
+        # Rotate the image.
+        self.image = pygame.transform.rotozoom(self.orig_image, -self.angle, 1)
+        # Rotate the offset vector.
+        offset_rotated = self.offset.rotate(self.angle)
+        # Create a new rect with the center of the sprite + the offset.
+        self.rect = self.image.get_rect(center=self.pos+offset_rotated)
 
 
 
