@@ -115,9 +115,9 @@ class Level:
         cont = 0
         for row_index, row in enumerate(entity_map):
             for col_index, col in enumerate(row):
-                x = col_index * TILE_SIZE
-                y = row_index * TILE_SIZE
                 if col == 't':  # Change 'l' to 't' to match the torch sprite placement
+                    x = col_index * TILE_SIZE
+                    y = row_index * TILE_SIZE
                     self.light.add_torch(x, y)
                     cont += 1
                     print(f'LIGHT CONT: {cont}, X: {x}, Y: {y}')
@@ -136,7 +136,7 @@ class YSortCameraGroup(pygame.sprite.Group):
         # Update the camera offset to follow the player
         self.offset.x = player.rect.centerx - self.half_width + player.rect.width/2
         self.offset.y =  player.rect.centery - self.half_height + player.rect.height/2
-        
+
         # Clamp the camera offset
         self.offset.x = max(MIN_X_OFFSET, min(self.offset.x, MAX_X_OFFSET - WIDTH ))
         self.offset.y = max(MIN_Y_OFFSET, min(self.offset.y, MAX_Y_OFFSET - HEIGHT))
@@ -151,9 +151,10 @@ class YSortCameraGroup(pygame.sprite.Group):
 
         # Draw the scene (sprites, background, etc.)
         for sprite in sorted(self.sprites(), key=lambda sprite: sprite.rect.centery):
-            if sprite.sprite_type != "invisible_wall":
+            if sprite.sprite_type not in ["invisible_wall"]:
                 offset_pos = sprite.rect.center - self.offset
                 self.display_surface.blit(sprite.image, offset_pos) 
+
 
         light.cast_light(player)
 

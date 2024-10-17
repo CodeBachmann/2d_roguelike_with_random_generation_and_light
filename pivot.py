@@ -39,10 +39,6 @@ class SpikeBall:
         
         self.image, self.rect = self.rotate_on_pivot()
     
-    def draw(self, surface):
-        pygame.draw.line(surface, 'darkgray', self.pivot, self.rect.center, width = 3)
-        pygame.draw.line(surface, 'black', self.pivot, self.rect.center)
-        surface.blit(self.image, self.rect)
 
     def rotate_on_pivot(self):
         
@@ -69,7 +65,7 @@ class Game:
   
         self.spikeball = SpikeBall()
   
-    def load_image(self, image_name, colorkey = None):
+    def load_image(self, image_name):
         image = pygame.image.load(f'graphics/weapons/wood_buckler/{image_name}.png').convert_alpha()
         reference_dict[image_name] = image
   
@@ -116,7 +112,7 @@ class Game:
                     if event.key == pygame.K_ESCAPE:
                         self.running = False
             
-            self.update(dt)
+            self.update()
             self.draw(self.screen)
         
         

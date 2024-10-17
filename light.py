@@ -13,7 +13,6 @@ class Light():
         self.half_height = self.display_surface.get_size()[1] // 2
         self.light_box = lighting.LightBox((WIDTH, HEIGHT), pygame.BLEND_RGBA_MULT)
         
-        
         # Light Power
         self.light_color = [v * 0.90 for v in LIGHT_COLOR]
         self.default_light_img = self.create_default_light(40)
