@@ -94,8 +94,7 @@ while game_loop == True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             game_loop = False
-
-            
+      
 
     if current_time - last_spawn_time >= spawn_duration:
         enemy.create_enemy()  # Spawn a new enemy

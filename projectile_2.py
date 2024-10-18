@@ -11,11 +11,11 @@ class SpikeBall(pygame.sprite.Sprite):
         self.chain_length = 40
         self.world_offset = offset
         offset = Vector2()
-        offset.from_polar((self.chain_length,- 90))
+        offset.from_polar((self.chain_length, 0))
         
         self.pos = self.pivot + offset
         
-        self.image_orig = pygame.image.load('graphics/weapons/wood_buckler/Wood_Buckler.png').convert()
+        self.image_orig = pygame.image.load('graphics/weapons/wood_buckler/Wood_Buckler.png').convert_alpha()
         self.image = self.image_orig
         self.rect = self.image.get_rect(center = self.pos)
         self.update()
@@ -25,15 +25,19 @@ class SpikeBall(pygame.sprite.Sprite):
         mouse_pos = pygame.mouse.get_pos()
  
         # Calculate the angle based on the mouse position relative to the pivot
-        self.angle = (mouse_pos - (self.pivot - self.world_offset)).angle_to(Vector2(1, 0)) - 90
+        self.angle = (mouse_pos - (self.pivot - self.world_offset)).angle_to(Vector2(1, 0))
         
         self.image, self.rect = self.rotate_on_pivot()
+        self.pos = self.pivot + Vector2(self.chain_length, 0).rotate(-self.angle)  # Ensure distance is always chain_length
+        self.rect.center = self.pos  # Update rect position
+        
+
     
 
 
     def rotate_on_pivot(self):
         
-        surf = pygame.transform.rotate(self.image_orig, self.angle)
+        surf = pygame.transform.rotate(self.image_orig, self.angle - 90)
         
         offset = self.pivot + (self.pos - self.pivot).rotate(-self.angle)
         rect = surf.get_rect(center = offset)

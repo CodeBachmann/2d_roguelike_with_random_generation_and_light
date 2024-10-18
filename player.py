@@ -13,6 +13,7 @@ class Player(Entity):
         self.import_player_assets()
         self.image = self.animations['down'][0]
         self.rect = self.image.get_rect(topleft = pos)
+        self.rect_width, self.rect_height = self.rect.size  # Use the size attribute directly
         self.hitbox = self.rect.inflate(-10, HITBOX_OFFSET['player'])
         
         self.offset = pygame.math.Vector2(0, 0)
@@ -230,7 +231,7 @@ class Player(Entity):
 
     def create_arc_projectile(self, name):
         rect_to_angle = self.rect.center - self.offset
-        SpikeBall(self.projectile_group, self.rect.center, self.offset)
+        SpikeBall(self.projectile_group, (self.rect.centerx + self.rect_width/2, self.rect.centery + self.rect_height/2), self.offset)
         
     def base_stats(self):
         self.health = classes_data[self.player_class]['hp']
