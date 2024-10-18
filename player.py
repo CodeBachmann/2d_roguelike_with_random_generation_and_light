@@ -230,8 +230,7 @@ class Player(Entity):
             self.status += '_idle'
 
     def create_arc_projectile(self, name):
-        rect_to_angle = self.rect.center - self.offset
-        SpikeBall(self.projectile_group, (self.rect.centerx + self.rect_width/2, self.rect.centery + self.rect_height/2), self.offset)
+        SpikeBall(self.projectile_group, (self.rect.centerx + self.rect_width/2, self.rect.centery + self.rect_height/2), self.offset, name)
         
     def base_stats(self):
         self.health = classes_data[self.player_class]['hp']

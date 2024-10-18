@@ -154,7 +154,10 @@ class YSortCameraGroup(pygame.sprite.Group):
             if sprite.sprite_type not in ["invisible_wall"]:
                 offset_pos = sprite.rect.center - self.offset
                 if sprite.sprite_type == 'projectile':
-                    offset_pos = sprite.rect.center - self.offset - (sprite.rect.width / 2, sprite.rect.height / 2)  # Fixed typo from 'widht' to 'width'
+                    offset_pos = sprite.rect.center - self.offset - (sprite.rect.width / 2, sprite.rect.height / 2)
+                    if sprite.shield:
+                        sprite.pivot = pygame.math.Vector2(player.rect.centerx + player.rect_width/2, player.rect.centery + player.rect_height/2)
+                        
                 self.display_surface.blit(sprite.image, offset_pos) 
                    
 
