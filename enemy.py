@@ -5,7 +5,7 @@ from support import *
 
 
 class Enemy(Entity):
-	def __init__(self,monster_name,pos,groups,obstacle_sprites,damage_player,trigger_death_particles,add_exp):
+	def __init__(self,monster_name,pos,groups,obstacle_sprites,damage_player,trigger_death_particles,add_exp, create_projectile):
 
 		# general setup
 		super().__init__(groups)
@@ -21,6 +21,7 @@ class Enemy(Entity):
 		self.hitbox = self.rect.inflate(0,-10)
 		self.obstacle_sprites = obstacle_sprites
 		self.view_radius = 100
+		self.player_rect_center = None
 
 		# stats
 		self.monster_name = monster_name
@@ -30,8 +31,8 @@ class Enemy(Entity):
 		self.speed = monster_info['speed'] * IMG_SCALE
 		self.attack_damage = monster_info['damage']
 		self.resistance = monster_info['resistance']
-		self.attack_radius = monster_info['attack_radius']
-		self.notice_radius = monster_info['notice_radius']
+		self.attack_radius = monster_info['attack_radius'] * IMG_SCALE
+		self.notice_radius = monster_info['notice_radius'] * IMG_SCALE
 		self.attack_type = monster_info['attack_type']
 
 		# player interaction
@@ -41,7 +42,7 @@ class Enemy(Entity):
 		self.damage_player = damage_player
 		self.trigger_death_particles = trigger_death_particles
 		self.add_exp = add_exp
-
+		self.create_projectile = create_projectile
 		# invincibility timer
 		self.vulnerable = True
 		self.hit_time = None
@@ -64,9 +65,9 @@ class Enemy(Entity):
 				img = pygame.transform.scale(i, (int(i.get_width() * IMG_SCALE), int(i.get_height() * IMG_SCALE)))
 				self.animations[animation][x] = img
 
-	def get_player_distance_direction(self,player):
+	def get_player_distance_direction(self):
 		enemy_vec = pygame.math.Vector2(self.rect.center)
-		player_vec = pygame.math.Vector2(player.rect.center)
+		player_vec = pygame.math.Vector2(self.player_rect_center)
 		distance = (player_vec - enemy_vec).magnitude()
 
 		if distance > 0:
@@ -76,8 +77,8 @@ class Enemy(Entity):
 
 		return (distance,direction)
 
-	def get_status(self, player):
-		distance = self.get_player_distance_direction(player)[0]
+	def get_status(self):
+		distance = self.get_player_distance_direction()[0]
 
 		if distance <= self.attack_radius and self.can_attack:
 			if self.status != 'attack':
@@ -88,13 +89,13 @@ class Enemy(Entity):
 		else:
 			self.status = 'idle'
 
-	def actions(self,player):
+	def actions(self):
 		if self.status == 'attack':
 			self.attack_time = pygame.time.get_ticks()
 			self.damage_player(self.attack_damage,self.attack_type)
 			self.attack_sound.play()
 		elif self.status == 'move':
-			self.direction = self.get_player_distance_direction(player)[1]
+			self.direction = self.get_player_distance_direction()[1]
 		else:
 			self.direction = pygame.math.Vector2()
 
@@ -126,16 +127,6 @@ class Enemy(Entity):
 			if current_time - self.hit_time >= self.invincibility_duration:
 				self.vulnerable = True
 
-	def get_damage(self,player,attack_type):
-		if self.vulnerable:
-			self.hit_sound.play()
-			self.direction = self.get_player_distance_direction(player)[1]
-			if attack_type == 'weapon':
-				self.health -= player.get_full_weapon_damage()
-			else:
-				self.health -= player.get_full_magic_damage()
-			self.hit_time = pygame.time.get_ticks()
-			self.vulnerable = False
 
 	def check_death(self):
 		if self.health <= 0:
@@ -149,12 +140,12 @@ class Enemy(Entity):
 			self.direction *= -self.resistance
 
 	def update(self):
+		self.get_status()
+		self.actions()
 		self.hit_reaction()
 		self.move(self.speed)
+	
 		self.animate()
 		self.cooldowns()
 		self.check_death()
 
-	def enemy_update(self,player):
-		self.get_status(player)
-		self.actions(player)

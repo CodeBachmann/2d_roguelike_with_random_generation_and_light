@@ -69,99 +69,53 @@ class Map:
         return tiles
 
     def generate_tile_map(self):
-        # Initialize map with non-walkable tiles ('x')
-        game_map = [['x' for _ in range(MAP_SIZE_X)] for _ in range(MAP_SIZE_Y)]
-
-        rooms = []
-
-        # Function to carve a room
-        def carve_room(x1, y1, x2, y2):
-            for x in range(x1, x2 + 1):
-                for y in range(y1, y2 + 1):
-                    game_map[y][x] = ' '
-
-        def carve_horizontal_corridor(x1, x2, y):
-            for x in range(min(x1, x2), max(x1, x2) + 1):
-                # Randomize the corridor width (1 to 3 tiles)
-                width = random.randint(3, 4)
-                # Randomize the vertical position within the width
-                offset = random.randint(0, width - 1)
-                
-                for i in range(width):
-                    current_y = y - offset + i
-                    if 0 <= current_y < MAP_SIZE_Y:
-                        game_map[current_y][x] = ' '
-                
-                # Occasionally add some randomness to the path
-                if random.random() < 0.2:  # 20% chance to shift
-                    y += random.choice([-1, 0, 1])
-                    y = max(1, min(y, MAP_SIZE_Y - 2))  # Keep within bounds
-
-        def carve_vertical_corridor(y1, y2, x):
-            for y in range(min(y1, y2), max(y1, y2) + 1):
-                # Randomize the corridor width (1 to 3 tiles)
-                width = random.randint(3, 4)
-                # Randomize the horizontal position within the width
-                offset = random.randint(0, width - 1)
-                
-                for i in range(width):
-                    current_x = x - offset + i
-                    if 0 <= current_x < MAP_SIZE_X:
-                        game_map[y][current_x] = ' '
-                
-                # Occasionally add some randomness to the path
-                if random.random() < 0.2:  # 20% chance to shift
-                    x += random.choice([-1, 0, 1])
-                    x = max(1, min(x, MAP_SIZE_X - 2))  # Keep within bounds
-
+        # Initialize the map with empty spaces
+        tile_map = [['e' for _ in range(self.width)] for _ in range(self.height)]
+        
         # Create random rooms
-        for _ in range(ROOM_COUNT):
+        num_rooms = ROOM_COUNT
+        rooms = []
+        for _ in range(num_rooms):
             room_width = random.randint(MIN_ROOM_SIZE, MAX_ROOM_SIZE)
             room_height = random.randint(MIN_ROOM_SIZE, MAX_ROOM_SIZE)
-            room_x = random.randint(1, self.width - room_width - 1)
-            room_y = random.randint(1, self.height - room_height - 1)
-            room = (room_x, room_y, room_x + room_width, room_y + room_height)
+            x = random.randint(1, self.width - room_width - 1)
+            y = random.randint(1, self.height - room_height - 1)
             
-            # Carve the room
-            carve_room(*room)
-            rooms.append(room)
-
-        # Connect the rooms with corridors
-        for i in range(1, len(rooms)):
-            x1, y1, _, _ = rooms[i - 1]
-            x2, y2, _, _ = rooms[i]
-
-            # Randomly decide whether to do horizontal or vertical first
-            if random.choice([True, False]):
-                carve_horizontal_corridor(x1, x2, y1)
-                carve_vertical_corridor(y1, y2, x2)
-            else:
-                carve_vertical_corridor(y1, y2, x1)
-                carve_horizontal_corridor(x1, x2, y2)
-
-        # Optional: add a random walk to add more paths
-        def random_walk(steps):
-            directions = [(0, 1), (0, -1), (1, 0), (-1, 0)]  # Down, Up, Right, Left
-            x, y = random.randint(1, MAP_SIZE_X - 2), random.randint(1, MAP_SIZE_Y - 2)
-
-            for _ in range(steps):
-                direction = random.choice(directions)
-                new_x, new_y = x + direction[0], y + direction[1]
-
-                if 1 <= new_x < MAP_SIZE_X - 1 and 1 <= new_y < MAP_SIZE_Y - 1:
-                    game_map[new_y][new_x] = ' '
-                    x, y = new_x, new_y
-
-        random_walk((MAP_SIZE_X * MAP_SIZE_Y) // 10)
-
-        for x in range(MAP_SIZE_X):
-            game_map[0][x] = 'x'
-            game_map[MAP_SIZE_Y - 1][x] = 'x'
-        for y in range(MAP_SIZE_Y):
-            game_map[y][0] = 'x'
-            game_map[y][MAP_SIZE_X - 1] = 'x'
-
-        return game_map
+            # Fill room with floor tiles
+            for i in range(y, y + room_height):
+                for j in range(x, x + room_width):
+                    tile_map[i][j] = ' '
+            
+            rooms.append((x, y, room_width, room_height))
+        
+        # Create corridors between rooms
+        for i in range(len(rooms) - 1):
+            x1, y1, w1, h1 = rooms[i]
+            x2, y2, w2, h2 = rooms[i + 1]
+            
+            # Find center points of rooms
+            cx1, cy1 = x1 + w1 // 2, y1 + h1 // 2
+            cx2, cy2 = x2 + w2 // 2, y2 + h2 // 2
+            
+            # Horizontal corridor
+            for x in range(min(cx1, cx2), max(cx1, cx2) + 1):
+                tile_map[cy1][x] = ' '
+            
+            # Vertical corridor
+            for y in range(min(cy1, cy2), max(cy1, cy2) + 1):
+                tile_map[y][cx2] = ' '
+        
+        # Add walls around rooms and corridors
+        for y in range(self.height):
+            for x in range(self.width):
+                if tile_map[y][x] == ' ':
+                    for dy, dx in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
+                        ny, nx = y + dy, x + dx
+                        if 0 <= ny < self.height and 0 <= nx < self.width:
+                            if tile_map[ny][nx] == 'e':
+                                tile_map[ny][nx] = 'x'
+        
+        return tile_map 
 
     def generate_entity_map(self):
         entity_map = [[' ' for _ in range(self.width)] for _ in range(self.height)]

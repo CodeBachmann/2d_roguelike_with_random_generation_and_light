@@ -14,14 +14,14 @@ HITBOX_OFFSET = {
 	'grass': -10,
 	'invisible': 0}
 
-MAP_SIZE_X = 50
+MAP_SIZE_X = 65
 MAP_SIZE_Y = MAP_SIZE_X
 ROOM_COUNT = MAP_SIZE_X // 5
 MIN_ROOM_SIZE = 5
 MAX_ROOM_SIZE = 12
 
-NUM_MELEE = 1
-NUM_RANGED = 1
+NUM_MELEE = 0
+NUM_RANGED = 20
 NUM_OBJECT = 15
 NUM_TREASURE = 5
 NUM_LIGHT = 5
@@ -92,36 +92,36 @@ monster_data = {
 projectile_data = {
     'fireball': {'image_path': 'graphics/particles/flame/fire.png', 'missile': True, 'width': 32,
                   'height': 32, 'movable': True, 'speed_modifier': 1.5, 'range': 400, 'dispersion': 0,
-                    'initial_color': (255, 0, 0), 'final_color': (255, 255, 0), 'type': 'arc', 'shield': False},
+                    'initial_color': (255, 0, 0), 'final_color': (255, 255, 0), 'type': 'arc', 'shield': False, 'chain_length': 60},
 
     'sword': {'image_path': 'graphics/weapons/sword/full.png', 'missile': False, 'width': 32, 
-              'height': 32, 'movable': True, 'speed_modifier': 1, 'range': 100, 'dispersion': 0,
-                'initial_color': (255, 255, 255), 'final_color': (255, 255, 255), 'type': 'arc', 'shield': False},
+              'height': 32, 'movable': True, 'speed_modifier': 1, 'range': 300, 'dispersion': 0,
+                'initial_color': (255, 255, 255), 'final_color': (255, 255, 255), 'type': 'arc', 'shield': False, 'chain_length': 60},
 
     'lance': {'image_path': 'graphics/weapons/lance/full.png', 'missile': False, 'width': 32, 
               'height': 32, 'movable': True, 'speed_modifier': 1, 'range': 100, 'dispersion': 0,
-                'initial_color': (255, 255, 255), 'final_color': (255, 255, 255), 'type': 'arc', 'shield': False},
+                'initial_color': (255, 255, 255), 'final_color': (255, 255, 255), 'type': 'arc', 'shield': False, 'chain_length': 60},
 
     'axe': {'image_path': 'graphics/weapons/axe/full.png', 'missile': False, 'width': 32,
              'height': 32, 'movable': True, 'speed_modifier': 1, 'range': 100, 'dispersion': 0,
-               'initial_color': (255, 255, 255), 'final_color': (255, 255, 255), 'type': 'arc', 'shield': False},
+               'initial_color': (255, 255, 255), 'final_color': (255, 255, 255), 'type': 'arc', 'shield': False, 'chain_length': 60},
 
     'rapier': {'image_path': 'graphics/weapons/rapier/full.png', 'missile': False, 'width': 32, 
                'height': 32, 'movable': True, 'speed_modifier': 1, 'range': 100, 'dispersion': 0,
-                 'initial_color': (255, 255, 255), 'final_color': (255, 255, 255), 'type': 'bar', 'shield': False},
+                 'initial_color': (255, 255, 255), 'final_color': (255, 255, 255), 'type': 'bar', 'shield': False, 'chain_length': 60},
 
     'sai': {'image_path': 'graphics/weapons/sai/full.png', 'missile': False, 'width': 32,
              'height': 32, 'movable': True, 'speed_modifier': 1, 'range': 100, 'dispersion': 0, 
-             'initial_color': (255, 255, 255), 'final_color': (255, 255, 255), 'type': 'bar', 'shield': False},
+             'initial_color': (255, 255, 255), 'final_color': (255, 255, 255), 'type': 'bar', 'shield': False, 'chain_length': 60},
 
     'slash': {
         'image_path': None, 'missile': True, 'width': 16, 'height': 16, 'movable': True,
         'speed_modifier': 0.2, 'range': 100, 'dispersion': 0, 'initial_color': (255, 255, 255),
-          'final_color': (255, 255, 255), 'type': 'arc', 'shield': False},
+          'final_color': (255, 255, 255), 'type': 'arc', 'shield': False, 'chain_length': 60},
 
     'buckler': {'image_path': 'graphics/weapons/wood_buckler/Wood_Buckler.png', 'missile': False, 'width': 32,
-                'height': 16, 'movable': False, 'speed_modifier': 1, 'range': 0, 'dispersion': 0,
-                'initial_color': (255, 255, 255), 'final_color': (255, 255, 255), 'type': 'bar', 'shield': True}}
+                'height': 5, 'movable': False, 'speed_modifier': 1, 'range': 0, 'dispersion': 0,
+                'initial_color': (255, 255, 255), 'final_color': (255, 255, 255), 'type': 'bar', 'shield': True, 'chain_length': 30}}
  
 
 """

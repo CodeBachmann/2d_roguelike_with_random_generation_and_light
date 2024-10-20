@@ -14,7 +14,8 @@ class Light():
         self.light_box = lighting.LightBox((WIDTH, HEIGHT), pygame.BLEND_RGBA_MULT)
         
         # Light Power
-        self.light_color = [v * 0.90 for v in LIGHT_COLOR]
+        #self.light_color = [v * 0.90 for v in LIGHT_COLOR]
+        self.light_color = LIGHT_COLOR
         self.default_light_img = self.create_default_light(40)
         
 
@@ -147,7 +148,7 @@ class Light():
         circle_light = self.light_box.get_light(self.circle_light)
         circle_light.set_color(self.light_color, True)
         circle_light.position = [player.rect.centerx, player.rect.centery]
-        circle_light.set_size(player.view_radius)
+        circle_light.set_size(player.view_radius // 5)
 
 
 

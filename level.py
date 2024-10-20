@@ -6,7 +6,8 @@ from settings import *
 from ui import UI
 from light import Light
 from particles import AnimationPlayer
-
+from projectile import Projectile
+from pygame.math import Vector2
 
 class Level:
     def __init__(self):
@@ -44,7 +45,6 @@ class Level:
             self.ui.display(tile_map)
         else:
             self.visible_sprites.custom_draw(self.player, self.light)
-            self.visible_sprites.enemy_update(self.player)
 
         self.visible_sprites.update()
 
@@ -74,7 +74,8 @@ class Level:
                         groups=[self.visible_sprites],
                         obstacle_sprites=self.obstacle_sprites,
                         background=self.background,
-                        projectile_group=self.visible_sprites
+                        projectile_group=self.visible_sprites,
+                        create_projectile=self.create_projectile
                         )
                 if col == '390':
                     Enemy(
@@ -84,7 +85,8 @@ class Level:
                         self.obstacle_sprites,
                         self.damage_player,
                         self.trigger_death_particles,
-                        self.add_exp)
+                        self.add_exp,
+                        self.create_projectile)
                 if col == 't':
                     Tile((x, y), [self.visible_sprites], sprite_type = 'torch', spritesheet = 'graphics/objects/torches', length = 8)
                     cont+=1
@@ -95,6 +97,7 @@ class Level:
     def damage_player(self,amount,attack_type):
         if self.player.vulnerable:
             self.player.health -= amount
+            print(self.player.health)
             self.player.vulnerable = False
             self.player.hurt_time = pygame.time.get_ticks()
             self.animation_player.create_particles(attack_type,self.player.rect.center,[self.visible_sprites])
@@ -120,12 +123,17 @@ class Level:
                     y = row_index * TILE_SIZE
                     self.light.add_torch(x, y)
                     cont += 1
-                    print(f'LIGHT CONT: {cont}, X: {x}, Y: {y}')
+                    print(f'LIGHT CONT: {cont}, X: {x}, Y: {y}')    
+
+    def create_projectile(self, name, entity_type, rect, player_offset, target_pos = None):
+        Projectile(self.visible_sprites, self.obstacle_sprites, self.visible_sprites, entity_type, rect, player_offset, name, target_pos)
+      
 
 
 class YSortCameraGroup(pygame.sprite.Group):
     def __init__(self):
         super().__init__()
+        self.sprite_type = 'camera'
         self.display_surface = pygame.display.get_surface()
         self.half_width = self.display_surface.get_size()[0] // 2
         self.half_height = self.display_surface.get_size()[1] // 2
@@ -153,21 +161,21 @@ class YSortCameraGroup(pygame.sprite.Group):
         for sprite in sorted(self.sprites(), key=lambda sprite: sprite.rect.centery):
             if sprite.sprite_type not in ["invisible_wall"]:
                 offset_pos = sprite.rect.center - self.offset
+                if sprite.sprite_type == 'enemy':
+                    sprite.player_rect_center = player.rect.center
                 if sprite.sprite_type == 'projectile':
                     offset_pos = sprite.rect.center - self.offset - (sprite.rect.width / 2, sprite.rect.height / 2)
                     if sprite.shield:
                         sprite.pivot = pygame.math.Vector2(player.rect.centerx + player.rect_width/2, player.rect.centery + player.rect_height/2)
-                        
+                        if not MOUSE_BUTTONS[2]:
+                            sprite.kill()
+                    
                 self.display_surface.blit(sprite.image, offset_pos) 
                    
 
         light.cast_light(player)
 
 
-    def enemy_update(self,player):
-        enemy_sprites = [sprite for sprite in self.sprites() if hasattr(sprite,'sprite_type') and sprite.sprite_type == 'enemy']
-        for enemy in enemy_sprites:
-            enemy.enemy_update(player)
             
 
 

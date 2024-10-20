@@ -3,9 +3,8 @@ from settings import *
 from entity import Entity
 from support import import_folder
 from debug import debug
-from projectile_2 import SpikeBall
 class Player(Entity):
-    def __init__(self, pos, groups, obstacle_sprites, background, projectile_group, player_class='Fighter'):
+    def __init__(self, pos, groups, obstacle_sprites, background, projectile_group, player_class='Fighter', create_projectile=None):
         super().__init__(groups)
         
         # Define Sprite and Position
@@ -15,6 +14,7 @@ class Player(Entity):
         self.rect = self.image.get_rect(topleft = pos)
         self.rect_width, self.rect_height = self.rect.size  # Use the size attribute directly
         self.hitbox = self.rect.inflate(-10, HITBOX_OFFSET['player'])
+        self.create_projectile = create_projectile
         
         self.offset = pygame.math.Vector2(0, 0)
         self.status = 'down'
@@ -61,6 +61,7 @@ class Player(Entity):
         self.vulnerable = True
         self.hurt_time = None
         self.invulnerability_duration = 500
+        self.exp = 0
 
 
     def input(self):
@@ -98,21 +99,23 @@ class Player(Entity):
                 self.v_cooldown = True
                 self.v_time = pygame.time.get_ticks()
 
-            if self.mouse_buttons[0]:
-                self.attacking = True
-                self.attack_time = pygame.time.get_ticks()
-                self.create_arc_projectile(self.m1)  # Add this line
-                print("left mouse button pressed")
-
-                print("left mouse button pressed")
-            elif self.mouse_buttons[2]:
-                if projectile_data[self.m2]['shield']:
-                    self.defending = True
+            if not self.defending:
+                if self.mouse_buttons[0]:
+                    self.attacking = True
                     self.attack_time = pygame.time.get_ticks()
-                    self.create_arc_projectile(self.m2)
-                    #self.view_radius -= 10
+                    self.create_projectile(self.m1, entity_type = 'player', rect = self.rect, player_offset = self.offset)  # Add this line
+                    print("left mouse button pressed")
 
-                print("right mouse button pressed")
+                    print("left mouse button pressed")
+                elif self.mouse_buttons[2]:
+                    if projectile_data[self.m2]['shield']:
+                        self.defending = True
+                        self.attack_time = pygame.time.get_ticks()
+                        self.create_projectile(self.m2, entity_type = 'player', rect = self.rect, player_offset = self.offset)
+                        self.actual_speed -= self.max_speed/2
+                        #self.view_radius -= 10
+
+                    print("right mouse button pressed")
         else:
             self.direction.x = 0
             self.direction.y = 0  
@@ -169,6 +172,11 @@ class Player(Entity):
         if not self.vulnerable:
             if pygame.time.get_ticks() - self.hurt_time >= self.invulnerability_duration:
                 self.vulnerable = True
+        
+        if self.defending and not self.mouse_buttons[2]:
+            if pygame.time.get_ticks() - self.attack_time > 200:
+                self.defending = False
+                self.actual_speed += self.max_speed/2
 
 
     def update(self):
@@ -229,9 +237,7 @@ class Player(Entity):
         elif self.direction == [0,0]:
             self.status += '_idle'
 
-    def create_arc_projectile(self, name):
-        SpikeBall(self.projectile_group, (self.rect.centerx + self.rect_width/2, self.rect.centery + self.rect_height/2), self.offset, name)
-        
+      
     def base_stats(self):
         self.health = classes_data[self.player_class]['hp']
         self.mana = classes_data[self.player_class]['mana']
