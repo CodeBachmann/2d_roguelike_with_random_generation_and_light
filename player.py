@@ -28,8 +28,11 @@ class Player(Entity):
         self.actual_stats()
 
         # Define Weapon
+        self.armor = {'head': None, 'chest': None, 'legs': None, 'feet': None, 'hands': None}
+        self.accessory = {'left': None, 'right': None, 'neck': None}
+        self.weapon = None
         self.weapon_data = weapon_data
-        self.m1 = 'sword'
+        self.m1 = 'slash'
         self.m2 = 'buckler'
         self.mouse_direction = pygame.math.Vector2()
         self.angle =  math.degrees(math.atan2(self.mouse_direction.y, self.mouse_direction.x))
@@ -100,25 +103,29 @@ class Player(Entity):
                 self.v_time = pygame.time.get_ticks()
 
             if not self.defending:
-                if self.mouse_buttons[0]:
-                    self.attacking = True
-                    self.attack_time = pygame.time.get_ticks()
-                    self.create_projectile(self.m1, entity_type = 'player', rect = self.rect, player_offset = self.offset)  # Add this line
-                    print("left mouse button pressed")
-
-                    print("left mouse button pressed")
-                elif self.mouse_buttons[2]:
-                    if projectile_data[self.m2]['shield']:
-                        self.defending = True
-                        self.attack_time = pygame.time.get_ticks()
-                        self.create_projectile(self.m2, entity_type = 'player', rect = self.rect, player_offset = self.offset)
-                        self.actual_speed -= self.max_speed/2
-                        #self.view_radius -= 10
-
-                    print("right mouse button pressed")
+                self.attack()
+                
         else:
             self.direction.x = 0
-            self.direction.y = 0  
+            self.direction.y = 0 
+
+    def attack(self):
+
+        if self.mouse_buttons[0]:
+            self.attacking = True
+            self.attack_time = pygame.time.get_ticks()
+            self.create_projectile(self.m1, entity_type = 'player', rect = self.rect, player_offset = self.offset)  # Add this line
+            print("left mouse button pressed")
+
+        elif self.mouse_buttons[2]:
+            if projectile_data[self.m2]['shield']:
+                self.defending = True
+                self.attack_time = pygame.time.get_ticks()
+                self.create_projectile(self.m2, entity_type = 'player', rect = self.rect, player_offset = self.offset)
+                self.actual_speed -= self.max_speed/2
+                #self.view_radius -= 10
+
+                print("right mouse button pressed")
 
     def animate(self):
         animation = self.animations[self.status]
@@ -155,7 +162,7 @@ class Player(Entity):
 
     def cooldowns(self):
         if self.attacking:
-            if pygame.time.get_ticks() - self.attack_time > 200:
+            if pygame.time.get_ticks() - self.attack_time > 500:
                 self.attacking = False
 
         if self.map_toggled:
@@ -165,6 +172,7 @@ class Player(Entity):
         if self.c_cooldown:
             if pygame.time.get_ticks() - self.c_time > 200:
                 self.c_cooldown = False
+
         if self.v_cooldown:
             if pygame.time.get_ticks() - self.v_time > 200:
                 self.v_cooldown = False

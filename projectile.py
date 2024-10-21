@@ -17,7 +17,7 @@ class Projectile(pygame.sprite.Sprite):
         # POSITION AND ANGLE CREATION
         self.pivot = Vector2(self.entity_rect.centerx + self.entity_rect_width/2, self.entity_rect.centery + self.entity_rect_height/2)
         self.angle = 0
-        self.chain_length = self.projectile_info['chain_length']
+        self.chain_length = self.projectile_info['chain_length']// 2
         self.world_offset = player_offset
         offset = Vector2()
         offset.from_polar((self.chain_length, -90))
@@ -34,7 +34,11 @@ class Projectile(pygame.sprite.Sprite):
         
         # IMAGE CREATION
         self.pos = self.pivot + offset
-        self.image_orig = pygame.image.load(self.projectile_info['image_path']).convert_alpha()
+        if self.image_path == None:
+            self.image_orig = pygame.image.load(self.projectile_info['image_path']).convert_alpha()
+        else:
+            self.image_orig = self.create_cone()
+
         if self.shield:
             self.image_orig = pygame.transform.scale(self.image_orig, (self.projectile_info['width'], self.projectile_info['height']))
         else:
@@ -87,13 +91,42 @@ class Projectile(pygame.sprite.Sprite):
         
         return surf, rect
     
+    def create_cone(self):
+        # Create a cone shape using the projectile's position and angle
+        cone_length = self.chain_length  # Length of the cone
+        cone_width = 20  # Width of the cone (adjust as needed)
+
+        # Calculate the points for the cone shape
+        tip = self.pos
+        left_point = self.pos + Vector2(-cone_width / 2, cone_length).rotate(-self.angle)
+        right_point = self.pos + Vector2(cone_width / 2, cone_length).rotate(-self.angle)
+
+        # Create a list of points to form the cone
+        cone_points = [tip, left_point, right_point]
+
+        # Create a surface to draw the cone on
+        cone_surface = pygame.Surface((cone_width, cone_length), pygame.SRCALPHA)  # Create a transparent surface
+        pygame.draw.polygon(cone_surface, (255, 0, 0), cone_points)  # Draw the cone in red
+
+        return cone_surface
+
+    
     def collision(self):
-        for sprite in self.obstacle_sprites:
-            if sprite.hitbox.colliderect(self.rect):
-                self.kill()
+        if not self.shield:
+            for sprite in self.obstacle_sprites:
+                if sprite.hitbox.colliderect(self.rect):
+                    self.kill()
 
         for sprite in self.visible_sprites:
-            if sprite.sprite_type == 'enemy':
-                if sprite.hitbox.colliderect(self.rect):
-                    sprite.health -= self.damage
-                    self.kill()
+            if sprite.sprite_type == 'enemy' and sprite.hitbox.colliderect(self.rect) and self.shield == False:
+                sprite.health -= self.damage
+                self.kill()
+            
+            elif sprite.sprite_type == 'player' and sprite.hitbox.colliderect(self.rect) and self.shield == False:
+                sprite.health -= self.damage
+                self.kill()
+        
+            elif sprite.sprite_type == 'sprite' and sprite.hitbox.colliderect(self.rect) and self.shield == True:
+                sprite.health -= self.damage
+                self.kill()
+

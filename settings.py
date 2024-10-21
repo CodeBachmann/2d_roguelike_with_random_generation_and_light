@@ -117,7 +117,7 @@ projectile_data = {
     'slash': {
         'image_path': None, 'missile': True, 'width': 16, 'height': 16, 'movable': True,
         'speed_modifier': 0.2, 'range': 100, 'dispersion': 0, 'initial_color': (255, 255, 255),
-          'final_color': (255, 255, 255), 'type': 'arc', 'shield': False, 'chain_length': 60},
+          'final_color': (255, 255, 255), 'type': 'cone', 'shield': False, 'chain_length': 150},
 
     'buckler': {'image_path': 'graphics/weapons/wood_buckler/Wood_Buckler.png', 'missile': False, 'width': 32,
                 'height': 5, 'movable': False, 'speed_modifier': 1, 'range': 0, 'dispersion': 0,

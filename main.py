@@ -11,6 +11,7 @@ class Game:
             self.screen = pygame.display.set_mode((WIDTH, HEIGHT), pygame.FULLSCREEN|pygame.SCALED)
         else:
             self.screen = pygame.display.set_mode((WIDTH, HEIGHT), pygame.SCALED)
+            
         self.clock = pygame.time.Clock()
         self.level = Level()
         self.mouse_buttons = MOUSE_BUTTONS
