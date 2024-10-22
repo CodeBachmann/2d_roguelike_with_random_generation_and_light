@@ -8,6 +8,7 @@ from light import Light
 from particles import AnimationPlayer
 from projectile import Projectile
 from pygame.math import Vector2
+from inventory import Inventory
 
 class Level:
     def __init__(self):
@@ -19,6 +20,7 @@ class Level:
         self.obstacle_sprites = pygame.sprite.Group()
         self.attackable_sprites = pygame.sprite.Group()
         self.animation_player = AnimationPlayer()
+
         # light setup
         self.light = Light()
         
@@ -30,6 +32,8 @@ class Level:
         self.ui = UI(self.player)  # Add this line
         self.last_update_time = 0
         self.update_interval = 2000  # 2 seconds in milliseconds
+        self.inventory = Inventory(self.player, 6, 2)
+
 
 
     def run(self, mouse_buttons):
@@ -60,11 +64,11 @@ class Level:
 
                 if col == 'x':
                     Tile((x, y), [self.visible_sprites, self.obstacle_sprites], sprite_type = 'invisible_wall', img_path = 'graphics/test/rock.png')
-                
-        cont = 0   
-        print(f'OBJECTS')
+
+        cont = 0
+        print('OBJECTS')
         for row_index, row in enumerate(entity_map):
-            
+
             for col_index, col in enumerate(row):
                 x = col_index * TILE_SIZE
                 y = row_index * TILE_SIZE

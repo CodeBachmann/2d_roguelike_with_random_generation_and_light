@@ -31,10 +31,11 @@ class Projectile(pygame.sprite.Sprite):
         self.missile = self.projectile_info['missile']
         self.image_path = self.projectile_info['image_path']
         self.range = self.projectile_info['range']
-        
+
         # IMAGE CREATION
         self.pos = self.pivot + offset
-        if self.image_path == None:
+        print(self.image_path)
+        if self.image_path == "None":
             self.image_orig = pygame.image.load(self.projectile_info['image_path']).convert_alpha()
         else:
             self.image_orig = self.create_cone()
@@ -111,8 +112,8 @@ class Projectile(pygame.sprite.Sprite):
         return cone_surface
 
     
-    def collision(self):
-        if not self.shield:
+    def collision(self): 
+        if not self.shield and not self.movable:
             for sprite in self.obstacle_sprites:
                 if sprite.hitbox.colliderect(self.rect):
                     self.kill()
@@ -128,5 +129,5 @@ class Projectile(pygame.sprite.Sprite):
         
             elif sprite.sprite_type == 'sprite' and sprite.hitbox.colliderect(self.rect) and self.shield == True:
                 sprite.health -= self.damage
-                self.kill()
+                sprite.kill()
 

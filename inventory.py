@@ -1,7 +1,6 @@
 import pygame as pg
 from settings_inv import *
-import random
-import time
+
 
 class Inventory:
 	def __init__(self, player, cols, rows):

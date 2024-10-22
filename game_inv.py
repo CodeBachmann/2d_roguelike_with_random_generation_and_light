@@ -17,9 +17,7 @@ class Game():
 	def new(self):
 		# start a new game
 		self.all_sprites = pg.sprite.Group()
-		self.all_coins = pg.sprite.Group()
 		self.player = Player(self, 15, 15, DEFUALT_HP, DEFUALT_PROT, DEFUALT_ATK)
-		self.coin = Coin(self, random.randrange(0, GRIDWIDTH), random.randrange(0, GRIDHEIGHT))
 		self.inventory = Inventory(self.player, 12, 6, 2)
 		sword_steel = Weapon('img/sword.png', 20, 20, 'weapon', 'sword')
 		sword_wood = Weapon('img/swordWood.png', 10, 10, 'weapon', 'sword')
@@ -35,7 +33,6 @@ class Game():
 		self.inventory.addItemInv(chest_armor)
 		self.inventory.addItemInv(upg_helmet_armor)
 		self.inventory.addItemInv(upg_chest_armor)
-		g.run()
 
 	def run(self):
 		# game loop
@@ -60,30 +57,19 @@ class Game():
 			if event.type == pg.QUIT:
 				self.quit()
 			if event.type == pg.KEYDOWN:
-				if event.key == pg.K_UP or event.key == pg.K_w:
-					self.player.move(0, -1)
-				if event.key == pg.K_DOWN or event.key == pg.K_s:
-					self.player.move(0, 1)
-				if event.key == pg.K_LEFT or event.key == pg.K_a:
-					self.player.move(-1)
-				if event.key == pg.K_RIGHT or event.key == pg.K_d:
-					self.player.move(1)
 				if event.key == pg.K_b:
 					self.inventory.toggleInventory()
-			if event.type == pg.MOUSEBUTTONDOWN and event.button == 3:
-				if self.inventory.display_inventory:
+			if self.inventory.display_inventory:
+				if event.type == pg.MOUSEBUTTONDOWN and event.button == 3:
 					mouse_pos = pg.mouse.get_pos()
 					self.inventory.checkSlot(self.screen, mouse_pos)
-			if event.type == pg.MOUSEBUTTONDOWN and event.button == 1:
-				if self.inventory.display_inventory:
+
+				elif event.type == pg.MOUSEBUTTONDOWN and event.button == 1:
 					self.inventory.moveItem(self.screen)
-			if event.type == pg.MOUSEBUTTONUP and event.button == 1:
-				if self.inventory.display_inventory:
+
+				elif event.type == pg.MOUSEBUTTONUP and event.button == 1:
 					self.inventory.placeItem(self.screen)
 
-	def new_coin(self):
-		self.coin.x = random.randrange(0, GRIDWIDTH)
-		self.coin.y = random.randrange(0, GRIDHEIGHT)
 
 	def draw_grid(self):
 		for x in range(0, WIDTH, TILESIZE):
@@ -96,10 +82,12 @@ class Game():
 		self.prot = self.myfont.render(f"{self.player.prot}" , False, WHITE)
 		self.atk = self.myfont.render(f"{self.player.atk}" , False, WHITE)
 		self.coins = self.myfont.render(f"{self.player.p_coins}" , False, GOLD)
+
 		self.hpimg = pg.image.load('img/heart.png').convert_alpha()
 		self.protimg = pg.image.load('img/upg_shieldSmall.png').convert_alpha()
 		self.atkimg = pg.image.load('img/upg_dagger.png').convert_alpha()
 		self.coinimg = pg.image.load('img/coin1.png').convert_alpha()
+
 		self.screen.blit(self.hp,(STATPOSX,25))
 		self.screen.blit(self.prot,(STATPOSX,75))
 		self.screen.blit(self.atk,(STATPOSX,125))
