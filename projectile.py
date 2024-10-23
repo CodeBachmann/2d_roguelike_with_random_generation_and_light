@@ -35,7 +35,7 @@ class Projectile(pygame.sprite.Sprite):
         # IMAGE CREATION
         self.pos = self.pivot + offset
         print(self.image_path)
-        if self.image_path == "None":
+        if self.image_path != "None":
             self.image_orig = pygame.image.load(self.projectile_info['image_path']).convert_alpha()
         else:
             self.image_orig = self.create_cone()

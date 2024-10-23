@@ -21,7 +21,7 @@ MIN_ROOM_SIZE = 5
 MAX_ROOM_SIZE = 12
 
 NUM_MELEE = 0
-NUM_RANGED = 20
+NUM_RANGED = 0
 NUM_OBJECT = 15
 NUM_TREASURE = 5
 NUM_LIGHT = 5
@@ -45,28 +45,26 @@ light_map = map_generator.light_map
 classes_data = {
 
     'Fighter': {
-        'hp': 500, 'mana': 50, 'stamina': 80, 'speed': 6, 'wisdom': 10, 'dexterity': 11, 'strength': 11, 'endurance': 10,
+        'hp': 500, 'mana': 50, 'stamina': 80, 'prot': 0, 'speed': 6, 'wisdom': 10, 'dexterity': 11, 'strength': 11, 'endurance': 10,
         'intelligence': 9, 'vigor': 14, 'faith': 8, 'level': 5
     },
 
     'Mage': {
-         'hp': 500, 'mana': 50, 'stamina': 80, 'speed': 6, 'wisdom': 15, 'dexterity': 11, 'strength': 9, 'endurance': 8,
+         'hp': 500, 'mana': 50, 'stamina': 80, 'prot': 0, 'speed': 6, 'wisdom': 15, 'dexterity': 11, 'strength': 9, 'endurance': 8,
         'intelligence': 15, 'vigor': 8, 'faith': 8, 'level': 3
     },
 
     'Rogue': {
-        'hp': 500, 'mana': 50, 'stamina': 80, 'speed': 6, 'wisdom': 9, 'dexterity': 14, 'strength': 12, 'endurance': 11,
+        'hp': 500, 'mana': 50, 'stamina': 80, 'prot': 0, 'speed': 6, 'wisdom': 9, 'dexterity': 14, 'strength': 12, 'endurance': 11,
         'intelligence': 9, 'vigor': 11, 'faith': 9, 'level': 4
     },
 
     'Priest': {
-        'hp': 500, 'mana': 50, 'stamina': 80, 'speed': 6, 'wisdom': 11, 'dexterity': 8, 'strength': 12, 'endurance': 9,
+        'hp': 500, 'mana': 50, 'stamina': 80, 'prot': 0, 'speed': 6, 'wisdom': 11, 'dexterity': 8, 'strength': 12, 'endurance': 9,
         'intelligence': 8, 'vigor': 11, 'faith': 14, 'level': 2
     }
 
-
 }
-
 
 # weapons 
 weapon_data = {
@@ -115,7 +113,7 @@ projectile_data = {
              'initial_color': (255, 255, 255), 'final_color': (255, 255, 255), 'type': 'bar', 'shield': False, 'chain_length': 60},
 
     'slash': {
-        'image_path': None, 'missile': True, 'width': 16, 'height': 16, 'movable': True,
+        'image_path': "None", 'missile': True, 'width': 16, 'height': 16, 'movable': True,
         'speed_modifier': 0.2, 'range': 100, 'dispersion': 0, 'initial_color': (255, 255, 255),
           'final_color': (255, 255, 255), 'type': 'cone', 'shield': False, 'chain_length': 150},
 
@@ -124,37 +122,28 @@ projectile_data = {
                 'initial_color': (255, 255, 255), 'final_color': (255, 255, 255), 'type': 'bar', 'shield': True, 'chain_length': 30}}
  
 
-"""
-Upside Down
-Descendo essa tiroleza
-Ouvindo Oasis
-Vendo o distante tomando forma
-E o mundo disformando
- 
-Down... Down, DOWN!
-below, down!
-Upside down travelling this line
 
-No reasons to be
+# INVENTORY
 
+WHITE = (255, 255, 255)
+BLACK =(0, 0, 0)
+RED = (255, 0, 0)
+GREEN = (0, 255, 0)
+DARKGREEN = (0, 102, 0)
+BLUE = (0, 0, 255)
+DARKGREY = (40, 40, 40)
+LIGHTGREY = (100, 100, 100)
+YELLOW = (255, 255, 0)
+GOLD = (255,215,0)
 
-Killer on the run
-sometimes...
-You going fast..
-
-But is not enough
-U need to STOP!
-And face the truth
-
-I made my cage
-Theres no age
-To get out of this
-
-Upside down
-the distant is growing
-And the World is crumbling
+#game settings/options
+TITLE = "Inventory System Test"
+FPS = 60
+BGCOLOR = DARKGREY
 
 
-
-
-"""
+STATPOSX = 50
+UIHEIGTH = int(300*IMG_SCALE)
+INVTILESIZE = 32
+GRIDWIDTH = int(WIDTH / TILE_SIZE)
+GRIDHEIGHT = int(HEIGHT / TILE_SIZE)

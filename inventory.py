@@ -1,5 +1,5 @@
 import pygame as pg
-from settings_inv import *
+from settings import *
 
 
 class Inventory:
@@ -17,6 +17,9 @@ class Inventory:
 
 		self.movingitem = None
 		self.movingitemslot = None
+
+		self.holding_item = False
+		self.switched_item = False
 		
 	def appendSlots(self):
 		while len(self.inventory_slots) != self.totalSlots:
@@ -36,17 +39,13 @@ class Inventory:
 		self.armor_slots[1].slottype = 'chest'
 		self.armor_slots[2].slottype = 'legs'
 		self.armor_slots[3].slottype = 'feet'
-		self.weapon_slots[0].slottype = 'weapon'
+		self.weapon_slots[0].slottype = 'left_hand'
 
 	def draw(self, screen):
-		if self.display_inventory:
-			for slot in self.armor_slots + self.inventory_slots + self.weapon_slots:
-				slot.draw(screen)
-			for slot in self.armor_slots + self.inventory_slots + self.weapon_slots:
-				slot.drawItems(screen)
-
-	def toggleInventory(self):
-		self.display_inventory = not self.display_inventory
+		for slot in self.armor_slots + self.inventory_slots + self.weapon_slots:
+			slot.draw(screen)
+		for slot in self.armor_slots + self.inventory_slots + self.weapon_slots:
+			slot.drawItems(screen)
 
 	def addItemInv(self, item, slot=None):
 		if slot == None:
@@ -96,6 +95,10 @@ class Inventory:
 					if slot.slottype == self.movingitem.slot:
 						self.equipItem(self.movingitem)
 						break
+					if self.movingitem.slot == 'hand' and slot.slottype == 'left_hand' or slot.slottype == 'right_hand':
+						self.equipItem(self.movingitem)
+						break
+					
 		if self.movingitem != None:
 			self.movingitem.is_moving = False
 			self.movingitem = None
@@ -143,10 +146,12 @@ class InventorySlot:
 	def drawItems(self, screen):
 		if self.item != None and not self.item.is_moving:
 			self.image = pg.image.load(self.item.img).convert_alpha()
+			self.image = pg.transform.scale(self.image, (self.image.get_width() * IMG_SCALE * 2, self.image.get_height() * IMG_SCALE * 2))
 			screen.blit(self.image, (self.x-7, self.y-7))
 		if self.item != None and self.item.is_moving:
 			mousepos1 = pg.mouse.get_pos()
 			self.image = pg.image.load(self.item.img).convert_alpha()
+			self.image = pg.transform.scale(self.image, (self.image.get_width() * IMG_SCALE * 2, self.image.get_height() * IMG_SCALE * 2))
 			screen.blit(self.image, (mousepos1[0]-20,mousepos1[1]-20))
 
 class EquipableSlot(InventorySlot):
@@ -208,7 +213,7 @@ class Armor(Equipable):
 class Weapon(Equipable):
 	def __init__(self, img, value, atk, slot, wpn_type):
 		Equipable.__init__(self, img, value)
-		self.atk = atk
+		self.base_damage = atk
 		self.slot = slot
 		self.wpn_type = wpn_type
 

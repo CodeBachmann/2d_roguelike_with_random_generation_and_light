@@ -23,6 +23,7 @@ class Game:
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
+                    
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     self.mouse_buttons[event.button - 1] = True
 

@@ -52,8 +52,10 @@ class Player(Entity):
         self.attacking = False
         self.defending = False
         self.map_toggled = False
+        self.inventory_toggled = False
         self.c_cooldown = False
         self.v_cooldown = False
+        self.b_cooldown = False
 
         # lighting
         self.view_radius = int(500 * IMG_SCALE)
@@ -101,6 +103,11 @@ class Player(Entity):
                 self.circle = not self.circle
                 self.v_cooldown = True
                 self.v_time = pygame.time.get_ticks()
+
+            if keys[pygame.K_b] and not self.b_cooldown:
+                self.inventory_toggled = not self.inventory_toggled
+                self.b_cooldown = True
+                self.b_time = pygame.time.get_ticks()
 
             if not self.defending:
                 self.attack()
@@ -185,6 +192,10 @@ class Player(Entity):
             if pygame.time.get_ticks() - self.attack_time > 200:
                 self.defending = False
                 self.actual_speed += self.max_speed/2
+        
+        if self.b_cooldown:
+            if pygame.time.get_ticks() - self.b_time > 200:
+                self.b_cooldown = False
 
 
     def update(self):
@@ -196,15 +207,15 @@ class Player(Entity):
         self.get_status()
         self.animate()
         
-        debug(f'ANGLE:{self.angle}', y = 10*IMG_SCALE)
-        debug(f'RIGHT MOUSE:{self.mouse_buttons[2]}', y = 40*IMG_SCALE)
-        debug(f'MOUSE DIRECTION:{self.mouse_direction}', y = 70*IMG_SCALE)
-        debug(f'OFFSET:{self.offset}', y = 190*IMG_SCALE)
-        debug(f'MOUSE - OFFSET:{self.mouse_direction + self.offset}', y = 130*IMG_SCALE)
-        debug(f'PLAYER POS:{self.rect.center}', y = 160*IMG_SCALE)
-        debug(f'MOUSE SCREEN POS:{pygame.mouse.get_pos()}', y = 220*IMG_SCALE)
-        debug(f'PLAYER SCREEN POS:{self.rect.center - self.offset}', y = 250*IMG_SCALE)
-        debug(f'ANGLE:{self.rect.size}', y = 280*IMG_SCALE)
+        # debug(f'ANGLE:{self.angle}', y = 10*IMG_SCALE)
+        # debug(f'RIGHT MOUSE:{self.mouse_buttons[2]}', y = 40*IMG_SCALE)
+        # debug(f'MOUSE DIRECTION:{self.mouse_direction}', y = 70*IMG_SCALE)
+        # debug(f'OFFSET:{self.offset}', y = 190*IMG_SCALE)
+        # debug(f'MOUSE - OFFSET:{self.mouse_direction + self.offset}', y = 130*IMG_SCALE)
+        # debug(f'PLAYER POS:{self.rect.center}', y = 160*IMG_SCALE)
+        # debug(f'MOUSE SCREEN POS:{pygame.mouse.get_pos()}', y = 220*IMG_SCALE)
+        # debug(f'PLAYER SCREEN POS:{self.rect.center - self.offset}', y = 250*IMG_SCALE)
+        # debug(f'ANGLE:{self.rect.size}', y = 280*IMG_SCALE)
 
 
     def import_player_assets(self):
@@ -250,6 +261,7 @@ class Player(Entity):
         self.health = classes_data[self.player_class]['hp']
         self.mana = classes_data[self.player_class]['mana']
         self.stamina = classes_data[self.player_class]['stamina']
+        self.prot = classes_data[self.player_class]['prot']
         self.speed = int(classes_data[self.player_class]['speed'] * IMG_SCALE)
         self.wisdom = classes_data[self.player_class]['wisdom']
         self.dexterity = classes_data[self.player_class]['dexterity']
@@ -266,6 +278,7 @@ class Player(Entity):
         self.max_health = self.health + (22 * self.vigor)
         self.max_mana = self.mana + (1 * self.wisdom)
         self.max_stamina = self.stamina + (2 * self.endurance)
+        self.max_prot = self.prot
         self.max_speed = self.speed
         self.max_wisdom = self.wisdom 
         self.max_dexterity = self.dexterity
@@ -274,11 +287,13 @@ class Player(Entity):
         self.max_intelligence = self.intelligence
         self.max_vigor = self.vigor
         self.max_faith = self.faith
+        self.base_damage = 1
 
     def actual_stats(self):
         self.actual_health = self.max_health
         self.actual_mana = self.max_mana
         self.actual_stamina = self.max_stamina
+        self.actual_prot = self.max_prot
         self.actual_speed = self.max_speed
         self.actual_wisdom = self.max_wisdom
         self.actual_dexterity = self.max_dexterity
@@ -287,5 +302,36 @@ class Player(Entity):
         self.actual_intelligence = self.max_intelligence
         self.actual_vigor = self.max_vigor
         self.actual_faith = self.max_faith
+        self.damage = self.base_damage
         
         
+
+    def addHp(self, hp_gain):
+        self.actual_health += hp_gain
+        if self.actual_health > self.max_health:
+            self.actual_health = self.max_health
+
+    def addProt(self, prot_gain):
+        self.actual_prot += prot_gain
+
+    def equip_armor(self, item):
+        if self.armor[item.slot] != None:
+            self.unequip_armor(item.slot)
+        self.armor[item.slot] = item
+        self.actual_prot += item.prot
+
+    def unequip_armor(self, slot):
+        if self.armor[slot] != None:
+            self.actual_prot -= self.armor[slot].prot
+            self.armor[slot] = None
+
+    def equip_weapon(self, weapon):
+        if self.weapon != None:
+            self.unequip_weapon()
+        self.weapon = weapon
+        self.base_damage = weapon.base_damage
+
+    def unequip_weapon(self):
+        if self.weapon != None:
+            self.base_damage = 1
+            self.weapon = None

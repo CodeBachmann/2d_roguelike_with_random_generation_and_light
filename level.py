@@ -8,7 +8,8 @@ from light import Light
 from particles import AnimationPlayer
 from projectile import Projectile
 from pygame.math import Vector2
-from inventory import Inventory
+from inventory import *
+
 
 class Level:
     def __init__(self):
@@ -33,12 +34,13 @@ class Level:
         self.last_update_time = 0
         self.update_interval = 2000  # 2 seconds in milliseconds
         self.inventory = Inventory(self.player, 6, 2)
-
-
+        self.new()
 
     def run(self, mouse_buttons):
 
         current_time = pygame.time.get_ticks()
+        
+            
         if current_time - self.last_update_time > self.update_interval:
             self.ui.update_explored_area(tile_map)
             self.last_update_time = current_time        
@@ -49,6 +51,9 @@ class Level:
             self.ui.display(tile_map)
         else:
             self.visible_sprites.custom_draw(self.player, self.light)
+
+        if self.player.inventory_toggled:
+            self.update_inventory()
 
         self.visible_sprites.update()
 
@@ -131,7 +136,43 @@ class Level:
 
     def create_projectile(self, name, entity_type, rect, player_offset, target_pos = None):
         Projectile(self.visible_sprites, self.obstacle_sprites, self.visible_sprites, entity_type, rect, player_offset, name, target_pos)
-      
+
+    def new(self):
+        
+        sword_steel = Weapon('img/sword.png', 20, 20, 'hand', 'sword')
+        sword_wood = Weapon('img/swordWood.png', 10, 10, 'hand', 'sword')
+        hp_potion = Consumable('img/potionRed.png', 2, 30)
+        helmet_armor = Armor('img/helmet.png', 10, 20, 'head')
+        chest_armor = Armor('img/chest.png', 10, 40, 'chest')
+        upg_helmet_armor = Armor('img/upg_helmet.png', 10, 40, 'head')
+        upg_chest_armor = Armor('img/upg_chest.png', 10, 80, 'chest')
+        self.inventory.addItemInv(helmet_armor)
+        self.inventory.addItemInv(hp_potion)
+        self.inventory.addItemInv(sword_steel)
+        self.inventory.addItemInv(sword_wood)
+        self.inventory.addItemInv(chest_armor)
+        self.inventory.addItemInv(upg_helmet_armor)
+        self.inventory.addItemInv(upg_chest_armor)
+
+    def update_inventory(self):
+        print('uepa')
+        if self.player.mouse_buttons[2]:
+            mouse_pos = pg.mouse.get_pos()
+            self.inventory.checkSlot(self.display_surface, mouse_pos)
+            self.inventory.switched_item = True
+        
+        elif not self.player.mouse_buttons[2] and self.inventory.switched_item:
+            self.inventory.switched_item = False
+
+        elif self.player.mouse_buttons[0]:
+            self.inventory.moveItem(self.display_surface)
+            self.inventory.holding_item = True
+
+        elif not self.player.mouse_buttons[0] and self.inventory.holding_item:
+            self.inventory.placeItem(self.display_surface)
+            self.inventory.holding_item = False
+        
+        self.inventory.draw(self.display_surface)
 
 
 class YSortCameraGroup(pygame.sprite.Group):

@@ -17,22 +17,6 @@ class Game():
 	def new(self):
 		# start a new game
 		self.all_sprites = pg.sprite.Group()
-		self.player = Player(self, 15, 15, DEFUALT_HP, DEFUALT_PROT, DEFUALT_ATK)
-		self.inventory = Inventory(self.player, 12, 6, 2)
-		sword_steel = Weapon('img/sword.png', 20, 20, 'weapon', 'sword')
-		sword_wood = Weapon('img/swordWood.png', 10, 10, 'weapon', 'sword')
-		hp_potion = Consumable('img/potionRed.png', 2, 30)
-		helmet_armor = Armor('img/helmet.png', 10, 20, 'head')
-		chest_armor = Armor('img/chest.png', 10, 40, 'chest')
-		upg_helmet_armor = Armor('img/upg_helmet.png', 10, 40, 'head')
-		upg_chest_armor = Armor('img/upg_chest.png', 10, 80, 'chest')
-		self.inventory.addItemInv(helmet_armor)
-		self.inventory.addItemInv(hp_potion)
-		self.inventory.addItemInv(sword_steel)
-		self.inventory.addItemInv(sword_wood)
-		self.inventory.addItemInv(chest_armor)
-		self.inventory.addItemInv(upg_helmet_armor)
-		self.inventory.addItemInv(upg_chest_armor)
 
 	def run(self):
 		# game loop
@@ -44,6 +28,7 @@ class Game():
 
 	def quit(self):
 		sys.exit()
+
 	def update(self):
 		# game loop update
 		self.all_sprites.update()
@@ -56,9 +41,7 @@ class Game():
         # check for closing window
 			if event.type == pg.QUIT:
 				self.quit()
-			if event.type == pg.KEYDOWN:
-				if event.key == pg.K_b:
-					self.inventory.toggleInventory()
+			
 			if self.inventory.display_inventory:
 				if event.type == pg.MOUSEBUTTONDOWN and event.button == 3:
 					mouse_pos = pg.mouse.get_pos()
@@ -71,11 +54,7 @@ class Game():
 					self.inventory.placeItem(self.screen)
 
 
-	def draw_grid(self):
-		for x in range(0, WIDTH, TILESIZE):
-			pg.draw.line(self.screen, LIGHTGREY, (x, 0), (x, HEIGHT))
-		for y in range(0, HEIGHT, TILESIZE):
-			pg.draw.line(self.screen, LIGHTGREY, (0, y), (WIDTH, y))
+
 
 	def draw_player_stats(self):
 		self.hp = self.myfont.render(f"{self.player.hp}" , False, RED)
