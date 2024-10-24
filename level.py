@@ -9,6 +9,7 @@ from particles import AnimationPlayer
 from projectile import Projectile
 from pygame.math import Vector2
 from inventory import *
+from itens import *
 
 
 class Level:
@@ -55,7 +56,7 @@ class Level:
             self.update_inventory()
         
         else:
-            #self.visible_sprites.custom_draw(self.player, self.light)
+            self.visible_sprites.custom_draw(self.player, self.light)
             self.ui.draw_stats()
 
         self.visible_sprites.update()
@@ -109,7 +110,8 @@ class Level:
                     cont+=1
                     print(f'CONT: {cont}, X: {x}, Y: {y}')
 
-
+    def create_loot_bag(self):
+        pass
 
     def damage_player(self,amount,attack_type):
         if self.player.vulnerable:
@@ -124,11 +126,9 @@ class Level:
         self.animation_player.create_particles(particle_type,pos,self.visible_sprites)
 
     def add_exp(self,amount):
-
         self.player.exp += amount
 
     def toggle_menu(self):
-
         self.game_paused = not self.game_paused 
 
     def create_torches(self):
@@ -146,14 +146,6 @@ class Level:
         Projectile(self.visible_sprites, self.obstacle_sprites, self.visible_sprites, entity_type, rect, player_offset, name, target_pos, id)
 
     def new(self):
-        
-        sword_steel = Weapon('img/sword.png', 20, 20, 'hand', 'sword')
-        sword_wood = Weapon('img/swordWood.png', 10, 10, 'right_hand', 'sword')
-        hp_potion = Consumable('img/potionRed.png', 2, 30)
-        helmet_armor = Armor('img/helmet.png', 10, 20, 'head')
-        chest_armor = Armor('img/chest.png', 10, 40, 'chest')
-        upg_helmet_armor = Armor('img/upg_helmet.png', 10, 40, 'head')
-        upg_chest_armor = Armor('img/upg_chest.png', 10, 80, 'chest')
         self.inventory.addItemInv(helmet_armor)
         self.inventory.addItemInv(hp_potion)
         self.inventory.addItemInv(sword_steel)
@@ -161,11 +153,9 @@ class Level:
         self.inventory.addItemInv(chest_armor)
         self.inventory.addItemInv(upg_helmet_armor)
         self.inventory.addItemInv(upg_chest_armor)
-        self.inventory.addItemInv(upg_chest_armor)
 
 
     def update_inventory(self):
-        print('uepa')
         if self.player.mouse_buttons[2] and not self.inventory.switched_item:
             mouse_pos = pg.mouse.get_pos()
             self.inventory.checkSlot(self.display_surface, mouse_pos)

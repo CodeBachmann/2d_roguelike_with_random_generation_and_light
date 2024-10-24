@@ -15,7 +15,7 @@ class Inventory:
 		self.player = player
 		self.appendSlots()
 		self.setSlotTypes()
-		self.can_loot = False
+		self.can_loot = True
 		self.movingitem = None
 		self.movingitemslot = None
 
@@ -95,7 +95,7 @@ class Inventory:
 
 	def placeItem(self, screen):
 		mousepos = pg.mouse.get_pos()
-		for slot in self.inventory_slots + self.armor_slots + self.weapon_slots:
+		for slot in self.inventory_slots + self.armor_slots + self.weapon_slots + self.loot_slots:
 			if slot.draw(screen).collidepoint(mousepos) and self.movingitem != None:
 				if isinstance(self.movingitemslot, EquipableSlot) and isinstance(slot, InventorySlot) and not isinstance(slot, EquipableSlot) and slot.item == None:
 					self.unequipItem(self.movingitem)

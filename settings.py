@@ -21,7 +21,7 @@ MIN_ROOM_SIZE = 5
 MAX_ROOM_SIZE = 12
 
 NUM_MELEE = 0
-NUM_RANGED = 0
+NUM_RANGED = 1
 NUM_OBJECT = 15
 NUM_TREASURE = 5
 NUM_LIGHT = 5
@@ -84,7 +84,7 @@ monster_data = {
 	'squid': {'health': 100,'exp':100,'damage':20,'attack_type': 'slash', 'attack_sound':'audio/attack/slash.wav', 'speed': 3, 'resistance': 3, 'attack_radius': 80, 'notice_radius': 360},
 	'raccoon': {'health': 300,'exp':250,'damage':40,'attack_type': 'claw',  'attack_sound':'audio/attack/claw.wav','speed': 2, 'resistance': 3, 'attack_radius': 120, 'notice_radius': 400},
 	'spirit': {'health': 100,'exp':110,'damage':8,'attack_type': 'thunder', 'attack_sound':'audio/attack/fireball.wav', 'speed': 4, 'resistance': 3, 'attack_radius': 60, 'notice_radius': 350},
-	'bamboo': {'health': 70,'exp':120,'damage':6,'attack_type': 'leaf_attack', 'attack_sound':'audio/attack/slash.wav', 'speed': 3, 'resistance': 3, 'attack_radius': 50, 'notice_radius': 300}}
+	'bamboo': {'health': 70,'exp':120,'damage':120,'attack_type': 'leaf_attack', 'attack_sound':'audio/attack/slash.wav', 'speed': 3, 'resistance': 3, 'attack_radius': 50, 'notice_radius': 300}}
 
 
 projectile_data = {
@@ -120,8 +120,6 @@ projectile_data = {
     'buckler': {'image_path': 'graphics/weapons/wood_buckler/Wood_Buckler.png', 'missile': False, 'width': 32,
                 'height': 5, 'movable': False, 'speed_modifier': 1, 'range': 0, 'dispersion': 0,
                 'initial_color': (255, 255, 255), 'final_color': (255, 255, 255), 'type': 'bar', 'shield': True, 'chain_length': 30}}
- 
-
 
 # INVENTORY
 
@@ -137,10 +135,7 @@ YELLOW = (255, 255, 0)
 GOLD = (255,215,0)
 
 #game settings/options
-FPS = 60
 BGCOLOR = DARKGREY
-
-
 STATPOSX = 50
 UIHEIGTH = int(350*IMG_SCALE)
 INVTILESIZE = 28

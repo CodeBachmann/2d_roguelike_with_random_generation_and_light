@@ -110,6 +110,9 @@ class Projectile(pygame.sprite.Sprite):
         cone_surface = pygame.Surface((cone_width, cone_length), pygame.SRCALPHA)  # Create a transparent surface
         pygame.draw.polygon(cone_surface, (255, 0, 0), cone_points)  # Draw the cone in red
 
+        # Ensure the cone is positioned correctly
+        cone_surface.get_rect(center=tip)  # Center the cone surface at the tip
+
         return cone_surface
 
     

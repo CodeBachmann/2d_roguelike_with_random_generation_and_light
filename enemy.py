@@ -131,6 +131,7 @@ class Enemy(Entity):
 
 	def check_death(self):
 		if self.health <= 0:
+			self.create_loot_bag()
 			self.kill()
 			self.trigger_death_particles(self.rect.center,self.monster_name)
 			self.add_exp(self.exp)
