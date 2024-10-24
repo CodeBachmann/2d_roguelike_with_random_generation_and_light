@@ -68,11 +68,11 @@ classes_data = {
 
 # weapons 
 weapon_data = {
-	'sword': {'cooldown': 100, 'damage': 15,'graphic':'graphics/weapons/sword/full.png'},
-	'lance': {'cooldown': 400, 'damage': 30,'graphic':'graphics/weapons/lance/full.png'},
-	'axe': {'cooldown': 300, 'damage': 20, 'graphic':'graphics/weapons/axe/full.png'},
-	'rapier':{'cooldown': 50, 'damage': 8, 'graphic':'graphics/weapons/rapier/full.png'},
-	'sai':{'cooldown': 80, 'damage': 10, 'graphic':'graphics/weapons/sai/full.png'}}
+	'sword': {'cooldown': 500, 'damage': 15,'graphic':'graphics/weapons/sword/full.png'},
+	'lance': {'cooldown': 800, 'damage': 30,'graphic':'graphics/weapons/lance/full.png'},
+	'axe': {'cooldown': 400, 'damage': 20, 'graphic':'graphics/weapons/axe/full.png'},
+	'rapier':{'cooldown': 300, 'damage': 8, 'graphic':'graphics/weapons/rapier/full.png'},
+	'sai':{'cooldown': 350, 'damage': 10, 'graphic':'graphics/weapons/sai/full.png'}}
 
 # magic
 magic_data = {
@@ -115,7 +115,7 @@ projectile_data = {
     'slash': {
         'image_path': "None", 'missile': True, 'width': 16, 'height': 16, 'movable': True,
         'speed_modifier': 0.2, 'range': 100, 'dispersion': 0, 'initial_color': (255, 255, 255),
-          'final_color': (255, 255, 255), 'type': 'cone', 'shield': False, 'chain_length': 150},
+          'final_color': (255, 255, 255), 'type': 'cone', 'shield': False, 'chain_length': 60},
 
     'buckler': {'image_path': 'graphics/weapons/wood_buckler/Wood_Buckler.png', 'missile': False, 'width': 32,
                 'height': 5, 'movable': False, 'speed_modifier': 1, 'range': 0, 'dispersion': 0,
@@ -137,13 +137,12 @@ YELLOW = (255, 255, 0)
 GOLD = (255,215,0)
 
 #game settings/options
-TITLE = "Inventory System Test"
 FPS = 60
 BGCOLOR = DARKGREY
 
 
 STATPOSX = 50
-UIHEIGTH = int(300*IMG_SCALE)
-INVTILESIZE = 32
+UIHEIGTH = int(350*IMG_SCALE)
+INVTILESIZE = 28
 GRIDWIDTH = int(WIDTH / TILE_SIZE)
 GRIDHEIGHT = int(HEIGHT / TILE_SIZE)

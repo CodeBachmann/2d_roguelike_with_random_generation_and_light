@@ -4,10 +4,11 @@ from entity import Entity
 from support import import_folder
 from debug import debug
 class Player(Entity):
-    def __init__(self, pos, groups, obstacle_sprites, background, projectile_group, player_class='Fighter', create_projectile=None):
+    def __init__(self, pos, groups, obstacle_sprites, background, projectile_group, id, player_class='Fighter', create_projectile=None):
         super().__init__(groups)
         
         # Define Sprite and Position
+        self.id = id
         self.sprite_type = 'player'
         self.import_player_assets()
         self.image = self.animations['down'][0]
@@ -74,21 +75,7 @@ class Player(Entity):
         keys = pygame.key.get_pressed()
 
         if not self.attacking:
-            if keys[pygame.K_w]:
-                self.direction.y = -1
 
-            elif keys[pygame.K_s]:
-                self.direction.y = 1
-            else:
-                self.direction.y = 0
-
-            if keys[pygame.K_a]:
-                self.direction.x = -1
-            elif keys[pygame.K_d]:
-                self.direction.x = 1
-            else:
-                self.direction.x = 0
-            
             if keys[pygame.K_m] and not self.map_toggled:
                 self.show_map = not self.show_map
                 self.map_toggled = True
@@ -109,8 +96,24 @@ class Player(Entity):
                 self.b_cooldown = True
                 self.b_time = pygame.time.get_ticks()
 
-            if not self.defending:
-                self.attack()
+            if not self.inventory_toggled:
+                if keys[pygame.K_w]:
+                    self.direction.y = -1
+
+                elif keys[pygame.K_s]:
+                    self.direction.y = 1
+                else:
+                    self.direction.y = 0
+
+                if keys[pygame.K_a]:
+                    self.direction.x = -1
+                elif keys[pygame.K_d]:
+                    self.direction.x = 1
+                else:
+                    self.direction.x = 0
+
+                if not self.defending:
+                    self.attack()
                 
         else:
             self.direction.x = 0
@@ -121,14 +124,14 @@ class Player(Entity):
         if self.mouse_buttons[0]:
             self.attacking = True
             self.attack_time = pygame.time.get_ticks()
-            self.create_projectile(self.m1, entity_type = 'player', rect = self.rect, player_offset = self.offset)  # Add this line
+            self.create_projectile(self.m1, entity_type = 'player', rect = self.rect, player_offset = self.offset, id = self.id)  # Add this line
             print("left mouse button pressed")
 
         elif self.mouse_buttons[2]:
             if projectile_data[self.m2]['shield']:
                 self.defending = True
                 self.attack_time = pygame.time.get_ticks()
-                self.create_projectile(self.m2, entity_type = 'player', rect = self.rect, player_offset = self.offset)
+                self.create_projectile(self.m2, entity_type = 'player', rect = self.rect, player_offset = self.offset, id=self.id)
                 self.actual_speed -= self.max_speed/2
                 #self.view_radius -= 10
 
@@ -335,3 +338,6 @@ class Player(Entity):
         if self.weapon != None:
             self.base_damage = 1
             self.weapon = None
+    
+    def shield_block(self, damage):
+        pass

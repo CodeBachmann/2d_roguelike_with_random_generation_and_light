@@ -8,13 +8,14 @@ class Inventory:
 		self.rows = rows
 		self.cols = cols
 		self.inventory_slots = []
+		self.loot_slots = []
 		self.armor_slots = []
 		self.weapon_slots = []
 		self.display_inventory = False
 		self.player = player
 		self.appendSlots()
 		self.setSlotTypes()
-
+		self.can_loot = False
 		self.movingitem = None
 		self.movingitemslot = None
 
@@ -30,22 +31,39 @@ class Inventory:
 		while len(self.armor_slots) != 4:
 			for y in range(UIHEIGTH-100, UIHEIGTH-100+(INVTILESIZE+1) * 4, INVTILESIZE+2):
 				self.armor_slots.append(EquipableSlot(self.inventory_slots[0].x - 100, y))
+		
 
-		while len(self.weapon_slots) != 1:
-			self.weapon_slots.append(EquipableSlot(self.armor_slots[3].x - 50, self.armor_slots[3].y))
+		while len(self.weapon_slots) != 2:
+				self.weapon_slots.append(EquipableSlot(self.armor_slots[1].x - 50, self.armor_slots[0].y))
+				self.weapon_slots.append(EquipableSlot(self.armor_slots[1].x + 50, self.armor_slots[0].y))
 
+		cont = 0
+
+		while len(self.loot_slots) != 8:
+			self.loot_slots.append(InventorySlot(self.inventory_slots[cont].x + 20, self.inventory_slots[0].y - 80))
+			self.loot_slots.append(InventorySlot(self.inventory_slots[cont+1].x + 20, self.inventory_slots[1].y - 80))
+			cont += 2
+
+			
 	def setSlotTypes(self):
 		self.armor_slots[0].slottype = 'head'
 		self.armor_slots[1].slottype = 'chest'
 		self.armor_slots[2].slottype = 'legs'
 		self.armor_slots[3].slottype = 'feet'
-		self.weapon_slots[0].slottype = 'left_hand'
+		self.weapon_slots[0].slottype = 'hand'
+		self.weapon_slots[1].slottype = 'right_hand'
 
 	def draw(self, screen):
-		for slot in self.armor_slots + self.inventory_slots + self.weapon_slots:
-			slot.draw(screen)
-		for slot in self.armor_slots + self.inventory_slots + self.weapon_slots:
-			slot.drawItems(screen)
+		if self.can_loot:
+			for slot in self.armor_slots + self.inventory_slots + self.weapon_slots + self.loot_slots:
+				slot.draw(screen)
+			for slot in self.armor_slots + self.inventory_slots + self.weapon_slots + self.loot_slots:
+				slot.drawItems(screen)
+		else:
+			for slot in self.armor_slots + self.inventory_slots + self.weapon_slots:
+				slot.draw(screen)
+			for slot in self.armor_slots + self.inventory_slots + self.weapon_slots:
+				slot.drawItems(screen)
 
 	def addItemInv(self, item, slot=None):
 		if slot == None:
@@ -93,9 +111,6 @@ class Inventory:
 						break
 				if isinstance(slot, EquipableSlot) and isinstance(self.movingitem, Equipable):
 					if slot.slottype == self.movingitem.slot:
-						self.equipItem(self.movingitem)
-						break
-					if self.movingitem.slot == 'hand' and slot.slottype == 'left_hand' or slot.slottype == 'right_hand':
 						self.equipItem(self.movingitem)
 						break
 					

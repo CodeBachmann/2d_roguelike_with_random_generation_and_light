@@ -2,9 +2,10 @@ import pygame
 from pygame.math import Vector2
 from settings import IMG_SCALE, projectile_data
 class Projectile(pygame.sprite.Sprite):
-    def __init__(self, groups, obstacle_sprites, visible_sprites, entity_type, rect, player_offset, name, target_pos = None, damage = 10):
+    def __init__(self, groups, obstacle_sprites, visible_sprites, entity_type, rect, player_offset, name, target_pos = None, damage = 10, creator_id = None):
         super().__init__(groups)
 
+        self.creator_id = creator_id
         self.sprite_type = 'projectile'
         self.projectile_info = projectile_data[name]
         self.entity_type = entity_type
@@ -128,6 +129,8 @@ class Projectile(pygame.sprite.Sprite):
                 self.kill()
         
             elif sprite.sprite_type == 'sprite' and sprite.hitbox.colliderect(self.rect) and self.shield == True:
-                sprite.health -= self.damage
+                for sprite_defender in self.visible_sprites:
+                    if sprite_defender.creator_id == self.creator_id:   
+                        sprite_defender.shield_block(sprite.damage)             
                 sprite.kill()
 

@@ -5,7 +5,7 @@ from support import *
 
 
 class Enemy(Entity):
-	def __init__(self,monster_name,pos,groups,obstacle_sprites,damage_player,trigger_death_particles,add_exp, create_projectile):
+	def __init__(self,monster_name,pos,groups,obstacle_sprites,damage_player,trigger_death_particles,add_exp, create_projectile, id):
 
 		# general setup
 		super().__init__(groups)
@@ -15,6 +15,7 @@ class Enemy(Entity):
 		self.import_graphics(monster_name)
 		self.status = 'idle'
 		self.image = self.animations[self.status][self.frame_index]
+		self.id = id
 
 		# movement
 		self.rect = self.image.get_rect(topleft = pos)

@@ -16,6 +16,7 @@ class Level:
         # get display surface
         self.display_surface = pygame.display.get_surface()
         self.elapsed_time = 0
+
         # sprite groups setup
         self.visible_sprites = YSortCameraGroup()
         self.obstacle_sprites = pygame.sprite.Group()
@@ -24,7 +25,8 @@ class Level:
 
         # light setup
         self.light = Light()
-        
+        self.id_index = 0
+        print(IMG_SCALE)
         # create map
         self.show_map = False
         self.create_map()
@@ -40,7 +42,6 @@ class Level:
 
         current_time = pygame.time.get_ticks()
         
-            
         if current_time - self.last_update_time > self.update_interval:
             self.ui.update_explored_area(tile_map)
             self.last_update_time = current_time        
@@ -49,11 +50,13 @@ class Level:
 
         if self.player.show_map:
             self.ui.display(tile_map)
-        else:
-            self.visible_sprites.custom_draw(self.player, self.light)
-
-        if self.player.inventory_toggled:
+        
+        elif self.player.inventory_toggled:
             self.update_inventory()
+        
+        else:
+            #self.visible_sprites.custom_draw(self.player, self.light)
+            self.ui.draw_stats()
 
         self.visible_sprites.update()
 
@@ -84,8 +87,10 @@ class Level:
                         obstacle_sprites=self.obstacle_sprites,
                         background=self.background,
                         projectile_group=self.visible_sprites,
-                        create_projectile=self.create_projectile
+                        create_projectile=self.create_projectile,
+                        id=self.id_index
                         )
+                    self.id_index += 1
                 if col == '390':
                     Enemy(
                         'bamboo',
@@ -95,7 +100,10 @@ class Level:
                         self.damage_player,
                         self.trigger_death_particles,
                         self.add_exp,
-                        self.create_projectile)
+                        self.create_projectile,
+                        self.id_index)
+                    
+                    self.id_index += 1
                 if col == 't':
                     Tile((x, y), [self.visible_sprites], sprite_type = 'torch', spritesheet = 'graphics/objects/torches', length = 8)
                     cont+=1
@@ -134,13 +142,13 @@ class Level:
                     cont += 1
                     print(f'LIGHT CONT: {cont}, X: {x}, Y: {y}')    
 
-    def create_projectile(self, name, entity_type, rect, player_offset, target_pos = None):
-        Projectile(self.visible_sprites, self.obstacle_sprites, self.visible_sprites, entity_type, rect, player_offset, name, target_pos)
+    def create_projectile(self, name, entity_type, rect, player_offset, target_pos = None, id = None):
+        Projectile(self.visible_sprites, self.obstacle_sprites, self.visible_sprites, entity_type, rect, player_offset, name, target_pos, id)
 
     def new(self):
         
         sword_steel = Weapon('img/sword.png', 20, 20, 'hand', 'sword')
-        sword_wood = Weapon('img/swordWood.png', 10, 10, 'hand', 'sword')
+        sword_wood = Weapon('img/swordWood.png', 10, 10, 'right_hand', 'sword')
         hp_potion = Consumable('img/potionRed.png', 2, 30)
         helmet_armor = Armor('img/helmet.png', 10, 20, 'head')
         chest_armor = Armor('img/chest.png', 10, 40, 'chest')
@@ -153,10 +161,12 @@ class Level:
         self.inventory.addItemInv(chest_armor)
         self.inventory.addItemInv(upg_helmet_armor)
         self.inventory.addItemInv(upg_chest_armor)
+        self.inventory.addItemInv(upg_chest_armor)
+
 
     def update_inventory(self):
         print('uepa')
-        if self.player.mouse_buttons[2]:
+        if self.player.mouse_buttons[2] and not self.inventory.switched_item:
             mouse_pos = pg.mouse.get_pos()
             self.inventory.checkSlot(self.display_surface, mouse_pos)
             self.inventory.switched_item = True
@@ -164,7 +174,7 @@ class Level:
         elif not self.player.mouse_buttons[2] and self.inventory.switched_item:
             self.inventory.switched_item = False
 
-        elif self.player.mouse_buttons[0]:
+        elif self.player.mouse_buttons[0] and not self.inventory.holding_item:
             self.inventory.moveItem(self.display_surface)
             self.inventory.holding_item = True
 
@@ -219,9 +229,3 @@ class YSortCameraGroup(pygame.sprite.Group):
                    
 
         light.cast_light(player)
-
-
-            
-
-
- 
