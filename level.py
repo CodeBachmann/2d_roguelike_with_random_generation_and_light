@@ -20,6 +20,7 @@ class Level:
 
         # sprite groups setup
         self.visible_sprites = YSortCameraGroup()
+        self.lootable_sprites = pygame.sprite.Group()
         self.obstacle_sprites = pygame.sprite.Group()
         self.attackable_sprites = pygame.sprite.Group()
         self.animation_player = AnimationPlayer()
@@ -48,11 +49,17 @@ class Level:
             self.last_update_time = current_time        
         
         self.player.mouse_buttons = mouse_buttons
+        self.check_for_loot()
 
         if self.player.show_map:
             self.ui.display(tile_map)
         
         elif self.player.inventory_toggled:
+            if not self.inventory.can_loot and self.player.can_loot:
+                self.add_loot()
+
+            self.inventory.can_loot = self.player.can_loot
+            print(self.inventory.can_loot)
             self.update_inventory()
         
         else:
@@ -86,6 +93,7 @@ class Level:
                         pos=(x, y),
                         groups=[self.visible_sprites],
                         obstacle_sprites=self.obstacle_sprites,
+                        lootable_sprites=self.obstacle_sprites,
                         background=self.background,
                         projectile_group=self.visible_sprites,
                         create_projectile=self.create_projectile,
@@ -106,10 +114,11 @@ class Level:
                         self.id_index)
                     
                     self.id_index += 1
+                
+                # Place the Torchs
                 if col == 't':
                     Tile((x, y), self.visible_sprites, sprite_type = 'torch', spritesheet = 'graphics/objects/torches', length = 8)
-                    cont+=1
-                    print(f'CONT: {cont}, X: {x}, Y: {y}')
+
 
 
     def damage_player(self,amount,attack_type):
@@ -153,6 +162,10 @@ class Level:
         self.inventory.addItemInv(upg_helmet_armor)
         self.inventory.addItemInv(upg_chest_armor)
 
+    def add_loot(self):
+        for item in self.player.loot:
+            print(item)
+            self.inventory.addItemInv(item, loot=True)
 
     def update_inventory(self):
         if self.player.mouse_buttons[2] and not self.inventory.switched_item:
@@ -174,7 +187,14 @@ class Level:
         self.inventory.draw(self.display_surface)
     
     def create_lootbag(self, pos, loot):
-        loot = LootBag([self.visible_sprites], pos, loot)
+        loot = LootBag([self.visible_sprites, self.lootable_sprites], pos, loot)
+    
+    def check_for_loot(self):
+        for loot in self.lootable_sprites:
+                if loot.rect.colliderect(self.player.rect):
+                    self.player.can_loot == True
+                    print(self.player.can_loot)
+                    self.player.loot = loot.loot
 
 
 class YSortCameraGroup(pygame.sprite.Group):

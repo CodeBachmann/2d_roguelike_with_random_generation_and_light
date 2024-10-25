@@ -4,7 +4,7 @@ from entity import Entity
 from support import import_folder
 from debug import debug
 class Player(Entity):
-    def __init__(self, pos, groups, obstacle_sprites, background, projectile_group, id, player_class='Fighter', create_projectile=None):
+    def __init__(self, pos, groups, obstacle_sprites, lootable_sprites, background, projectile_group, id, player_class='Fighter', create_projectile=None):
         super().__init__(groups)
         
         # Define Sprite and Position
@@ -31,13 +31,15 @@ class Player(Entity):
         # Define Weapon
         self.armor = {'head': None, 'chest': None, 'legs': None, 'feet': None, 'hands': None}
         self.accessory = {'left': None, 'right': None, 'neck': None}
-        self.weapon = None
+        self.weapon_1 = None
+        self.weapon_2 = None
         self.weapon_data = weapon_data
         self.m1 = 'slash'
         self.m2 = 'buckler'
         self.mouse_direction = pygame.math.Vector2()
         self.angle =  math.degrees(math.atan2(self.mouse_direction.y, self.mouse_direction.x))
         self.vector_angle = pygame.Vector2(1, 0)
+        self.lootable_sprites = lootable_sprites
         self.obstacle_sprites = obstacle_sprites
         self.projectile_group = projectile_group
         self.mouse_buttons = MOUSE_BUTTONS
@@ -57,6 +59,7 @@ class Player(Entity):
         self.c_cooldown = False
         self.v_cooldown = False
         self.b_cooldown = False
+        self.can_loot = False
 
         # lighting
         self.view_radius = int(500 * IMG_SCALE)
@@ -171,33 +174,35 @@ class Player(Entity):
         self.angle = (self.angle + 360) % 360
 
     def cooldowns(self):
+        time = pygame.time.get_ticks()
+
         if self.attacking:
-            if pygame.time.get_ticks() - self.attack_time > 500:
+            if time - self.attack_time > 500:
                 self.attacking = False
 
         if self.map_toggled:
-            if pygame.time.get_ticks() - self.map_toggle_time > 200:
+            if time - self.map_toggle_time > 200:
                 self.map_toggled = False
 
         if self.c_cooldown:
-            if pygame.time.get_ticks() - self.c_time > 200:
+            if time - self.c_time > 200:
                 self.c_cooldown = False
 
         if self.v_cooldown:
-            if pygame.time.get_ticks() - self.v_time > 200:
+            if time - self.v_time > 200:
                 self.v_cooldown = False
 
         if not self.vulnerable:
-            if pygame.time.get_ticks() - self.hurt_time >= self.invulnerability_duration:
+            if time - self.hurt_time >= self.invulnerability_duration:
                 self.vulnerable = True
         
         if self.defending and not self.mouse_buttons[2]:
-            if pygame.time.get_ticks() - self.attack_time > 200:
+            if time - self.attack_time > 200:
                 self.defending = False
                 self.actual_speed += self.max_speed/2
         
         if self.b_cooldown:
-            if pygame.time.get_ticks() - self.b_time > 200:
+            if time - self.b_time > 200:
                 self.b_cooldown = False
 
 
@@ -215,7 +220,7 @@ class Player(Entity):
         # debug(f'MOUSE DIRECTION:{self.mouse_direction}', y = 70*IMG_SCALE)
         # debug(f'OFFSET:{self.offset}', y = 190*IMG_SCALE)
         # debug(f'MOUSE - OFFSET:{self.mouse_direction + self.offset}', y = 130*IMG_SCALE)
-        # debug(f'PLAYER POS:{self.rect.center}', y = 160*IMG_SCALE)
+        debug(f'PLAYER POS:{self.rect.center}', y = 160*IMG_SCALE)
         # debug(f'MOUSE SCREEN POS:{pygame.mouse.get_pos()}', y = 220*IMG_SCALE)
         # debug(f'PLAYER SCREEN POS:{self.rect.center - self.offset}', y = 250*IMG_SCALE)
         # debug(f'ANGLE:{self.rect.size}', y = 280*IMG_SCALE)
@@ -234,6 +239,7 @@ class Player(Entity):
                 img = pygame.transform.scale(i, (int(i.get_width() * IMG_SCALE), int(i.get_height() * IMG_SCALE)))
                 self.animations[animation][x] = img
     
+                
     def get_offset(self):
         self.offset.x = self.rect.centerx - (WIDTH / 2)
         self.offset.y = self.rect.centery - (HEIGHT / 2)
@@ -290,7 +296,6 @@ class Player(Entity):
         self.max_intelligence = self.intelligence
         self.max_vigor = self.vigor
         self.max_faith = self.faith
-        self.base_damage = 1
 
     def actual_stats(self):
         self.actual_health = self.max_health
@@ -305,7 +310,6 @@ class Player(Entity):
         self.actual_intelligence = self.max_intelligence
         self.actual_vigor = self.max_vigor
         self.actual_faith = self.max_faith
-        self.damage = self.base_damage
         
         
 
@@ -329,19 +333,29 @@ class Player(Entity):
             self.armor[slot] = None
 
     def equip_weapon(self, weapon):
-        if self.weapon != None:
-            self.unequip_weapon()
-        self.weapon = weapon
-        self.base_damage = weapon.base_damage
+        if self.weapon_1 != None:
+            self.unequip_weapon(1)
+        elif self.weapon_2 != None:
+            self.unequip_weapon(2)
+                
         if weapon.slot == "hand":
+            self.weapon_1 = weapon
             self.m1 = weapon.projectile
-        elif weapon.slot == "right_hand":
-            self.m2 = weapon.projectile
+            self.m1_base_damage = weapon.base_damage
 
-    def unequip_weapon(self):
-        if self.weapon != None:
-            self.base_damage = 1
-            self.weapon = None
+        elif weapon.slot == "right_hand":
+            self.weapon_2 = weapon
+            self.m2 = weapon.projectile
+            self.m2_base_damage = weapon.base_damage
+
+    def unequip_weapon(self, hand):
+        if self.weapon_1 != None and hand == 1:
+            self.m1_base_damage = 0
+            self.weapon_1 = None
+        
+        elif self.weapon_2 != None and hand == 2:
+            self.m2_base_damage = 0
+            self.weapon_2 = None
     
     def shield_block(self, damage):
         pass

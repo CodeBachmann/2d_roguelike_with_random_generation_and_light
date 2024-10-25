@@ -7,13 +7,13 @@ class Projectile(pygame.sprite.Sprite):
 
         self.creator_id = creator_id
         self.sprite_type = 'projectile'
-        self.projectile_info = projectile_data[name]
+        self.projectile_info = projectile_data['sword']
         self.entity_type = entity_type
         self.entity_rect = rect
         self.entity_rect_width, self.entity_rect_height = rect.width, rect.height
         self.obstacle_sprites = obstacle_sprites
         self.visible_sprites = visible_sprites
-        self.damage = damage
+        self.damage = 10
 
         # POSITION AND ANGLE CREATION
         self.pivot = Vector2(self.entity_rect.centerx + self.entity_rect_width/2, self.entity_rect.centery + self.entity_rect_height/2)

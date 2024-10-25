@@ -2,6 +2,8 @@ import pygame
 from settings import *
 from entity import Entity
 from support import *
+from itens import t1_itens
+from random import choices
 
 
 class Enemy(Entity):
@@ -44,10 +46,12 @@ class Enemy(Entity):
 		self.trigger_death_particles = trigger_death_particles
 		self.add_exp = add_exp
 		self.create_projectile = create_projectile
+
 		# invincibility timer
 		self.vulnerable = True
 		self.hit_time = None
 		self.invincibility_duration = 300
+		self.loot = choices(t1_itens, k=2)
 		self.create_lootbag = create_lootbag
 
 		# sounds
@@ -133,7 +137,7 @@ class Enemy(Entity):
 	def check_death(self):
 		if self.health <= 0:
 			loot = []
-			self.create_lootbag(self.rect.center, loot)
+			self.create_lootbag(self.rect.center, self.loot)
 			self.kill()
 			self.trigger_death_particles(self.rect.center,self.monster_name)
 			self.add_exp(self.exp)

@@ -93,23 +93,15 @@ class Light():
 
         if self.current_view_radius != view_radius:
             self.current_view_radius = view_radius
-            circle_light = self.get_circle_light(size)
-            cone_mask = self.get_cone_mask(size)
             
-            rotated_mask = pygame.transform.rotate(cone_mask, angle)
-            self.current_masked_light = circle_light.copy()
-            
-            mask_rect = rotated_mask.get_rect(center=(size // 2, size // 2))
-            self.current_masked_light.blit(rotated_mask, mask_rect.topleft, special_flags=pygame.BLEND_RGBA_MULT)
-        else:
-            circle_light = self.get_circle_light(size)
-            cone_mask = self.get_cone_mask(size)
-            
-            rotated_mask = pygame.transform.rotate(cone_mask, angle)
-            self.current_masked_light = circle_light.copy()
-            
-            mask_rect = rotated_mask.get_rect(center=(size // 2, size // 2))
-            self.current_masked_light.blit(rotated_mask, mask_rect.topleft, special_flags=pygame.BLEND_RGBA_MULT)
+        circle_light = self.get_circle_light(size)
+        cone_mask = self.get_cone_mask(size)
+        
+        rotated_mask = pygame.transform.rotate(cone_mask, angle)
+        self.current_masked_light = circle_light.copy()
+        
+        mask_rect = rotated_mask.get_rect(center=(size // 2, size // 2))
+        self.current_masked_light.blit(rotated_mask, mask_rect.topleft, special_flags=pygame.BLEND_RGBA_MULT)
 
         if scale_factor < 1:
             scaled_size = (int(size * scale_factor), int(size * scale_factor))

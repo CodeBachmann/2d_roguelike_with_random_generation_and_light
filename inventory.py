@@ -15,7 +15,7 @@ class Inventory:
 		self.player = player
 		self.appendSlots()
 		self.setSlotTypes()
-		self.can_loot = True
+		self.can_loot = False
 		self.movingitem = None
 		self.movingitemslot = None
 
@@ -37,12 +37,10 @@ class Inventory:
 				self.weapon_slots.append(EquipableSlot(self.armor_slots[1].x - 50, self.armor_slots[0].y))
 				self.weapon_slots.append(EquipableSlot(self.armor_slots[1].x + 50, self.armor_slots[0].y))
 
-		cont = 0
 
 		while len(self.loot_slots) != 8:
-			self.loot_slots.append(InventorySlot(self.inventory_slots[cont].x + 20, self.inventory_slots[0].y - 80))
-			self.loot_slots.append(InventorySlot(self.inventory_slots[cont+1].x + 20, self.inventory_slots[1].y - 80))
-			cont += 2
+			self.loot_slots.append(InventorySlot(self.inventory_slots[len(self.loot_slots)].x + 20, self.inventory_slots[0].y - 80))
+			self.loot_slots.append(InventorySlot(self.inventory_slots[len(self.loot_slots)].x + 20, self.inventory_slots[1].y - 80))
 
 			
 	def setSlotTypes(self):
@@ -65,18 +63,32 @@ class Inventory:
 			for slot in self.armor_slots + self.inventory_slots + self.weapon_slots:
 				slot.drawItems(screen)
 
-	def addItemInv(self, item, slot=None):
-		if slot == None:
-			for slots in self.inventory_slots:
-				if slots.item == None:
-					slots.item = item
-					break
-		if slot != None:
-			if slot.item != None:
-				self.movingitemslot.item = slot.item
-				slot.item = item
-			else:
-				slot.item = item
+	def addItemInv(self, item, slot=None, loot=False):
+		if loot:
+			if slot == None:
+				for slots in self.loot_slots:
+					if slots.item == None:
+						slots.item = item
+						break
+			if slot != None:
+				if slot.item != None:
+					self.movingitemslot.item = slot.item
+					slot.item = item
+				else:
+					slot.item = item
+		else:
+			if slot == None:
+				for slots in self.inventory_slots:
+					if slots.item == None:
+						slots.item = item
+						break
+
+			if slot != None:
+				if slot.item != None:
+					self.movingitemslot.item = slot.item
+					slot.item = item
+				else:
+					slot.item = item
 
 	def removeItemInv(self, item):
 		for slot in self.inventory_slots:
@@ -120,7 +132,7 @@ class Inventory:
 			self.movingitemslot = None
 
 	def checkSlot(self, screen, mousepos):
-		for slot in self.inventory_slots + self.armor_slots + self.weapon_slots:
+		for slot in self.inventory_slots + self.armor_slots + self.weapon_slots + self.loot_slots:
 			if isinstance(slot, InventorySlot):
 				if slot.draw(screen).collidepoint(mousepos):
 					if isinstance(slot.item, Equipable):
