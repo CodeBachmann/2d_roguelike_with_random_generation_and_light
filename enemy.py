@@ -5,7 +5,7 @@ from support import *
 
 
 class Enemy(Entity):
-	def __init__(self,monster_name,pos,groups,obstacle_sprites,damage_player,trigger_death_particles,add_exp, create_projectile, id):
+	def __init__(self,monster_name,pos,groups,obstacle_sprites,damage_player,trigger_death_particles,add_exp, create_projectile, create_lootbag, id):
 
 		# general setup
 		super().__init__(groups)
@@ -48,6 +48,7 @@ class Enemy(Entity):
 		self.vulnerable = True
 		self.hit_time = None
 		self.invincibility_duration = 300
+		self.create_lootbag = create_lootbag
 
 		# sounds
 		self.death_sound = pygame.mixer.Sound('audio/death.wav')
@@ -131,7 +132,8 @@ class Enemy(Entity):
 
 	def check_death(self):
 		if self.health <= 0:
-			self.create_loot_bag()
+			loot = []
+			self.create_lootbag(self.rect.center, loot)
 			self.kill()
 			self.trigger_death_particles(self.rect.center,self.monster_name)
 			self.add_exp(self.exp)

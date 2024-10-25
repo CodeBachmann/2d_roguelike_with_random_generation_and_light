@@ -14,14 +14,14 @@ HITBOX_OFFSET = {
 	'grass': -10,
 	'invisible': 0}
 
-MAP_SIZE_X = 65
+MAP_SIZE_X = 20
 MAP_SIZE_Y = MAP_SIZE_X
 ROOM_COUNT = MAP_SIZE_X // 5
 MIN_ROOM_SIZE = 5
 MAX_ROOM_SIZE = 12
 
 NUM_MELEE = 0
-NUM_RANGED = 1
+NUM_RANGED = 5
 NUM_OBJECT = 15
 NUM_TREASURE = 5
 NUM_LIGHT = 5
@@ -84,7 +84,7 @@ monster_data = {
 	'squid': {'health': 100,'exp':100,'damage':20,'attack_type': 'slash', 'attack_sound':'audio/attack/slash.wav', 'speed': 3, 'resistance': 3, 'attack_radius': 80, 'notice_radius': 360},
 	'raccoon': {'health': 300,'exp':250,'damage':40,'attack_type': 'claw',  'attack_sound':'audio/attack/claw.wav','speed': 2, 'resistance': 3, 'attack_radius': 120, 'notice_radius': 400},
 	'spirit': {'health': 100,'exp':110,'damage':8,'attack_type': 'thunder', 'attack_sound':'audio/attack/fireball.wav', 'speed': 4, 'resistance': 3, 'attack_radius': 60, 'notice_radius': 350},
-	'bamboo': {'health': 70,'exp':120,'damage':120,'attack_type': 'leaf_attack', 'attack_sound':'audio/attack/slash.wav', 'speed': 3, 'resistance': 3, 'attack_radius': 50, 'notice_radius': 300}}
+	'bamboo': {'health': 10,'exp':120,'damage':120,'attack_type': 'leaf_attack', 'attack_sound':'audio/attack/slash.wav', 'speed': 3, 'resistance': 3, 'attack_radius': 50, 'notice_radius': 300}}
 
 
 projectile_data = {

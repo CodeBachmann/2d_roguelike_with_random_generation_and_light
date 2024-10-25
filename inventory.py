@@ -226,11 +226,12 @@ class Armor(Equipable):
 		inv.getEquipSlot(self).item = None
 
 class Weapon(Equipable):
-	def __init__(self, img, value, atk, slot, wpn_type):
+	def __init__(self, img, value, atk, slot, wpn_type, projectile):
 		Equipable.__init__(self, img, value)
 		self.base_damage = atk
 		self.slot = slot
 		self.wpn_type = wpn_type
+		self.projectile = projectile
 
 	def equip(self, inv, target):
 		if inv.getEquipSlot(self).item != None:

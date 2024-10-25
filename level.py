@@ -102,21 +102,20 @@ class Level:
                         self.trigger_death_particles,
                         self.add_exp,
                         self.create_projectile,
+                        self.create_lootbag,
                         self.id_index)
                     
                     self.id_index += 1
                 if col == 't':
-                    Tile((x, y), [self.visible_sprites], sprite_type = 'torch', spritesheet = 'graphics/objects/torches', length = 8)
+                    Tile((x, y), self.visible_sprites, sprite_type = 'torch', spritesheet = 'graphics/objects/torches', length = 8)
                     cont+=1
                     print(f'CONT: {cont}, X: {x}, Y: {y}')
 
-    def create_loot_bag(self):
-        pass
 
     def damage_player(self,amount,attack_type):
         if self.player.vulnerable:
-            self.player.health -= amount
-            print(self.player.health)
+            self.player.actual_health -= amount
+            print(self.player.actual_health)
             self.player.vulnerable = False
             self.player.hurt_time = pygame.time.get_ticks()
             self.animation_player.create_particles(attack_type,self.player.rect.center,[self.visible_sprites])
@@ -173,6 +172,9 @@ class Level:
             self.inventory.holding_item = False
         
         self.inventory.draw(self.display_surface)
+    
+    def create_lootbag(self, pos, loot):
+        loot = LootBag([self.visible_sprites], pos, loot)
 
 
 class YSortCameraGroup(pygame.sprite.Group):
@@ -209,7 +211,7 @@ class YSortCameraGroup(pygame.sprite.Group):
                 if sprite.sprite_type == 'enemy':
                     sprite.player_rect_center = player.rect.center
                 if sprite.sprite_type == 'projectile':
-                    offset_pos = sprite.rect.center - self.offset - (sprite.rect.width / 2, sprite.rect.height / 2)
+                    offset_pos = sprite.rect.center - self.offset
                     if sprite.shield:
                         sprite.pivot = pygame.math.Vector2(player.rect.centerx + player.rect_width/2, player.rect.centery + player.rect_height/2)
                         if not MOUSE_BUTTONS[2]:
@@ -218,4 +220,4 @@ class YSortCameraGroup(pygame.sprite.Group):
                 self.display_surface.blit(sprite.image, offset_pos) 
                    
 
-        light.cast_light(player)
+        #light.cast_light(player)

@@ -2,7 +2,7 @@ import pygame
 from pygame.math import Vector2
 from settings import IMG_SCALE, projectile_data
 class Projectile(pygame.sprite.Sprite):
-    def __init__(self, groups, obstacle_sprites, visible_sprites, entity_type, rect, player_offset, name, target_pos = None, damage = 10, creator_id = None):
+    def __init__(self, groups, obstacle_sprites, visible_sprites, entity_type, rect, player_offset, name, target_pos = None, damage = 500, creator_id = None):
         super().__init__(groups)
 
         self.creator_id = creator_id
@@ -67,12 +67,12 @@ class Projectile(pygame.sprite.Sprite):
         
         self.image, self.rect = self.rotate_on_pivot()
         self.pos = self.pivot + Vector2(self.chain_length, 0).rotate(-self.angle )  # Ensure distance is always chain_length
-        self.rect.center = self.pos  # Update rect position
+        self.rect.center = self.pos - (self.rect.width / 2, self.rect.height / 2)  # Update rect position
 
     def update(self):
         if self.movable:
             self.pos += self.velocity
-            self.rect.center = self.pos
+            self.rect.center = self.pos 
             if self.pos.distance_to(self.initial_pos) > self.range:
                 self.kill()
                 
@@ -83,13 +83,12 @@ class Projectile(pygame.sprite.Sprite):
 
 
     def rotate_on_pivot(self):
-        print(self.angle)
         surf = pygame.transform.rotate(self.image_orig, self.angle - 90)
         
         offset = self.pivot + (self.pos - self.pivot).rotate(-self.angle)
-        rect = surf.get_rect(center = offset)
+        rect = surf.get_rect(center = offset )
 
-        rect.center = offset
+        rect.center = offset 
         
         return surf, rect
     
@@ -117,7 +116,7 @@ class Projectile(pygame.sprite.Sprite):
 
     
     def collision(self): 
-        if not self.shield and not self.movable:
+        if not self.shield:
             for sprite in self.obstacle_sprites:
                 if sprite.hitbox.colliderect(self.rect):
                     self.kill()
@@ -125,6 +124,7 @@ class Projectile(pygame.sprite.Sprite):
         for sprite in self.visible_sprites:
             if sprite.sprite_type == 'enemy' and sprite.hitbox.colliderect(self.rect) and self.shield == False:
                 sprite.health -= self.damage
+                print(sprite.health)
                 self.kill()
             
             elif sprite.sprite_type == 'player' and sprite.hitbox.colliderect(self.rect) and self.shield == False:

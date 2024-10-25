@@ -333,6 +333,10 @@ class Player(Entity):
             self.unequip_weapon()
         self.weapon = weapon
         self.base_damage = weapon.base_damage
+        if weapon.slot == "hand":
+            self.m1 = weapon.projectile
+        elif weapon.slot == "right_hand":
+            self.m2 = weapon.projectile
 
     def unequip_weapon(self):
         if self.weapon != None:
