@@ -3,9 +3,10 @@ import pygame
 from settings import IMG_SCALE
 
 class LootBag(pygame.sprite.Sprite):
-    def __init__(self, groups, pos, loot):
+    def __init__(self, groups, pos, loot, id):
         super().__init__(groups)
 
+        self.id = id
         self.sprite_type = 'loot_bag'
         self.pos = pos
         self.image = pygame.image.load("loot_bag.png").convert_alpha()
@@ -17,7 +18,6 @@ class LootBag(pygame.sprite.Sprite):
         self.loot = loot
 
     def update(self):
-        print(self.pos)
         if self.looted == True:
             self.kill()
 

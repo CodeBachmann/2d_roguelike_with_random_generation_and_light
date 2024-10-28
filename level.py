@@ -10,6 +10,7 @@ from projectile import Projectile
 from pygame.math import Vector2
 from inventory import *
 from itens import *
+from debug import debug
 
 
 class Level:
@@ -28,7 +29,7 @@ class Level:
         # light setup
         self.light = Light()
         self.id_index = 0
-        print(IMG_SCALE)
+
         # create map
         self.show_map = False
         self.create_map()
@@ -43,26 +44,27 @@ class Level:
     def run(self, mouse_buttons):
 
         current_time = pygame.time.get_ticks()
+        debug(f'Player can Loot: {self.player.can_loot}', 30, 10)
         
         if current_time - self.last_update_time > self.update_interval:
             self.ui.update_explored_area(tile_map)
             self.last_update_time = current_time        
         
         self.player.mouse_buttons = mouse_buttons
-        self.check_for_loot()
 
         if self.player.show_map:
             self.ui.display(tile_map)
         
         elif self.player.inventory_toggled:
+
             if not self.inventory.can_loot and self.player.can_loot:
                 self.add_loot()
 
             self.inventory.can_loot = self.player.can_loot
-            print(self.inventory.can_loot)
             self.update_inventory()
         
         else:
+            self.check_for_loot()
             self.visible_sprites.custom_draw(self.player, self.light)
             self.ui.draw_stats()
 
@@ -124,14 +126,13 @@ class Level:
     def damage_player(self,amount,attack_type):
         if self.player.vulnerable:
             self.player.actual_health -= amount
-            print(self.player.actual_health)
             self.player.vulnerable = False
             self.player.hurt_time = pygame.time.get_ticks()
-            self.animation_player.create_particles(attack_type,self.player.rect.center,[self.visible_sprites])
+            self.animation_player.create_particles(attack_type,self.player.rect.center, [self.visible_sprites])
 
-    def trigger_death_particles(self,pos,particle_type):
+    def trigger_death_particles(self, pos, particle_type):
 
-        self.animation_player.create_particles(particle_type,pos,self.visible_sprites)
+        self.animation_player.create_particles(particle_type, pos, self.visible_sprites)
 
     def add_exp(self,amount):
         self.player.exp += amount
@@ -148,7 +149,6 @@ class Level:
                     y = row_index * TILE_SIZE
                     self.light.add_torch(x, y)
                     cont += 1
-                    print(f'LIGHT CONT: {cont}, X: {x}, Y: {y}')    
 
     def create_projectile(self, name, entity_type, rect, player_offset, target_pos = None, id = None):
         Projectile(self.visible_sprites, self.obstacle_sprites, self.visible_sprites, entity_type, rect, player_offset, name, target_pos, id)
@@ -164,7 +164,6 @@ class Level:
 
     def add_loot(self):
         for item in self.player.loot:
-            print(item)
             self.inventory.addItemInv(item, loot=True)
 
     def update_inventory(self):
@@ -186,15 +185,25 @@ class Level:
         
         self.inventory.draw(self.display_surface)
     
-    def create_lootbag(self, pos, loot):
-        loot = LootBag([self.visible_sprites, self.lootable_sprites], pos, loot)
+    def create_lootbag(self, pos, loot, id):
+        loot = LootBag([self.visible_sprites, self.lootable_sprites], pos, loot, id)
     
     def check_for_loot(self):
         for loot in self.lootable_sprites:
-                if loot.rect.colliderect(self.player.rect):
-                    self.player.can_loot == True
-                    print(self.player.can_loot)
-                    self.player.loot = loot.loot
+            if (
+                loot.rect.colliderect(self.player.rect)
+                and self.player.touching_loot is None
+            ):
+                self.player.can_loot = True
+                self.player.touching_loot = loot.id
+                print(f"player can loot: {self.player.can_loot}")
+                self.player.loot = loot.loot
+
+            elif loot.id == self.player.touching_loot and not loot.rect.colliderect(self.player.rect) :
+                self.player.touching_loot = None
+                self.player.can_loot = False
+                self.player.loot = []
+                self.inventory.loot
 
 
 class YSortCameraGroup(pygame.sprite.Group):

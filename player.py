@@ -60,6 +60,7 @@ class Player(Entity):
         self.v_cooldown = False
         self.b_cooldown = False
         self.can_loot = False
+        self.touching_loot = None
 
         # lighting
         self.view_radius = int(500 * IMG_SCALE)

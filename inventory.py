@@ -98,12 +98,13 @@ class Inventory:
 
 	def moveItem(self, screen):
 		mousepos = pg.mouse.get_pos()
-		for slot in self.inventory_slots + self.armor_slots + self.weapon_slots:
+		for slot in self.inventory_slots + self.armor_slots + self.weapon_slots + self.loot_slots:
 			if slot.draw(screen).collidepoint(mousepos) and slot.item != None:
 				slot.item.is_moving = True
 				self.movingitem = slot.item
 				self.movingitemslot = slot
 				break
+
 
 	def placeItem(self, screen):
 		mousepos = pg.mouse.get_pos()
