@@ -163,7 +163,9 @@ class Level:
         self.inventory.addItemInv(upg_chest_armor)
 
     def add_loot(self):
+        print(len(self.player.loot))
         for item in self.player.loot:
+            print(item)
             self.inventory.addItemInv(item, loot=True)
 
     def update_inventory(self):
@@ -199,11 +201,16 @@ class Level:
                 print(f"player can loot: {self.player.can_loot}")
                 self.player.loot = loot.loot
 
-            elif loot.id == self.player.touching_loot and not loot.rect.colliderect(self.player.rect) :
+            elif loot.id == self.player.touching_loot and self.inventory.can_loot:
                 self.player.touching_loot = None
                 self.player.can_loot = False
                 self.player.loot = []
+
+                for slot in self.Inventory.loot_slots:
+                    slot.item = None
+
                 loot.kill()
+                self.update_inventory()
 
 
 class YSortCameraGroup(pygame.sprite.Group):
