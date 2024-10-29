@@ -51,7 +51,7 @@ class Enemy(Entity):
 		self.vulnerable = True
 		self.hit_time = None
 		self.invincibility_duration = 300
-		self.loot = choices(t1_itens, k=2)
+		self.loot = choices(t1_itens, k=3)
 		self.create_lootbag = create_lootbag
 
 		# sounds

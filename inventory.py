@@ -91,7 +91,7 @@ class Inventory:
 					slot.item = item
 
 	def removeItemInv(self, item):
-		for slot in self.inventory_slots:
+		for slot in self.inventory_slots + self.loot_slots:
 			if slot.item == item:
 				slot.item = None
 				break

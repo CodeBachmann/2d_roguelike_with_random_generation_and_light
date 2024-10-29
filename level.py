@@ -203,7 +203,7 @@ class Level:
                 self.player.touching_loot = None
                 self.player.can_loot = False
                 self.player.loot = []
-                self.inventory.loot
+                loot.kill()
 
 
 class YSortCameraGroup(pygame.sprite.Group):

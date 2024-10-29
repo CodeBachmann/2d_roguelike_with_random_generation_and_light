@@ -28,6 +28,9 @@ helmet_armor = Armor('img/helmet.png', 10, 20, 'head')
 chest_armor = Armor('img/chest.png', 10, 40, 'chest')
 upg_helmet_armor = Armor('img/upg_helmet.png', 10, 40, 'head')
 upg_chest_armor = Armor('img/upg_chest.png', 10, 80, 'chest')
+lance = Weapon('graphics\\icons\\fork_lance.png', 50, 50, 'hand', 'lance', 'lance')
 
-t1_itens = [chest_armor, helmet_armor, sword_wood]
+
+
+t1_itens = [lance, chest_armor, helmet_armor, sword_wood]
 t2_itens = [sword_steel, upg_chest_armor, upg_helmet_armor]
