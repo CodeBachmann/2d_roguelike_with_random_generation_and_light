@@ -23,7 +23,7 @@ class LootBag(pygame.sprite.Sprite):
         if self.looted == True:
             self.kill()
 
-    def generate_random_item(self, tier):
+    def generate_random_item(self, tier, specific_item = None):
         decisions = ['consumable', 'weapon', 'armor']
         decision = choice(decisions)
 
@@ -61,10 +61,12 @@ weapons_data_set = {
         'dagger': {'image': 'graphics/icons/knife.png', 'value': 15, 'attack': 10, 'type': 'hand', 'category': 'dagger'},
         'axe': {'image': 'graphics/icons/axe.png', 'value': 30, 'attack': 20, 'type': 'hand', 'category': 'axe'},
         'curved_bow': {'image': 'graphics/icons/curved_bow.png', 'value': 25, 'attack': 15, 'type': 'hand', 'category': 'bow'},
-        'iron_shield': {'image': 'graphics/icons/iron_shield.png', 'value': 20, 'attack': 40, 'type': 'right_hand', 'category': 'buckler'},
+        'wodden_shield': {'image': 'graphics/icons/wodden_shield.png', 'value': 20, 'attack': 40, 'type': 'right_hand', 'category': 'buckler'},
+        'novice_staff': {'image': 'graphics/icons/novice_staff.png', 'value': 20, 'attack': 10, 'type': 'right_hand', 'category': 'staff'},
     },
     't2': {
         'sword_steel': {'image': 'img/sword.png', 'value': 40, 'attack': 40, 'type': 'hand', 'category': 'sword'},
+        'iron_shield': {'image': 'graphics/icons/iron_shield.png', 'value': 20, 'attack': 40, 'type': 'right_hand', 'category': 'buckler'},
         'battle_axe': {'image': 'graphics/icons/double_head_war_axe.png', 'value': 50, 'attack': 30, 'type': 'hand', 'category': 'axe'},
         'golden_short_sword': {'image': 'graphics/icons/golden_short_sword.png', 'value': 35, 'attack': 25, 'type': 'hand', 'category': 'sword'},
         'great_iron_shield': {'image': 'graphics/icons/great_iron_shield.png', 'value': 30, 'attack': 50, 'type': 'right_hand', 'category': 'buckler'},
@@ -92,9 +94,9 @@ valuable_data_set = {
 }
 
 consumable_data_set = {
-    'hp_potion': {'image': 'img/potionRed.png', 'heal': 30, 'quantity': 2},
-    'bread': {'image': 'graphics/icons/bread.png', 'heal': 10, 'quantity': 1},
-    'banana': {'image': 'graphics/icons/banana.png', 'heal': 5, 'quantity': 1},
+    'hp_potion': {'image': 'img/potionRed.png', 'heal': 300, 'quantity': 2},
+    'bread': {'image': 'graphics/icons/bread.png', 'heal': 100, 'quantity': 1},
+    'banana': {'image': 'graphics/icons/banana.png', 'heal': 50, 'quantity': 1},
 }
 
 sword_steel = Weapon('img/sword.png', 20, 20, 'hand', 'sword', 'sword')

@@ -315,8 +315,7 @@ class Player(Entity):
 
     def addHp(self, hp_gain):
         self.actual_health += hp_gain
-        if self.actual_health > self.max_health:
-            self.actual_health = self.max_health
+        self.actual_health = min(self.actual_health, self.max_health)
 
     def addProt(self, prot_gain):
         self.actual_prot += prot_gain
@@ -335,6 +334,7 @@ class Player(Entity):
     def equip_weapon(self, weapon):
         if self.weapon_1 != None:
             self.unequip_weapon(1)
+            
         elif self.weapon_2 != None:
             self.unequip_weapon(2)
                 

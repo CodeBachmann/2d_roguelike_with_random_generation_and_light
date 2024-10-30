@@ -15,7 +15,7 @@ def import_folder(path):
 
 	for _,__,img_files in os.walk(path):
 		for image in img_files:
-			full_path = path + '/' + image
+			full_path = f'{path}/{image}'
 			image_surf = pygame.image.load(full_path).convert_alpha()
 			surface_list.append(image_surf)
 
@@ -29,3 +29,9 @@ def load_images_from_folder(folder_path):
                 image = pygame.image.load(img_path).convert_alpha()  # Load the image
                 images.append((image, filename))  # Store as a tuple (image, filename)
         return images
+
+def load_stage_songs(audio_name_list, stage):
+	return [
+		pygame.mixer.Sound(f'audio\\stages\\{stage}\\{audio_name}.wav')
+		for audio_name in audio_name_list
+	]

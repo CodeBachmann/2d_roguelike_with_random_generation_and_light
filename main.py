@@ -34,7 +34,7 @@ class Game:
             self.level.run(self.mouse_buttons)
 
             fps = self.clock.get_fps()
-            debug(f'FPS: {fps:.2f}', x=self.screen.get_width() -180*IMG_SCALE ,y=10*IMG_SCALE)
+            debug(f'FPS: {fps:.2f}', x=self.screen.get_width() -180*IMG_SCALE, y=10*IMG_SCALE)
 
             pygame.display.update()
             self.clock.tick(60)

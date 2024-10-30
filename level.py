@@ -11,6 +11,7 @@ from pygame.math import Vector2
 from inventory import *
 from itens import *
 from debug import debug
+from support import load_stage_songs
 
 
 class Level:
@@ -25,7 +26,19 @@ class Level:
         self.obstacle_sprites = pygame.sprite.Group()
         self.attackable_sprites = pygame.sprite.Group()
         self.animation_player = AnimationPlayer()
+
         self.stage = "Menu"
+
+        self.menu_songs = [
+            'crowd_wave_1',
+            'crowd_wave_2',
+            'crowd_wave_3',
+            'crowd_wave_4'               
+                           ]
+        
+        self.song_start_time = -8000
+        self.current_song = None
+        self.stage_songs = load_stage_songs(self.menu_songs, self.stage)
 
         # light setup
         self.light = Light()
@@ -39,13 +52,16 @@ class Level:
                         groups=[self.visible_sprites],
                         obstacle_sprites=self.obstacle_sprites,
                         lootable_sprites=self.obstacle_sprites,
-                        background=self.background,
+                        background=None,
                         projectile_group=self.visible_sprites,
                         create_projectile=self.create_projectile,
                         id=self.id_index
                         )
+        
         self.characters = []
         self.rc_list = []
+        self.selected_character = []
+        self.generate_rc_list(3, None)
         # self.create_map()
         # self.create_torches()  # Add this line
 
@@ -58,8 +74,31 @@ class Level:
 
         current_time = pygame.time.get_ticks()
         if self.stage == "Menu":
+            if not pygame.mixer.get_busy() and current_time - self.song_start_time >= 10000:
+                new_song = choice(self.stage_songs)
+                while new_song == self.current_song:  # Ensure it's not the same song
+                    new_song = choice(self.stage_songs)
             
-            pass
+                new_song.play()  # Play the song in a loop
+                self.current_song = new_song  # Update the current song
+                self.song_start_time = current_time  # Reset the timer
+
+            self.stage = self.ui.draw_game_menu(self.rc_list, self.characters, self.stage)
+
+        elif self.stage == "Map":
+            self.stage = self.ui.draw_map_stage(self.selected_character, self.rc_list, self.stage)
+            
+            if len(self.selected_character) <= 0:
+                self.stage = "Map"
+
+            if self.stage == "Load":
+                print(self.selected_character[0].player_class)
+                self.player = self.selected_character[0]
+                self.create_map()
+                self.create_torches()
+                self.player.background = self.background
+                self.stage = "Dungeon"
+            
         elif self.stage == "Dungeon":   
 
             if current_time - self.last_update_time > self.update_interval:
@@ -219,20 +258,22 @@ class Level:
 
     def generate_rc_list(self, rc_number, level_randomness):
         classes = ['Mage', 'Fighter', 'Rogue', 'Priest']
-        for num in range(rc_number):
+        for _ in range(rc_number):
             chosen_class = choice(classes)
             self.rc_list.append(Player(
                         pos=(0, 0),
                         groups=[self.visible_sprites],
                         obstacle_sprites=self.obstacle_sprites,
                         lootable_sprites=self.obstacle_sprites,
-                        background=self.background,
+                        background=None,
                         projectile_group=self.visible_sprites,
                         create_projectile=self.create_projectile,
                         id=self.id_index, 
                         player_class=chosen_class
                         ))
-
+            
+    def load_stage_songs():
+        pass
 
 class YSortCameraGroup(pygame.sprite.Group):
     def __init__(self):

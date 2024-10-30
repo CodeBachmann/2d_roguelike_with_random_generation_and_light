@@ -46,22 +46,22 @@ classes_data = {
 
     'Fighter': {
         'hp': 500, 'mana': 50, 'stamina': 80, 'prot': 0, 'speed': 6, 'wisdom': 10, 'dexterity': 11, 'strength': 11, 'endurance': 10,
-        'intelligence': 9, 'vigor': 14, 'faith': 8, 'level': 5
+        'intelligence': 8, 'vigor': 11, 'faith': 8, 'level': 1
     },
 
     'Mage': {
-         'hp': 500, 'mana': 50, 'stamina': 80, 'prot': 0, 'speed': 6, 'wisdom': 15, 'dexterity': 11, 'strength': 9, 'endurance': 8,
-        'intelligence': 15, 'vigor': 8, 'faith': 8, 'level': 3
+         'hp': 500, 'mana': 50, 'stamina': 80, 'prot': 0, 'speed': 6, 'wisdom': 14, 'dexterity': 11, 'strength': 9, 'endurance': 8,
+        'intelligence': 14, 'vigor': 8, 'faith': 8, 'level': 1
     },
 
     'Rogue': {
-        'hp': 500, 'mana': 50, 'stamina': 80, 'prot': 0, 'speed': 6, 'wisdom': 9, 'dexterity': 14, 'strength': 12, 'endurance': 11,
-        'intelligence': 9, 'vigor': 11, 'faith': 9, 'level': 4
+        'hp': 500, 'mana': 50, 'stamina': 80, 'prot': 0, 'speed': 6, 'wisdom': 9, 'dexterity': 12, 'strength': 12, 'endurance': 11,
+        'intelligence': 8, 'vigor': 11, 'faith': 8, 'level': 1
     },
 
     'Priest': {
-        'hp': 500, 'mana': 50, 'stamina': 80, 'prot': 0, 'speed': 6, 'wisdom': 11, 'dexterity': 8, 'strength': 12, 'endurance': 9,
-        'intelligence': 8, 'vigor': 11, 'faith': 14, 'level': 2
+        'hp': 500, 'mana': 50, 'stamina': 80, 'prot': 0, 'speed': 6, 'wisdom': 11, 'dexterity': 8, 'strength': 12, 'endurance': 8,
+        'intelligence': 8, 'vigor': 11, 'faith': 14, 'level': 1
     }
 
 }
