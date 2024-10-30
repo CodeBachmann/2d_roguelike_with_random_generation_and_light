@@ -128,7 +128,8 @@ class Player(Entity):
         if self.mouse_buttons[0]:
             self.attacking = True
             self.attack_time = pygame.time.get_ticks()
-            self.create_projectile(self.m1, entity_type = 'player', rect = self.rect, player_offset = self.offset, id = self.id)  # Add this line
+            damage = self.m1_base_damage + (1 * self.strength)
+            self.create_projectile(self.m1, entity_type = 'player', rect = self.rect, player_offset = self.offset, id = self.id, damage = damage)  # Add this line
             print("left mouse button pressed")
 
         elif self.mouse_buttons[2]:
@@ -311,8 +312,6 @@ class Player(Entity):
         self.actual_intelligence = self.max_intelligence
         self.actual_vigor = self.max_vigor
         self.actual_faith = self.max_faith
-        
-        
 
     def addHp(self, hp_gain):
         self.actual_health += hp_gain

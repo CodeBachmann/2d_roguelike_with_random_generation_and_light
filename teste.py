@@ -85,7 +85,6 @@ spawn_duration = 2000
 while game_loop == True:
     screen.fill(black)
 
-
     #mouse
     mouse_pos = pygame.mouse.get_pos()
     current_time = pygame.time.get_ticks()

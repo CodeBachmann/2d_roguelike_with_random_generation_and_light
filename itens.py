@@ -10,7 +10,7 @@ class LootBag(pygame.sprite.Sprite):
         self.id = id
         self.sprite_type = 'loot_bag'
         self.pos = pos
-        self.image = pygame.image.load("loot_bag.png").convert_alpha()
+        self.image = pygame.image.load("graphics\\objects\\bags\\loot_bag.png").convert_alpha()
         self.image = pygame.transform.scale(self.image, (self.image.get_width() * IMG_SCALE, self.image.get_height() * IMG_SCALE))
         self.rect = self.image.get_rect(center = self.pos)
         self.hitbox = self.rect.inflate(0,0)
@@ -24,14 +24,14 @@ class LootBag(pygame.sprite.Sprite):
             self.kill()
 
     def generate_random_item(self, tier):
-        decisions = ['weapon', 'valuable', 'consumable', 'armor']
+        decisions = ['consumable', 'weapon', 'armor']
         decision = choice(decisions)
 
         if decision == 'weapon':
             item_name = choice(list(weapons_data_set[tier].keys()))
             item_data = weapons_data_set[tier][item_name]
-            print(*item_data)
-            return Weapon(*item_data)
+            print(item_data)
+            return Weapon(item_data['image'], item_data['value'], item_data['attack'], item_data['type'], item_data['category'], item_data['category'])
 
         # elif decision == 'valuable':
         #     item_name = choice(list(valuable_data_set.keys()))
@@ -41,59 +41,60 @@ class LootBag(pygame.sprite.Sprite):
         elif decision == 'consumable':
             item_name = choice(list(consumable_data_set.keys()))
             item_data = consumable_data_set[item_name]
-            print(*item_data)
+            image = item_data['image']
+            value = item_data['heal']
+            quantity = item_data['quantity']
 
-            return Consumable(*item_data)
+
+            return Consumable(image, value, quantity)
 
         elif decision == 'armor':
             item_name = choice(list(armors_data_set[tier].keys()))
             item_data = armors_data_set[tier][item_name]
-            print(*item_data)
-
-            return Armor(*item_data)
+            return Armor(item_data['image'], item_data['value'], item_data['defense'], item_data['type'] )
 
 
 weapons_data_set = {
     't1': {
-        'sword_wood': {'img/swordWood.png', 20, 20, 'hand', 'sword', 'sword'},
-        'cross_lance': {'graphics/icons/cross_lance.png', 20, 20, 'hand', 'lance','lance'},
-        'dagger': {'graphics/icons/knife.png', 15, 10, 'hand', 'dagger', 'dagger'},  # Attack item
-        'axe': {'graphics/icons/axe.png', 30, 20, 'hand', 'axe', 'axe'},  # Attack item
-        'curved_bow': {'graphics/icons/curved_bow.png', 25, 15, 'hand', 'bow', 'bow'},  # Attack item
-        'iron_shield': {'graphics/icons/iron_shield.png', 20, 40, 'right_hand', 'buckler','buckler'},  # Shield as weapon
+        'sword_wood': {'image': 'img/swordWood.png', 'value': 20, 'attack': 20, 'type': 'hand', 'category': 'sword'},
+        'cross_lance': {'image': 'graphics/icons/cross_lance.png', 'value': 20, 'attack': 20, 'type': 'hand', 'category': 'lance'},
+        'dagger': {'image': 'graphics/icons/knife.png', 'value': 15, 'attack': 10, 'type': 'hand', 'category': 'dagger'},
+        'axe': {'image': 'graphics/icons/axe.png', 'value': 30, 'attack': 20, 'type': 'hand', 'category': 'axe'},
+        'curved_bow': {'image': 'graphics/icons/curved_bow.png', 'value': 25, 'attack': 15, 'type': 'hand', 'category': 'bow'},
+        'iron_shield': {'image': 'graphics/icons/iron_shield.png', 'value': 20, 'attack': 40, 'type': 'right_hand', 'category': 'buckler'},
     },
     't2': {
-        'sword_steel': {'img/sword.png', 40, 40, 'hand', 'sword', 'sword'},
-        'battle_axe': {'graphics/icons/double_head_war_axe.png', 50, 30, 'hand', 'axe', 'axe'},  # Attack item
-        'golden_short_sword': {'graphics/icons/golden_short_sword.png', 35, 25, 'hand', 'sword', 'sword'},  # Attack item
-        'great_iron_shield': {'graphics/icons/great_iron_shield.png', 30, 50, 'right_hand', 'buckler', 'buckler'},  # Shield as weapon
+        'sword_steel': {'image': 'img/sword.png', 'value': 40, 'attack': 40, 'type': 'hand', 'category': 'sword'},
+        'battle_axe': {'image': 'graphics/icons/double_head_war_axe.png', 'value': 50, 'attack': 30, 'type': 'hand', 'category': 'axe'},
+        'golden_short_sword': {'image': 'graphics/icons/golden_short_sword.png', 'value': 35, 'attack': 25, 'type': 'hand', 'category': 'sword'},
+        'great_iron_shield': {'image': 'graphics/icons/great_iron_shield.png', 'value': 30, 'attack': 50, 'type': 'right_hand', 'category': 'buckler'},
     },
     't3': {
-        'demoniac_bow': {'graphics/icons/demoniac_bow.png', 45, 25, 'hand', 'bow', 'bow'},  # Attack item
+        'demoniac_bow': {'image': 'graphics/icons/demoniac_bow.png', 'attack': 45, 'attack': 25, 'type': 'hand', 'category': 'bow'},
     }
 }
 
 armors_data_set = {
     't1': {
-        'chest_armor': {'img/chest.png', 10, 40, 'chest'},
-        'helmet_armor': {'img/helmet.png', 10, 40, 'head'},
-        'golden_helmet': {'graphics/icons/golden_helmet.png', 15, 30, 'head'},  # Support item
+        'chest_armor': {'image': 'img/chest.png','value': 20 ,'defense': 40, 'type': 'chest'},
+        'helmet_armor': {'image': 'img/helmet.png','value': 20, 'defense': 40, 'type': 'head'},
+        'golden_helmet': {'image': 'graphics/icons/golden_helmet.png', 'value': 20, 'defense': 30, 'type': 'head'},
     },
     't2': {
-        'upg_chest_armor': {'img/ipg_chest.png', 20, 80, 'chest'},
+        'upg_chest_armor': {'image': 'img/ipg_chest.png','value': 20 , 'defense': 80, 'type': 'chest'},
     }
 }
 
 valuable_data_set = {
-    'wood': {'graphics/icons/wood.png', 1, 0},  # Valuable item
-    'gold': {'graphics/icons/gold.png', 1, 0},  # Valuable item
-    'iron': {'graphics/icons/iron.png', 1, 0},  # Valuable item
+    'wood': {'image': 'graphics/icons/wood.png', 'value': 1, 'quantity': 0},
+    'gold': {'image': 'graphics/icons/gold.png', 'value': 1, 'quantity': 0},
+    'iron': {'image': 'graphics/icons/iron.png', 'value': 1, 'quantity': 0},
 }
 
 consumable_data_set = {
-    'hp_potion': {'img/potionRed.png', 2, 30},
-    'bread': {'graphics/icons/bread.png', 1, 10},  # Consumable item
-    'banana': {'graphics/icons/banana.png', 1, 5},  # Consumable item
+    'hp_potion': {'image': 'img/potionRed.png', 'heal': 30, 'quantity': 2},
+    'bread': {'image': 'graphics/icons/bread.png', 'heal': 10, 'quantity': 1},
+    'banana': {'image': 'graphics/icons/banana.png', 'heal': 5, 'quantity': 1},
 }
 
 sword_steel = Weapon('img/sword.png', 20, 20, 'hand', 'sword', 'sword')

@@ -25,6 +25,7 @@ class Level:
         self.obstacle_sprites = pygame.sprite.Group()
         self.attackable_sprites = pygame.sprite.Group()
         self.animation_player = AnimationPlayer()
+        self.stage = "Menu"
 
         # light setup
         self.light = Light()
@@ -32,43 +33,59 @@ class Level:
 
         # create map
         self.show_map = False
-        self.create_map()
-        self.create_torches()  # Add this line
+
+        self.player = Player(
+                        pos=(0, 0),
+                        groups=[self.visible_sprites],
+                        obstacle_sprites=self.obstacle_sprites,
+                        lootable_sprites=self.obstacle_sprites,
+                        background=self.background,
+                        projectile_group=self.visible_sprites,
+                        create_projectile=self.create_projectile,
+                        id=self.id_index
+                        )
+        self.characters = []
+        self.rc_list = []
+        # self.create_map()
+        # self.create_torches()  # Add this line
 
         self.ui = UI(self.player)  # Add this line
         self.last_update_time = 0
         self.update_interval = 2000  # 2 seconds in milliseconds
         self.inventory = Inventory(self.player, 6, 2)
-        self.new()
 
     def run(self, mouse_buttons):
 
         current_time = pygame.time.get_ticks()
-        debug(f'Player can Loot: {self.player.can_loot}', 30, 10)
-        
-        if current_time - self.last_update_time > self.update_interval:
-            self.ui.update_explored_area(tile_map)
-            self.last_update_time = current_time        
-        
-        self.player.mouse_buttons = mouse_buttons
+        if self.stage == "Menu":
+            
+            pass
+        elif self.stage == "Dungeon":   
 
-        if self.player.show_map:
-            self.ui.display(tile_map)
-        
-        elif self.player.inventory_toggled:
+            if current_time - self.last_update_time > self.update_interval:
+                self.ui.update_explored_area(tile_map)
+                self.last_update_time = current_time        
+            
+            self.player.mouse_buttons = mouse_buttons
 
-            if not self.inventory.can_loot and self.player.can_loot:
-                self.add_loot()
+            if self.player.show_map:
+                self.ui.display(tile_map)
+            
+            elif self.player.inventory_toggled:
 
-            self.inventory.can_loot = self.player.can_loot
-            self.update_inventory()
-        
-        else:
-            self.check_for_loot()
-            self.visible_sprites.custom_draw(self.player, self.light)
-            self.ui.draw_stats()
+                if not self.inventory.can_loot and self.player.can_loot:
+                    self.add_loot()
 
-        self.visible_sprites.update()
+                self.inventory.can_loot = self.player.can_loot
+                self.ui.draw_stats_inv()
+                self.update_inventory()
+            
+            else:
+                self.check_for_loot()
+                self.visible_sprites.custom_draw(self.player, self.light)
+                self.ui.draw_stats()
+
+            self.visible_sprites.update()
 
     def create_map(self):
         self.background = pygame.Surface((MAP_SIZE_X * TILE_SIZE, MAP_SIZE_Y * TILE_SIZE))
@@ -91,16 +108,7 @@ class Level:
                 x = col_index * TILE_SIZE
                 y = row_index * TILE_SIZE
                 if col == '394':
-                    self.player = Player(
-                        pos=(x, y),
-                        groups=[self.visible_sprites],
-                        obstacle_sprites=self.obstacle_sprites,
-                        lootable_sprites=self.obstacle_sprites,
-                        background=self.background,
-                        projectile_group=self.visible_sprites,
-                        create_projectile=self.create_projectile,
-                        id=self.id_index
-                        )
+                    self.player.pos = (x, y)
                     self.id_index += 1
                 if col == '390':
                     Enemy(
@@ -128,7 +136,7 @@ class Level:
             self.player.actual_health -= amount
             self.player.vulnerable = False
             self.player.hurt_time = pygame.time.get_ticks()
-            self.animation_player.create_particles(attack_type,self.player.rect.center, [self.visible_sprites])
+            self.animation_player.create_particles(attack_type, self.player.rect.center, [self.visible_sprites])
 
     def trigger_death_particles(self, pos, particle_type):
 
@@ -150,8 +158,8 @@ class Level:
                     self.light.add_torch(x, y)
                     cont += 1
 
-    def create_projectile(self, name, entity_type, rect, player_offset, target_pos = None, id = None):
-        Projectile(self.visible_sprites, self.obstacle_sprites, self.visible_sprites, entity_type, rect, player_offset, name, target_pos, id)
+    def create_projectile(self, name, entity_type, rect, player_offset, target_pos = None, id = None, damage = None):
+        Projectile(self.visible_sprites, self.obstacle_sprites, self.visible_sprites, entity_type, rect, player_offset, name, target_pos, id, damage = damage)
 
     def new(self):
         self.inventory.addItemInv(helmet_armor)
@@ -163,9 +171,7 @@ class Level:
         self.inventory.addItemInv(upg_chest_armor)
 
     def add_loot(self):
-        print(len(self.player.loot))
         for item in self.player.loot:
-            print(item)
             self.inventory.addItemInv(item, loot=True)
 
     def update_inventory(self):
@@ -194,23 +200,38 @@ class Level:
         for loot in self.lootable_sprites:
             if (
                 loot.rect.colliderect(self.player.rect)
-                and self.player.touching_loot is None
-            ):
+                and not self.inventory.can_loot):
                 self.player.can_loot = True
                 self.player.touching_loot = loot.id
-                print(f"player can loot: {self.player.can_loot}")
                 self.player.loot = loot.loot
 
             elif loot.id == self.player.touching_loot and self.inventory.can_loot:
                 self.player.touching_loot = None
                 self.player.can_loot = False
                 self.player.loot = []
+                self.inventory.can_loot = False
 
-                for slot in self.Inventory.loot_slots:
+                for slot in self.inventory.loot_slots:
                     slot.item = None
 
                 loot.kill()
                 self.update_inventory()
+
+    def generate_rc_list(self, rc_number, level_randomness):
+        classes = ['Mage', 'Fighter', 'Rogue', 'Priest']
+        for num in range(rc_number):
+            chosen_class = choice(classes)
+            self.rc_list.append(Player(
+                        pos=(0, 0),
+                        groups=[self.visible_sprites],
+                        obstacle_sprites=self.obstacle_sprites,
+                        lootable_sprites=self.obstacle_sprites,
+                        background=self.background,
+                        projectile_group=self.visible_sprites,
+                        create_projectile=self.create_projectile,
+                        id=self.id_index, 
+                        player_class=chosen_class
+                        ))
 
 
 class YSortCameraGroup(pygame.sprite.Group):
@@ -256,4 +277,4 @@ class YSortCameraGroup(pygame.sprite.Group):
                 self.display_surface.blit(sprite.image, offset_pos) 
                    
 
-        #light.cast_light(player)
+        light.cast_light(player)

@@ -37,7 +37,6 @@ class Inventory:
 				self.weapon_slots.append(EquipableSlot(self.armor_slots[1].x - 50, self.armor_slots[0].y))
 				self.weapon_slots.append(EquipableSlot(self.armor_slots[1].x + 50, self.armor_slots[0].y))
 
-
 		while len(self.loot_slots) != 8:
 			self.loot_slots.append(InventorySlot(self.inventory_slots[len(self.loot_slots)].x + 20, self.inventory_slots[0].y - 80))
 			self.loot_slots.append(InventorySlot(self.inventory_slots[len(self.loot_slots)].x + 20, self.inventory_slots[1].y - 80))
@@ -227,6 +226,7 @@ class Armor(Equipable):
 	def equip(self, inv, target):
 		if inv.getEquipSlot(self).item != None:
 			inv.getEquipSlot(self).item.unequip(inv)
+			
 		Equipable.equip(self, target)
 		target.equip_armor(self)
 		inv.removeItemInv(self)
@@ -255,7 +255,7 @@ class Weapon(Equipable):
 		inv.getEquipSlot(self).item = self
 
 	def unequip(self, inv):
-		self.equipped_to.unequip_weapon()
+		self.equipped_to.unequip_weapon(self.slot)
 		Equipable.unequip(self)
 		inv.addItemInv(self)
 		inv.getEquipSlot(self).item = None
