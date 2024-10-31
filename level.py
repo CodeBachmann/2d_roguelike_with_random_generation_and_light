@@ -62,13 +62,10 @@ class Level:
         self.rc_list = []
         self.selected_character = []
         self.generate_rc_list(3, None)
-        # self.create_map()
-        # self.create_torches()  # Add this line
-
         self.ui = UI(self.player)  # Add this line
         self.last_update_time = 0
         self.update_interval = 2000  # 2 seconds in milliseconds
-        self.inventory = Inventory(self.player, 6, 2)
+        
 
     def run(self, mouse_buttons):
 
@@ -86,7 +83,7 @@ class Level:
             self.stage = self.ui.draw_game_menu(self.rc_list, self.characters, self.stage)
 
         elif self.stage == "Map":
-            self.stage = self.ui.draw_map_stage(self.selected_character, self.rc_list, self.stage)
+            self.stage = self.ui.draw_map_stage(self.selected_character, self.characters, self.stage)
             
             if len(self.selected_character) <= 0:
                 self.stage = "Map"
@@ -94,10 +91,12 @@ class Level:
             if self.stage == "Load":
                 print(self.selected_character[0].player_class)
                 self.player = self.selected_character[0]
+                self.ui = UI(self.player)
                 self.create_map()
                 self.create_torches()
                 self.player.background = self.background
                 self.stage = "Dungeon"
+                self.inventory = Inventory(self.player, 6, 2)
             
         elif self.stage == "Dungeon":   
 
@@ -147,7 +146,7 @@ class Level:
                 x = col_index * TILE_SIZE
                 y = row_index * TILE_SIZE
                 if col == '394':
-                    self.player.pos = (x, y)
+                    self.player.teleport((x, y))
                     self.id_index += 1
                 if col == '390':
                     Enemy(
@@ -197,8 +196,8 @@ class Level:
                     self.light.add_torch(x, y)
                     cont += 1
 
-    def create_projectile(self, name, entity_type, rect, player_offset, target_pos = None, id = None, damage = None):
-        Projectile(self.visible_sprites, self.obstacle_sprites, self.visible_sprites, entity_type, rect, player_offset, name, target_pos, id, damage = damage)
+    def create_projectile(self, name, entity_type, rect, offset, creator_id, damage = 0):
+        Projectile(self.visible_sprites, self.obstacle_sprites, self.visible_sprites, entity_type, rect, offset, name = name, creator_id = creator_id, damage = damage)
 
     def new(self):
         self.inventory.addItemInv(helmet_armor)
@@ -232,8 +231,8 @@ class Level:
         
         self.inventory.draw(self.display_surface)
     
-    def create_lootbag(self, pos, loot, id):
-        loot = LootBag([self.visible_sprites, self.lootable_sprites], pos, loot, id)
+    def create_lootbag(self, pos, tier, id, quantity):
+        loot = LootBag([self.visible_sprites, self.lootable_sprites], pos, tier, id, quantity)
     
     def check_for_loot(self):
         for loot in self.lootable_sprites:
@@ -267,7 +266,7 @@ class Level:
                         lootable_sprites=self.obstacle_sprites,
                         background=None,
                         projectile_group=self.visible_sprites,
-                        create_projectile=self.create_projectile,
+                        create_projectile= self.create_projectile,
                         id=self.id_index, 
                         player_class=chosen_class
                         ))

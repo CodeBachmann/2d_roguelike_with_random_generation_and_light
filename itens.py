@@ -4,7 +4,7 @@ from random import choice
 from settings import IMG_SCALE
 
 class LootBag(pygame.sprite.Sprite):
-    def __init__(self, groups, pos, tier, id):
+    def __init__(self, groups, pos, tier, id, quantity):
         super().__init__(groups)
 
         self.id = id
@@ -17,11 +17,14 @@ class LootBag(pygame.sprite.Sprite):
 
         self.looted = False
         self.loot = []
-        self.loot.append(self.generate_random_item(tier))
+        self.generate_many_loot(quantity, tier)
 
     def update(self):
         if self.looted == True:
             self.kill()
+    def generate_many_loot(self, quantity, tier):
+        for _ in range(quantity):
+            self.loot.append(self.generate_random_item(tier))
 
     def generate_random_item(self, tier, specific_item = None):
         decisions = ['consumable', 'weapon', 'armor']
@@ -56,7 +59,7 @@ class LootBag(pygame.sprite.Sprite):
 
 weapons_data_set = {
     't1': {
-        'sword_wood': {'image': 'img/swordWood.png', 'value': 20, 'attack': 20, 'type': 'hand', 'category': 'sword'},
+        'sword_wood': {'image': 'graphics//icons//inv_font//swordWood.png', 'value': 20, 'attack': 20, 'type': 'hand', 'category': 'sword'},
         'cross_lance': {'image': 'graphics/icons/cross_lance.png', 'value': 20, 'attack': 20, 'type': 'hand', 'category': 'lance'},
         'dagger': {'image': 'graphics/icons/knife.png', 'value': 15, 'attack': 10, 'type': 'hand', 'category': 'dagger'},
         'axe': {'image': 'graphics/icons/axe.png', 'value': 30, 'attack': 20, 'type': 'hand', 'category': 'axe'},
@@ -65,7 +68,7 @@ weapons_data_set = {
         'novice_staff': {'image': 'graphics/icons/novice_staff.png', 'value': 20, 'attack': 10, 'type': 'right_hand', 'category': 'staff'},
     },
     't2': {
-        'sword_steel': {'image': 'img/sword.png', 'value': 40, 'attack': 40, 'type': 'hand', 'category': 'sword'},
+        'sword_steel': {'image': 'graphics//icons//inv_font//sword.png', 'value': 40, 'attack': 40, 'type': 'hand', 'category': 'sword'},
         'iron_shield': {'image': 'graphics/icons/iron_shield.png', 'value': 20, 'attack': 40, 'type': 'right_hand', 'category': 'buckler'},
         'battle_axe': {'image': 'graphics/icons/double_head_war_axe.png', 'value': 50, 'attack': 30, 'type': 'hand', 'category': 'axe'},
         'golden_short_sword': {'image': 'graphics/icons/golden_short_sword.png', 'value': 35, 'attack': 25, 'type': 'hand', 'category': 'sword'},
@@ -78,12 +81,12 @@ weapons_data_set = {
 
 armors_data_set = {
     't1': {
-        'chest_armor': {'image': 'img/chest.png','value': 20 ,'defense': 40, 'type': 'chest'},
-        'helmet_armor': {'image': 'img/helmet.png','value': 20, 'defense': 40, 'type': 'head'},
+        'chest_armor': {'image': 'graphics//icons//inv_font//chest.png','value': 20 ,'defense': 40, 'type': 'chest'},
+        'helmet_armor': {'image': 'graphics//icons//inv_font//helmet.png','value': 20, 'defense': 40, 'type': 'head'},
         'golden_helmet': {'image': 'graphics/icons/golden_helmet.png', 'value': 20, 'defense': 30, 'type': 'head'},
     },
     't2': {
-        'upg_chest_armor': {'image': 'img/ipg_chest.png','value': 20 , 'defense': 80, 'type': 'chest'},
+        'upg_chest_armor': {'image': 'graphics//icons//inv_font//ipg_chest.png','value': 20 , 'defense': 80, 'type': 'chest'},
     }
 }
 
@@ -94,18 +97,18 @@ valuable_data_set = {
 }
 
 consumable_data_set = {
-    'hp_potion': {'image': 'img/potionRed.png', 'heal': 300, 'quantity': 2},
+    'hp_potion': {'image': 'graphics//icons//inv_font//potionRed.png', 'heal': 300, 'quantity': 2},
     'bread': {'image': 'graphics/icons/bread.png', 'heal': 100, 'quantity': 1},
     'banana': {'image': 'graphics/icons/banana.png', 'heal': 50, 'quantity': 1},
 }
 
-sword_steel = Weapon('img/sword.png', 20, 20, 'hand', 'sword', 'sword')
-sword_wood = Weapon('img/swordWood.png', 20, 10, 'right_hand', 'sword', 'buckler')
-hp_potion = Consumable('img/potionRed.png', 2, 30)
-helmet_armor = Armor('img/helmet.png', 10, 20, 'head')
-chest_armor = Armor('img/chest.png', 10, 40, 'chest')
-upg_helmet_armor = Armor('img/upg_helmet.png', 10, 40, 'head')
-upg_chest_armor = Armor('img/upg_chest.png', 10, 80, 'chest')
+sword_steel = Weapon('graphics//icons//inv_font//sword.png', 20, 20, 'hand', 'sword', 'sword')
+sword_wood = Weapon('graphics//icons//inv_font//swordWood.png', 20, 10, 'right_hand', 'sword', 'buckler')
+hp_potion = Consumable('graphics//icons//inv_font//potionRed.png', 2, 30)
+helmet_armor = Armor('graphics//icons//inv_font//helmet.png', 10, 20, 'head')
+chest_armor = Armor('graphics//icons//inv_font//chest.png', 10, 40, 'chest')
+upg_helmet_armor = Armor('graphics//icons//inv_font//upg_helmet.png', 10, 40, 'head')
+upg_chest_armor = Armor('graphics//icons//inv_font//upg_chest.png', 10, 80, 'chest')
 
 t1_itens = [chest_armor, helmet_armor, sword_wood]
 t2_itens = [sword_steel, upg_chest_armor, upg_helmet_armor]

@@ -14,7 +14,7 @@ HITBOX_OFFSET = {
 	'grass': -10,
 	'invisible': 0}
 
-MAP_SIZE_X = 20
+MAP_SIZE_X = 65
 MAP_SIZE_Y = MAP_SIZE_X
 ROOM_COUNT = MAP_SIZE_X // 5
 MIN_ROOM_SIZE = 5

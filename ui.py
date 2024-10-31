@@ -8,6 +8,7 @@ class UI:
 
         # Full map setup
         self.map_surface = pygame.Surface((WIDTH, HEIGHT))
+        self.bk_menu_image = pygame.transform.scale(pygame.image.load(r'graphics\stages\island.png'), (WIDTH, HEIGHT))
         
         # Zoom factor (adjust as needed)
         self.zoom_factor = min(WIDTH / (MAP_SIZE_X * TILE_SIZE), HEIGHT / (MAP_SIZE_Y * TILE_SIZE))
@@ -168,7 +169,7 @@ class UI:
         # Draw recruitable characters grid (bottom left)
         grid_start_x = 10
         grid_start_y = HEIGHT - 100  # Adjust as needed
-
+        self.display_surface.blit(self.bk_menu_image, (0,0))
         for i, character in enumerate(recruitable_characters):
             if character_image := self.character_icons.get(character.player_class):
                 # Calculate position
@@ -189,7 +190,7 @@ class UI:
         for i, character in enumerate(rooster_characters):
             if character_image := self.character_icons.get(character.player_class):
                 self.display_surface.blit(character_image, (grid_start_x_rooster + (i % 5) * (50 + 10), grid_start_y_rooster + (i // 5) * (50 + 10)))
-
+        
         game_stage = self.draw_start_button("Map", game_stage)
 
         return game_stage

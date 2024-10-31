@@ -16,7 +16,7 @@ class Light():
         # Light Power
         #self.light_color = [v * 0.90 for v in LIGHT_COLOR]
         self.light_color = LIGHT_COLOR
-        self.default_light_img = self.create_default_light(40)
+        self.default_light_img = self.create_default_light(20)
         
 
         self.current_view_radius = 0

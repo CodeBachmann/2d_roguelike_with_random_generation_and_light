@@ -1,6 +1,7 @@
 import pygame, sys
 from settings import WIDTH, HEIGHT, MOUSE_BUTTONS, IMG_SCALE, FULLSCREEN
 from level import Level
+
 from debug import debug
 
 class Game:

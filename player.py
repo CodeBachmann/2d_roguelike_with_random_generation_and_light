@@ -33,9 +33,11 @@ class Player(Entity):
         self.accessory = {'left': None, 'right': None, 'neck': None}
         self.weapon_1 = None
         self.weapon_2 = None
+        self.m1_base_damage = 1
+        self.m2_base_damage = 2
         self.weapon_data = weapon_data
-        self.m1 = 'slash'
-        self.m2 = 'buckler'
+        self.m1 = 'rapier'
+        self.m2 = ''
         self.mouse_direction = pygame.math.Vector2()
         self.angle =  math.degrees(math.atan2(self.mouse_direction.y, self.mouse_direction.x))
         self.vector_angle = pygame.Vector2(1, 0)
@@ -129,18 +131,17 @@ class Player(Entity):
             self.attacking = True
             self.attack_time = pygame.time.get_ticks()
             damage = self.m1_base_damage + (1 * self.strength)
-            self.create_projectile(self.m1, entity_type = 'player', rect = self.rect, player_offset = self.offset, id = self.id, damage = damage)  # Add this line
-            print("left mouse button pressed")
+            self.create_player_projectile(name = self.m1, damage = damage)  # Add this line
 
         elif self.mouse_buttons[2]:
-            if projectile_data[self.m2]['shield']:
+            print(self.m2)
+            if self.m2 == "buckler":
                 self.defending = True
                 self.attack_time = pygame.time.get_ticks()
-                self.create_projectile(self.m2, entity_type = 'player', rect = self.rect, player_offset = self.offset, id=self.id)
+                self.create_player_projectile(name = self.m2)
                 self.actual_speed -= self.max_speed/2
                 #self.view_radius -= 10
 
-                print("right mouse button pressed")
 
     def animate(self):
         animation = self.animations[self.status]
@@ -222,7 +223,6 @@ class Player(Entity):
         # debug(f'MOUSE DIRECTION:{self.mouse_direction}', y = 70*IMG_SCALE)
         # debug(f'OFFSET:{self.offset}', y = 190*IMG_SCALE)
         # debug(f'MOUSE - OFFSET:{self.mouse_direction + self.offset}', y = 130*IMG_SCALE)
-        debug(f'PLAYER POS:{self.rect.center}', y = 160*IMG_SCALE)
         # debug(f'MOUSE SCREEN POS:{pygame.mouse.get_pos()}', y = 220*IMG_SCALE)
         # debug(f'PLAYER SCREEN POS:{self.rect.center - self.offset}', y = 250*IMG_SCALE)
         # debug(f'ANGLE:{self.rect.size}', y = 280*IMG_SCALE)
@@ -266,6 +266,11 @@ class Player(Entity):
 
         elif self.direction == [0,0]:
             self.status += '_idle'
+
+    def teleport(self, pos):
+        self.rect = self.image.get_rect(topleft = pos)
+        self.rect_width, self.rect_height = self.rect.size  # Use the size attribute directly
+        self.hitbox = self.rect.inflate(-10, HITBOX_OFFSET['player'])
 
       
     def base_stats(self):
@@ -359,3 +364,6 @@ class Player(Entity):
     
     def shield_block(self, damage):
         pass
+
+    def create_player_projectile(self, name, damage = 0):
+        self.create_projectile(name = name, entity_type = self.sprite_type, rect = self.rect, offset = self.offset,  creator_id = self.id, damage =damage)

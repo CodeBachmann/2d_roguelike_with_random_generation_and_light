@@ -2,12 +2,13 @@ import pygame
 from pygame.math import Vector2
 from settings import IMG_SCALE, projectile_data
 class Projectile(pygame.sprite.Sprite):
-    def __init__(self, groups, obstacle_sprites, visible_sprites, entity_type, rect, player_offset, name, target_pos = None, damage = 500, creator_id = None):
+    def __init__(self, groups, obstacle_sprites, visible_sprites, entity_type, rect, player_offset, name = "sword", target_pos = None, damage = 500, creator_id = None):
         super().__init__(groups)
 
         self.creator_id = creator_id
         self.sprite_type = 'projectile'
-        self.projectile_info = projectile_data['sword']
+        print(10*name)
+        self.projectile_info = projectile_data[name]
         self.entity_type = entity_type
         self.entity_rect = rect
         self.entity_rect_width, self.entity_rect_height = rect.width, rect.height
