@@ -286,8 +286,8 @@ class YSortCameraGroup(pygame.sprite.Group):
     def custom_draw(self, player, light):
 
         # Update the camera offset to follow the player
-        self.offset.x = player.rect.centerx - self.half_width + player.rect.width/2
-        self.offset.y =  player.rect.centery - self.half_height + player.rect.height/2
+        self.offset.x = player.rect.centerx - self.half_width
+        self.offset.y =  player.rect.centery - self.half_height
 
         # Clamp the camera offset
         self.offset.x = max(MIN_X_OFFSET, min(self.offset.x, MAX_X_OFFSET - WIDTH ))
@@ -310,7 +310,7 @@ class YSortCameraGroup(pygame.sprite.Group):
                 if sprite.sprite_type == 'projectile':
                     offset_pos = sprite.rect.center - self.offset
                     if sprite.shield:
-                        sprite.pivot = pygame.math.Vector2(player.rect.centerx + player.rect_width/2, player.rect.centery + player.rect_height/2)
+                        sprite.pivot = pygame.math.Vector2(player.rect.centerx, player.rect.centery)
                         if not MOUSE_BUTTONS[2]:
                             sprite.kill()
                     

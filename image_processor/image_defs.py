@@ -177,15 +177,17 @@ def ensure_image_touches_borders(image, border_threshold=0):
     width, height = image.size
 
     # Check vertical borders (top and bottom)
-    top_touching = image.getbbox()[1] <= border_threshold  # Top border
-    bottom_touching = image.getbbox()[3] >= height - border_threshold  # Bottom border
-
+    try:
+        top_touching = image.getbbox()[1] <= border_threshold  # Top border
+        bottom_touching = image.getbbox()[3] >= height - border_threshold  # Bottom border
+    except:
+        return image.resize((64, 64), Image.LANCZOS)
     # Check horizontal borders (left and right)
     left_touching = image.getbbox()[0] <= border_threshold  # Left border
     right_touching = image.getbbox()[2] >= width - border_threshold  # Right border
 
     # If not touching at least two borders in one axis, crop
-    if not (top_touching and bottom_touching) and not (left_touching and right_touching):
+    if not (top_touching and bottom_touching) or not (left_touching and right_touching):
         # Crop the image to ensure it touches at least two borders
         if not top_touching and not bottom_touching:
             # Crop from top and bottom
@@ -206,4 +208,4 @@ def ensure_image_touches_borders(image, border_threshold=0):
 #adjust_height()
 #adjust_width_both_sides()
 create_spritesheet_images()
-scale_images()
+#scale_images()

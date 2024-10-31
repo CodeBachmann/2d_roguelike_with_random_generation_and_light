@@ -12,7 +12,7 @@ class Player(Entity):
         self.sprite_type = 'player'
         self.import_player_assets()
         self.image = self.animations['down'][0]
-        self.rect = self.image.get_rect(topleft = pos)
+        self.rect = self.image.get_rect(center = pos)
         self.rect_width, self.rect_height = self.rect.size  # Use the size attribute directly
         self.hitbox = self.rect.inflate(-10, HITBOX_OFFSET['player'])
         self.create_projectile = create_projectile
