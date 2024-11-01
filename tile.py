@@ -11,7 +11,7 @@ class Tile(Entity):
         self.animations = {'idle':[]}
         
         if img_path:
-            self.image = pygame.image.load(img_path).convert_alpha()
+            self.image = pygame.image.load(img_path).convert()
             self.image = pygame.transform.scale(self.image, (TILE_SIZE, TILE_SIZE))
         elif spritesheet:
             self.import_assets(spritesheet, length)
@@ -22,7 +22,7 @@ class Tile(Entity):
         else:
             raise ValueError("Either img_path or color must be provided")
         
-        self.rect = self.image.get_rect(topleft = pos)
+        self.rect = self.image.get_rect(center = pos)
         self.hitbox = self.rect.inflate(0, 0)
 
     def import_assets(self, path, length):

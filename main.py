@@ -11,7 +11,7 @@ class Game:
         if FULLSCREEN:
             self.screen = pygame.display.set_mode((WIDTH, HEIGHT), pygame.FULLSCREEN|pygame.SCALED)
         else:
-            self.screen = pygame.display.set_mode((WIDTH, HEIGHT), pygame.SCALED)
+            self.screen = pygame.display.set_mode((WIDTH, HEIGHT))#, pygame.SCALED
             
         self.clock = pygame.time.Clock()
         self.level = Level()
@@ -43,3 +43,4 @@ class Game:
 if __name__ == "__main__":
     game = Game()
     game.run()
+a

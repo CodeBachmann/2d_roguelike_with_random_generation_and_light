@@ -4,7 +4,7 @@ from entity import Entity
 from support import import_folder
 from debug import debug
 class Player(Entity):
-    def __init__(self, pos, groups, obstacle_sprites, lootable_sprites, background, projectile_group, id, player_class='Fighter', create_projectile=None):
+    def __init__(self, pos, groups, obstacle_sprites, background, projectile_group, id, player_class='Fighter', create_projectile=None):
         super().__init__(groups)
         
         # Define Sprite and Position
@@ -12,9 +12,9 @@ class Player(Entity):
         self.sprite_type = 'player'
         self.import_player_assets()
         self.image = self.animations['down'][0]
-        self.rect = self.image.get_rect(center = pos)
+        self.rect = self.image.get_rect(topleft = pos)
         self.rect_width, self.rect_height = self.rect.size  # Use the size attribute directly
-        self.hitbox = self.rect.inflate(-10, HITBOX_OFFSET['player'])
+        self.hitbox = self.rect.inflate(0, 0)
         self.create_projectile = create_projectile
         
         self.offset = pygame.math.Vector2(0, 0)
@@ -37,11 +37,10 @@ class Player(Entity):
         self.m2_base_damage = 2
         self.weapon_data = weapon_data
         self.m1 = 'rapier'
-        self.m2 = ''
+        self.m2 = 'buckler'
         self.mouse_direction = pygame.math.Vector2()
         self.angle =  math.degrees(math.atan2(self.mouse_direction.y, self.mouse_direction.x))
         self.vector_angle = pygame.Vector2(1, 0)
-        self.lootable_sprites = lootable_sprites
         self.obstacle_sprites = obstacle_sprites
         self.projectile_group = projectile_group
         self.mouse_buttons = MOUSE_BUTTONS
@@ -144,6 +143,7 @@ class Player(Entity):
 
 
     def animate(self):
+        debug(f"Image Rect: {self.rect}, Hitbox: {self.hitbox}")
         animation = self.animations[self.status]
 
         # loop over the frame index 
@@ -268,9 +268,9 @@ class Player(Entity):
             self.status += '_idle'
 
     def teleport(self, pos):
-        self.rect = self.image.get_rect(topleft = pos)
+        self.rect = self.image.get_rect(center = pos)
         self.rect_width, self.rect_height = self.rect.size  # Use the size attribute directly
-        self.hitbox = self.rect.inflate(-10, HITBOX_OFFSET['player'])
+        self.hitbox = self.rect.inflate(0, 0)
 
       
     def base_stats(self):
@@ -366,4 +366,4 @@ class Player(Entity):
         pass
 
     def create_player_projectile(self, name, damage = 0):
-        self.create_projectile(name = name, entity_type = self.sprite_type, rect = self.rect, offset = self.offset,  creator_id = self.id, damage =damage)
+        self.create_projectile(name = name, entity_type = self.sprite_type, rect = self.rect, offset = self.offset,  creator_id = self.id, damage = damage)

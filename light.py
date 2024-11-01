@@ -110,8 +110,9 @@ class Light():
     
 
     def cast_light(self, player):
-        self.offset.x = player.rect.centerx - self.half_width + player.rect.width/2
-        self.offset.y = player.rect.centery - self.half_height + player.rect.height/2
+        
+        self.offset.x = player.rect.centerx - self.half_width
+        self.offset.y = player.rect.centery - self.half_height
 
         self.offset.x = max(MIN_X_OFFSET, min(self.offset.x, MAX_X_OFFSET - WIDTH))
         self.offset.y = max(MIN_Y_OFFSET, min(self.offset.y, MAX_Y_OFFSET - HEIGHT))
@@ -125,7 +126,7 @@ class Light():
             # Update cone light
             cone_light = self.light_box.get_light(self.cone_light)
             cone_light.set_color(self.light_color, True)
-            cone_light.position = [player.rect.centerx, player.rect.centery]
+            cone_light.position = [player.rect.centerx + player.rect.width // 2 + player.rect.width // 4, player.rect.centery + player.rect.height // 2 + player.rect.height // 4]
             cone_light.set_size(player.view_radius)
 
             # Update the masked light
@@ -139,19 +140,14 @@ class Light():
         # Update circle light
         circle_light = self.light_box.get_light(self.circle_light)
         circle_light.set_color(self.light_color, True)
-        circle_light.position = [player.rect.centerx, player.rect.centery]
+        circle_light.position = [player.rect.centerx + player.rect.width // 2 + player.rect.width // 4, player.rect.centery + player.rect.height // 2 + player.rect.height // 4]
         circle_light.set_size(player.view_radius // 5)
-
-
-
-        self.offset.y = self.offset.y - 32*IMG_SCALE
-        self.offset.x = self.offset.x - 32*IMG_SCALE
 
         for torch_id, (x, y) in self.torch_lights.items():
             torch_light = self.light_box.get_light(torch_id)
             # Adjust torch position based on player's position and camera offset
-            adjusted_x = x + TILE_SIZE // 2
-            adjusted_y = y + TILE_SIZE // 2
+            adjusted_x = x
+            adjusted_y = y
             torch_light.position = [adjusted_x, adjusted_y]
         
         self.update_torch_lights()  # Add this line to update torch lights

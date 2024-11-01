@@ -30,16 +30,16 @@ class Inventory:
 
 		while len(self.armor_slots) != 4:
 			for y in range(UIHEIGTH-100, UIHEIGTH-100+(INVTILESIZE+1) * 4, INVTILESIZE+2):
-				self.armor_slots.append(EquipableSlot(self.inventory_slots[0].x - 100, y))
+				self.armor_slots.append(EquipableSlot(self.inventory_slots[0].x - 100 * IMG_SCALE, y))
 		
 
 		while len(self.weapon_slots) != 2:
-				self.weapon_slots.append(EquipableSlot(self.armor_slots[1].x - 50, self.armor_slots[0].y))
-				self.weapon_slots.append(EquipableSlot(self.armor_slots[1].x + 50, self.armor_slots[0].y))
+				self.weapon_slots.append(EquipableSlot(self.armor_slots[1].x - 50 * IMG_SCALE, self.armor_slots[0].y))
+				self.weapon_slots.append(EquipableSlot(self.armor_slots[1].x + 50 * IMG_SCALE, self.armor_slots[0].y))
 
 		while len(self.loot_slots) != 8:
-			self.loot_slots.append(InventorySlot(self.inventory_slots[len(self.loot_slots)].x + 20, self.inventory_slots[0].y - 80))
-			self.loot_slots.append(InventorySlot(self.inventory_slots[len(self.loot_slots)].x + 20, self.inventory_slots[1].y - 80))
+			self.loot_slots.append(InventorySlot(self.inventory_slots[len(self.loot_slots)].x + 20 * IMG_SCALE, self.inventory_slots[0].y - 80 * IMG_SCALE))
+			self.loot_slots.append(InventorySlot(self.inventory_slots[len(self.loot_slots)].x + 20 * IMG_SCALE, self.inventory_slots[1].y - 80 * IMG_SCALE))
 
 			
 	def setSlotTypes(self):

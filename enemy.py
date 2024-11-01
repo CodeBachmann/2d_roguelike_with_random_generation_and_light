@@ -36,7 +36,8 @@ class Enemy(Entity):
 		self.resistance = monster_info['resistance']
 		self.attack_radius = monster_info['attack_radius'] * IMG_SCALE
 		self.notice_radius = monster_info['notice_radius'] * IMG_SCALE
-		self.attack_type = monster_info['attack_type']
+		self.attack_type = 'sword'
+		self.offset = pygame.math.Vector2(0,0)
 
 		# player interaction
 		self.can_attack = True
@@ -98,7 +99,7 @@ class Enemy(Entity):
 	def actions(self):
 		if self.status == 'attack':
 			self.attack_time = pygame.time.get_ticks()
-			self.damage_player(self.attack_damage,self.attack_type)
+			self.create_enemy_projectile()
 			self.attack_sound.play()
 		elif self.status == 'move':
 			self.direction = self.get_player_distance_direction()[1]
@@ -138,7 +139,7 @@ class Enemy(Entity):
 		if self.health <= 0:
 			self.create_lootbag(self.rect.center, 't1', self.id, 4)
 			self.kill()
-			self.trigger_death_particles(self.rect.center,self.monster_name)
+			self.trigger_death_particles(self.rect.center, self.monster_name)
 			self.add_exp(self.exp)
 			self.death_sound.play()
 
@@ -155,4 +156,7 @@ class Enemy(Entity):
 		self.animate()
 		self.cooldowns()
 		self.check_death()
+
+	def create_enemy_projectile(self):
+		self.create_projectile(name = self.attack_type, entity_type = self.sprite_type, rect = self.rect, offset = self.offset,  creator_id = self.id, target_pos = self.player_rect_center, damage = self.attack_damage)
 
