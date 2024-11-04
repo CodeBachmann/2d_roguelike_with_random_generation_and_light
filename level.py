@@ -298,7 +298,8 @@ class YSortCameraGroup(pygame.sprite.Group):
                     sprite.player_rect_center = player.rect.center
                     sprite.offset = player.offset
                 if sprite.sprite_type == 'projectile':
-                    #offset_pos = sprite.rect.center - self.offset
+                    projectile_pivot = Vector2(sprite.rect.width // 8, sprite.rect.height // 8)
+                    offset_pos = sprite.rect.topleft - self.offset
                     if sprite.shield:
                         sprite.pivot = pygame.math.Vector2(player.rect.centerx + player.rect.width // 2, player.rect.centery + player.rect.height // 2)
                         if not MOUSE_BUTTONS[2]:
