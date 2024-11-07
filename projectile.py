@@ -36,6 +36,7 @@ class Projectile(pygame.sprite.Sprite):
         self.image_orig = self.load_image()  # Load image using a method
         self.image_orig = pygame.transform.scale(self.image_orig, (self.image_orig.get_width() * IMG_SCALE, self.image_orig.get_height() * IMG_SCALE))
         self.range = self.projectile_info['range']
+        self.is_animation = self.projectile_info['animation']
 
         # IMAGE CREATION
         self.pos = self.pivot + offset

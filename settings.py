@@ -90,36 +90,40 @@ monster_data = {
 projectile_data = {
     'fireball': {'image_path': 'graphics/particles/flame/fire.png', 'missile': True, 'width': 32,
                   'height': 32, 'movable': True, 'speed_modifier': 1.5, 'range': 400, 'dispersion': 0,
-                    'initial_color': (255, 0, 0), 'final_color': (255, 255, 0), 'type': 'arc', 'shield': False, 'chain_length': 60},
+                    'initial_color': (255, 0, 0), 'final_color': (255, 255, 0), 'type': 'arc', 'shield': False, 'chain_length': 60, 'animation': False},
 
     'sword': {'image_path': 'graphics/weapons/sword/full.png', 'missile': False, 'width': 32, 
               'height': 32, 'movable': True, 'speed_modifier': 1, 'range': 300, 'dispersion': 0,
-                'initial_color': (255, 255, 255), 'final_color': (255, 255, 255), 'type': 'arc', 'shield': False, 'chain_length': 60},
+                'initial_color': (255, 255, 255), 'final_color': (255, 255, 255), 'type': 'arc', 'shield': False, 'chain_length': 60, 'animation': False},
 
     'lance': {'image_path': 'graphics/weapons/lance/full.png', 'missile': False, 'width': 32, 
               'height': 32, 'movable': True, 'speed_modifier': 1, 'range': 100, 'dispersion': 0,
-                'initial_color': (255, 255, 255), 'final_color': (255, 255, 255), 'type': 'arc', 'shield': False, 'chain_length': 60},
+                'initial_color': (255, 255, 255), 'final_color': (255, 255, 255), 'type': 'arc', 'shield': False, 'chain_length': 60, 'animation': False},
 
     'axe': {'image_path': 'graphics/weapons/axe/full.png', 'missile': False, 'width': 32,
              'height': 32, 'movable': True, 'speed_modifier': 1, 'range': 100, 'dispersion': 0,
-               'initial_color': (255, 255, 255), 'final_color': (255, 255, 255), 'type': 'arc', 'shield': False, 'chain_length': 60},
+               'initial_color': (255, 255, 255), 'final_color': (255, 255, 255), 'type': 'arc', 'shield': False, 'chain_length': 60, 'animation': False},
 
     'rapier': {'image_path': 'graphics/weapons/rapier/full.png', 'missile': False, 'width': 32, 
                'height': 32, 'movable': True, 'speed_modifier': 1, 'range': 100, 'dispersion': 0,
-                 'initial_color': (255, 255, 255), 'final_color': (255, 255, 255), 'type': 'bar', 'shield': False, 'chain_length': 60},
+                 'initial_color': (255, 255, 255), 'final_color': (255, 255, 255), 'type': 'bar', 'shield': False, 'chain_length': 60, 'animation': False},
 
     'sai': {'image_path': 'graphics/weapons/sai/full.png', 'missile': False, 'width': 32,
              'height': 32, 'movable': True, 'speed_modifier': 1, 'range': 100, 'dispersion': 0, 
-             'initial_color': (255, 255, 255), 'final_color': (255, 255, 255), 'type': 'bar', 'shield': False, 'chain_length': 60},
+             'initial_color': (255, 255, 255), 'final_color': (255, 255, 255), 'type': 'bar', 'shield': False, 'chain_length': 60, 'animation': False},
 
     'slash': {
         'image_path': "None", 'missile': True, 'width': 16, 'height': 16, 'movable': True,
         'speed_modifier': 0.2, 'range': 100, 'dispersion': 0, 'initial_color': (255, 255, 255),
-          'final_color': (255, 255, 255), 'type': 'cone', 'shield': False, 'chain_length': 60},
+          'final_color': (255, 255, 255), 'type': 'cone', 'shield': False, 'chain_length': 60, 'animation': False},
 
     'buckler': {'image_path': 'graphics/weapons/wood_buckler/Wood_Buckler.png', 'missile': False, 'width': 32,
                 'height': 5, 'movable': False, 'speed_modifier': 1, 'range': 0, 'dispersion': 0,
-                'initial_color': (255, 255, 255), 'final_color': (255, 255, 255), 'type': 'bar', 'shield': True, 'chain_length': 30}}
+              'initial_color': (255, 255, 255), 'final_color': (255, 255, 255), 'type': 'bar', 'shield': True, 'chain_length': 30, 'animation': False},
+
+    'vertical_slash': {'image_path': 'graphics//attacks//4', 'missile': False, 'width': 32,
+                'height': 5, 'movable': False, 'speed_modifier': 1, 'range': 0, 'dispersion': 0,
+                'initial_color': (255, 255, 255), 'final_color': (255, 255, 255), 'type': 'bar', 'shield': False, 'chain_length': 30, 'animation': True}}
 
 # INVENTORY
 
