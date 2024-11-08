@@ -1,5 +1,5 @@
 import pygame, sys
-from settings import WIDTH, HEIGHT, MOUSE_BUTTONS, IMG_SCALE, FULLSCREEN
+from settings import WIDTH, HEIGHT, MOUSE_BUTTONS, FULLSCREEN
 from level import Level
 
 from debug import debug
@@ -11,7 +11,7 @@ class Game:
         if FULLSCREEN:
             self.screen = pygame.display.set_mode((WIDTH, HEIGHT), pygame.FULLSCREEN|pygame.SCALED)
         else:
-            self.screen = pygame.display.set_mode((WIDTH, HEIGHT))#, pygame.SCALED
+            self.screen = pygame.display.set_mode((WIDTH, HEIGHT))
             
         self.clock = pygame.time.Clock()
         self.level = Level()
@@ -35,7 +35,7 @@ class Game:
             self.level.run(self.mouse_buttons)
 
             fps = self.clock.get_fps()
-            debug(f'FPS: {fps:.2f}', x=self.screen.get_width() -180*IMG_SCALE, y=10*IMG_SCALE)
+            #debug(f'FPS: {fps:.2f}', x=self.screen.get_width() -60, y=4)
 
             pygame.display.update()
             self.clock.tick(60)

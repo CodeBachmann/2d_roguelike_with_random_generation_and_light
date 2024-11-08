@@ -1,7 +1,6 @@
 import pygame
-from settings import IMG_SCALE
 pygame.init()
-font = pygame.font.Font(pygame.font.get_default_font(), int(30*IMG_SCALE))
+font = pygame.font.Font(pygame.font.get_default_font(), int(10))
 
 def debug(info, y = 10, x = 10):
     display_surface = pygame.display.get_surface()

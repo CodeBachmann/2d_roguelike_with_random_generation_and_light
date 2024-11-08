@@ -202,10 +202,32 @@ def ensure_image_touches_borders(image, border_threshold=0):
     # Resize the original image to 64x64 if already touching at least two borders
     return image.resize((64, 64), Image.LANCZOS)
 
+def convert_images_to_21x21():
+    # Ask for user input
+    folder_path = input("Enter the folder path containing the 64x64 images: ").replace('"','')
 
+    # Process each image in the folder and its subfolders
+    for root, dirs, files in os.walk(folder_path):  # Use os.walk to traverse directories
+        for filename in files:
+            if filename.endswith(('.png', '.jpg', '.jpeg')):  # Check for image files
+                image_path = os.path.join(root, filename)  # Get the full path of the image
+
+                # Load the image
+                image = Image.open(image_path)
+
+                # Verify if the image is 64x64 before resizing
+                if image.size != (21, 21):
+                    output_path = os.path.join(root, filename)  # Save in the same directory
+
+                    # Resize the image to 21x21
+                    resized_image = image.resize((int(image.width * 0.328125), int(image.height * 0.328125)), Image.LANCZOS)
+                    resized_image.save(output_path)
+                else:
+                    print(f"Skipping {filename}: not a 64x64 image.")
 #create_sprites_from_columns()
 #adjust_height_both_sides()
 #adjust_height()
 #adjust_width_both_sides()
-create_spritesheet_images()
+convert_images_to_21x21()
+#create_spritesheet_images()
 #scale_images()

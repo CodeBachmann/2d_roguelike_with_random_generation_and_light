@@ -1,6 +1,6 @@
 import pygame
 from pygame.math import Vector2
-from settings import IMG_SCALE, projectile_data
+from settings import projectile_data
 
 # Constants
 DEFAULT_DAMAGE = 10
@@ -34,7 +34,6 @@ class Projectile(pygame.sprite.Sprite):
         self.movable = self.projectile_info['movable']
         self.shield = self.projectile_info['shield']
         self.image_orig = self.load_image()  # Load image using a method
-        self.image_orig = pygame.transform.scale(self.image_orig, (self.image_orig.get_width() * IMG_SCALE, self.image_orig.get_height() * IMG_SCALE))
         self.range = self.projectile_info['range']
         self.is_animation = self.projectile_info['animation']
 
@@ -58,10 +57,11 @@ class Projectile(pygame.sprite.Sprite):
 
     def update_image(self):
         # Get the mouse position
-        mouse_pos = pygame.mouse.get_pos() if self.entity_type == 'player' else self.target_pos
+        direction_pos = pygame.mouse.get_pos() if self.entity_type == 'player' else self.target_pos
 
         # Calculate the angle based on the mouse position relative to the pivot
-        self.angle = (mouse_pos - (self.pivot - self.world_offset)).angle_to(Vector2(1, 0))
+        self.angle = (direction_pos - (self.pivot - self.world_offset)).angle_to(Vector2(1, 0))
+        print(self.angle)
 
         self.image, self.rect = self.rotate_on_pivot()
         self.pos = self.pivot + Vector2(self.chain_length, 0).rotate(-self.angle)  # Ensure distance is always chain_length

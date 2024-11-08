@@ -1,7 +1,6 @@
 import pygame
 from support import import_folder
 from random import choice
-from settings import IMG_SCALE
 class AnimationPlayer:
     def __init__(self):
         self.frames = {
@@ -64,7 +63,7 @@ class ParticleEffect(pygame.sprite.Sprite):
 		self.frame_index = 0
 		self.animation_speed = 0.15
 		self.frames = animation_frames
-		self.image = pygame.transform.scale(self.frames[self.frame_index], (self.frames[self.frame_index].get_width() * IMG_SCALE, self.frames[self.frame_index].get_height() * IMG_SCALE))
+		self.image = self.frames[self.frame_index]
 		self.rect = self.image.get_rect(center = pos)
 
 	def animate(self):

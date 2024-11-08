@@ -30,7 +30,6 @@ class Tile(Entity):
         for image in range(length):
             full_path = path + '/' + str(image + 1) + '.png'
             img = pygame.image.load(full_path)
-            img = pygame.transform.scale(img, (int(img.get_width() * IMG_SCALE), int(img.get_height() * IMG_SCALE)))
             self.animations[self.status].append(img)
 
     def update(self):

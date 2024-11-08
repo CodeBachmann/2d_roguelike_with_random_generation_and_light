@@ -1,7 +1,6 @@
 from inventory import Weapon, Consumable, Armor
 import pygame
 from random import choice
-from settings import IMG_SCALE
 
 class LootBag(pygame.sprite.Sprite):
     def __init__(self, groups, pos, tier, id, quantity):
@@ -11,7 +10,6 @@ class LootBag(pygame.sprite.Sprite):
         self.sprite_type = 'loot_bag'
         self.pos = pos
         self.image = pygame.image.load("graphics\\objects\\bags\\loot_bag.png").convert_alpha()
-        self.image = pygame.transform.scale(self.image, (self.image.get_width() * IMG_SCALE, self.image.get_height() * IMG_SCALE))
         self.rect = self.image.get_rect(center = self.pos)
         self.hitbox = self.rect.inflate(0,0)
 

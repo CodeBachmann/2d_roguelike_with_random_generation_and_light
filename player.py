@@ -64,7 +64,7 @@ class Player(Entity):
         self.touching_loot = None
 
         # lighting
-        self.view_radius = int(500 * IMG_SCALE)
+        self.view_radius = 166
         self.cone = True
         self.circle = True
 
@@ -238,8 +238,7 @@ class Player(Entity):
             full_path = character_path + animation
             self.animations[animation] = import_folder(full_path)
             for x, i in enumerate(self.animations[animation]):
-                img = pygame.transform.scale(i, (int(i.get_width() * IMG_SCALE), int(i.get_height() * IMG_SCALE)))
-                self.animations[animation][x] = img
+                self.animations[animation][x] = i
     
                 
     def get_offset(self):
@@ -278,7 +277,7 @@ class Player(Entity):
         self.mana = classes_data[self.player_class]['mana']
         self.stamina = classes_data[self.player_class]['stamina']
         self.prot = classes_data[self.player_class]['prot']
-        self.speed = int(classes_data[self.player_class]['speed'] * IMG_SCALE)
+        self.speed = int(classes_data[self.player_class]['speed']/3)
         self.wisdom = classes_data[self.player_class]['wisdom']
         self.dexterity = classes_data[self.player_class]['dexterity']
         self.strength = classes_data[self.player_class]['strength']

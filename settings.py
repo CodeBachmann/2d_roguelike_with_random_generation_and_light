@@ -2,12 +2,10 @@
 # USE TO IMPROVE FPS BUT LOSE QUALITY
 FULLSCREEN = False
 QUALITY_NUM = 1
-WIDTH = int(495 * QUALITY_NUM)
-HEIGHT = int(WIDTH / 1.83)
-TILE_SIZE = int(WIDTH / 15.46875)
+WIDTH = 495
+HEIGHT = 270
+TILE_SIZE = 32
 FPS = 60
-IMG_SCALE = TILE_SIZE / 96
-SCREEN_SCALE = 64 / TILE_SIZE
 HITBOX_OFFSET = {
 	'player': -16,
 	'object': -40,
@@ -84,7 +82,7 @@ monster_data = {
 	'squid': {'health': 100,'exp':100,'damage':20,'attack_type': 'slash', 'attack_sound':'audio/attack/slash.wav', 'speed': 3, 'resistance': 3, 'attack_radius': 80, 'notice_radius': 360},
 	'raccoon': {'health': 300,'exp':250,'damage':40,'attack_type': 'claw',  'attack_sound':'audio/attack/claw.wav','speed': 2, 'resistance': 3, 'attack_radius': 120, 'notice_radius': 400},
 	'spirit': {'health': 100,'exp':110,'damage':8,'attack_type': 'thunder', 'attack_sound':'audio/attack/fireball.wav', 'speed': 4, 'resistance': 3, 'attack_radius': 60, 'notice_radius': 350},
-	'bamboo': {'health': 10,'exp':120,'damage':120,'attack_type': 'leaf_attack', 'attack_sound':'audio/attack/slash.wav', 'speed': 3, 'resistance': 3, 'attack_radius': 50, 'notice_radius': 300}}
+	'bamboo': {'health': 10,'exp':120,'damage':120,'attack_type': 'leaf_attack', 'attack_sound':'audio/attack/slash.wav', 'speed': 3, 'resistance': 3, 'attack_radius': 300, 'notice_radius': 300}}
 
 
 projectile_data = {
@@ -140,8 +138,8 @@ GOLD = (255,215,0)
 
 #game settings/options
 BGCOLOR = DARKGREY
-STATPOSX = int(50 * IMG_SCALE)
-UIHEIGTH = int(225*IMG_SCALE)
-INVTILESIZE = int(28 * IMG_SCALE)
-GRIDWIDTH = int(WIDTH / TILE_SIZE)
-GRIDHEIGHT = int(HEIGHT / TILE_SIZE)
+STATPOSX = int(50)
+UIHEIGTH = int(225)
+INVTILESIZE = int(28)
+GRIDWIDTH = int(WIDTH / 24)
+GRIDHEIGHT = int(HEIGHT / 24)

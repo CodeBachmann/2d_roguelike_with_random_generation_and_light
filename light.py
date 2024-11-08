@@ -2,7 +2,7 @@
 import pygame, sys, math, random
 from typing import Dict
 import lighting
-from settings import light_map, IMG_SCALE, LIGHT_COLOR, TILE_SIZE, WIDTH, HEIGHT, MIN_X_OFFSET, MIN_Y_OFFSET, MAX_X_OFFSET, MAX_Y_OFFSET
+from settings import light_map, LIGHT_COLOR, TILE_SIZE, WIDTH, HEIGHT, MIN_X_OFFSET, MIN_Y_OFFSET, MAX_X_OFFSET, MAX_Y_OFFSET
 
 class Light():
     def __init__(self):

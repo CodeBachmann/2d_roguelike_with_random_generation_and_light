@@ -195,8 +195,8 @@ class Level:
                     self.light.add_torch(x, y)
                     cont += 1
 
-    def create_projectile(self, name, entity_type, rect, offset, creator_id, damage = 0):
-        Projectile(self.visible_sprites, self.obstacle_sprites, self.visible_sprites, entity_type, rect, offset, name = name, creator_id = creator_id, damage = damage)
+    def create_projectile(self, name, entity_type, rect, offset, creator_id, damage = 0, target_pos=None):
+        Projectile(self.visible_sprites, self.obstacle_sprites, self.visible_sprites, entity_type, rect, offset, name = name, creator_id = creator_id, damage = damage, target_pos=target_pos)
 
     def add_loot(self):
         for item in self.player.loot:
@@ -301,7 +301,7 @@ class YSortCameraGroup(pygame.sprite.Group):
                     projectile_pivot = Vector2(sprite.rect.width // 8, sprite.rect.height // 8)
                     offset_pos = sprite.rect.topleft - self.offset
                     if sprite.shield:
-                        sprite.pivot = pygame.math.Vector2(player.rect.centerx + player.rect.width // 2, player.rect.centery + player.rect.height // 2)
+                        sprite.pivot = pygame.math.Vector2(player.rect.centerx + player.rect.width // 2 + player.rect.width // 4, player.rect.centery + player.rect.height // 2 + player.rect.height // 4)
                         if not MOUSE_BUTTONS[2]:
                             sprite.kill()
                     
