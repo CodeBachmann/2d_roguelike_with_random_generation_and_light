@@ -9,8 +9,8 @@ class Light():
         self.sprite_type = 'light'
         self.offset = pygame.math.Vector2()
         self.display_surface = pygame.display.get_surface()
-        self.half_width = self.display_surface.get_size()[0] // 2
-        self.half_height = self.display_surface.get_size()[1] // 2
+        self.half_width = self.display_surface.get_size()[0] // 2 + 12
+        self.half_height = self.display_surface.get_size()[1] // 2 + 12
         self.light_box = lighting.LightBox((WIDTH, HEIGHT), pygame.BLEND_RGBA_MULT)
         
         # Light Power
