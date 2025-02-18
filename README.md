@@ -22,13 +22,23 @@ e clique em change state novamente
 
 Comandos:
 
+"""""""""""""
+
 movimento: W A S D
+
 girar luz: Mouse
+
 ataque: Mouse Esquerdo
+
 defesa: Mouse Direito
+
 ligar/apagar luz: C
+
 inventário: B
+
 mapa: M
+
+"""""""""""""
 
 Obs: Esse projeto está abandonado, acabei tendo muita dificuldade com os pivots e reescalings.
 Após fazer alguns testes com o Unity, percebi que é muito mais interessante desenvolver por la
