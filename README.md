@@ -20,7 +20,17 @@ Depois selecione qual dos recrutados será o seu personagem de uso
 
 e clique em change state novamente
 
-Obs: Esse projeto está abandonado, acabei tendo muito dificuldade com os pivots e reescalings.
+Comandos:
+
+movimento: W A S D
+girar luz: Mouse
+ataque: Mouse Esquerdo
+defesa: Mouse Direito
+ligar/apagar luz: C
+inventário: B
+mapa: M
+
+Obs: Esse projeto está abandonado, acabei tendo muita dificuldade com os pivots e reescalings.
 Após fazer alguns testes com o Unity, percebi que é muito mais interessante desenvolver por la
 
 Ainda assim esse projeto foi um grande desafio e eu me diverti bastante desenvolvendo ele
