@@ -30,16 +30,16 @@ class Inventory:
 
 		while len(self.armor_slots) != 4:
 			for y in range(UIHEIGTH-100, UIHEIGTH-100+(INVTILESIZE+1) * 4, INVTILESIZE+2):
-				self.armor_slots.append(EquipableSlot(self.inventory_slots[0].x - 34, y))
+				self.armor_slots.append(EquipableSlot(self.inventory_slots[0].x - 100, y))
 		
 
 		while len(self.weapon_slots) != 2:
-				self.weapon_slots.append(EquipableSlot(self.armor_slots[1].x - 16, self.armor_slots[0].y))
-				self.weapon_slots.append(EquipableSlot(self.armor_slots[1].x + 16, self.armor_slots[0].y))
+				self.weapon_slots.append(EquipableSlot(self.armor_slots[1].x - 50, self.armor_slots[0].y))
+				self.weapon_slots.append(EquipableSlot(self.armor_slots[1].x + 50, self.armor_slots[0].y))
 
 		while len(self.loot_slots) != 8:
-			self.loot_slots.append(InventorySlot(self.inventory_slots[len(self.loot_slots)].x + 7, self.inventory_slots[0].y - 26))
-			self.loot_slots.append(InventorySlot(self.inventory_slots[len(self.loot_slots)].x + 7, self.inventory_slots[1].y - 26))
+			self.loot_slots.append(InventorySlot(self.inventory_slots[len(self.loot_slots)].x + 20, self.inventory_slots[0].y - 80))
+			self.loot_slots.append(InventorySlot(self.inventory_slots[len(self.loot_slots)].x + 20, self.inventory_slots[1].y - 80))
 
 			
 	def setSlotTypes(self):
@@ -173,12 +173,12 @@ class InventorySlot:
 	def drawItems(self, screen):
 		if self.item != None and not self.item.is_moving:
 			self.image = pg.image.load(self.item.img).convert_alpha()
-			self.image = pg.transform.scale(self.image, (self.image.get_width(), self.image.get_height()))
+			self.image = pg.transform.scale(self.image, (self.image.get_width() * IMG_SCALE * 2, self.image.get_height() * IMG_SCALE * 2))
 			screen.blit(self.image, (self.x-7, self.y-7))
 		if self.item != None and self.item.is_moving:
 			mousepos1 = pg.mouse.get_pos()
 			self.image = pg.image.load(self.item.img).convert_alpha()
-			self.image = pg.transform.scale(self.image, (self.image.get_width(), self.image.get_height()))
+			self.image = pg.transform.scale(self.image, (self.image.get_width() * IMG_SCALE * 2, self.image.get_height() * IMG_SCALE * 2))
 			screen.blit(self.image, (mousepos1[0]-20,mousepos1[1]-20))
 
 class EquipableSlot(InventorySlot):

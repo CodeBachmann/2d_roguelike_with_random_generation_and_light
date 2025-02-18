@@ -2,10 +2,12 @@
 # USE TO IMPROVE FPS BUT LOSE QUALITY
 FULLSCREEN = False
 QUALITY_NUM = 1
-WIDTH = 495
-HEIGHT = 270
-TILE_SIZE = 32
+WIDTH = int(660 * QUALITY_NUM)
+HEIGHT = int(WIDTH / 1.83)
+TILE_SIZE = int(WIDTH / 20.625)
 FPS = 60
+IMG_SCALE = TILE_SIZE / 96
+SCREEN_SCALE = 64 / TILE_SIZE
 HITBOX_OFFSET = {
 	'player': -16,
 	'object': -40,
@@ -82,46 +84,42 @@ monster_data = {
 	'squid': {'health': 100,'exp':100,'damage':20,'attack_type': 'slash', 'attack_sound':'audio/attack/slash.wav', 'speed': 3, 'resistance': 3, 'attack_radius': 80, 'notice_radius': 360},
 	'raccoon': {'health': 300,'exp':250,'damage':40,'attack_type': 'claw',  'attack_sound':'audio/attack/claw.wav','speed': 2, 'resistance': 3, 'attack_radius': 120, 'notice_radius': 400},
 	'spirit': {'health': 100,'exp':110,'damage':8,'attack_type': 'thunder', 'attack_sound':'audio/attack/fireball.wav', 'speed': 4, 'resistance': 3, 'attack_radius': 60, 'notice_radius': 350},
-	'bamboo': {'health': 10,'exp':120,'damage':120,'attack_type': 'leaf_attack', 'attack_sound':'audio/attack/slash.wav', 'speed': 3, 'resistance': 3, 'attack_radius': 300, 'notice_radius': 300}}
+	'bamboo': {'health': 10,'exp':120,'damage':120,'attack_type': 'leaf_attack', 'attack_sound':'audio/attack/slash.wav', 'speed': 3, 'resistance': 3, 'attack_radius': 50, 'notice_radius': 300}}
 
 
 projectile_data = {
     'fireball': {'image_path': 'graphics/particles/flame/fire.png', 'missile': True, 'width': 32,
                   'height': 32, 'movable': True, 'speed_modifier': 1.5, 'range': 400, 'dispersion': 0,
-                    'initial_color': (255, 0, 0), 'final_color': (255, 255, 0), 'type': 'arc', 'shield': False, 'chain_length': 60, 'animation': False},
+                    'initial_color': (255, 0, 0), 'final_color': (255, 255, 0), 'type': 'arc', 'shield': False, 'chain_length': 60},
 
     'sword': {'image_path': 'graphics/weapons/sword/full.png', 'missile': False, 'width': 32, 
               'height': 32, 'movable': True, 'speed_modifier': 1, 'range': 300, 'dispersion': 0,
-                'initial_color': (255, 255, 255), 'final_color': (255, 255, 255), 'type': 'arc', 'shield': False, 'chain_length': 60, 'animation': False},
+                'initial_color': (255, 255, 255), 'final_color': (255, 255, 255), 'type': 'arc', 'shield': False, 'chain_length': 60},
 
     'lance': {'image_path': 'graphics/weapons/lance/full.png', 'missile': False, 'width': 32, 
               'height': 32, 'movable': True, 'speed_modifier': 1, 'range': 100, 'dispersion': 0,
-                'initial_color': (255, 255, 255), 'final_color': (255, 255, 255), 'type': 'arc', 'shield': False, 'chain_length': 60, 'animation': False},
+                'initial_color': (255, 255, 255), 'final_color': (255, 255, 255), 'type': 'arc', 'shield': False, 'chain_length': 60},
 
     'axe': {'image_path': 'graphics/weapons/axe/full.png', 'missile': False, 'width': 32,
              'height': 32, 'movable': True, 'speed_modifier': 1, 'range': 100, 'dispersion': 0,
-               'initial_color': (255, 255, 255), 'final_color': (255, 255, 255), 'type': 'arc', 'shield': False, 'chain_length': 60, 'animation': False},
+               'initial_color': (255, 255, 255), 'final_color': (255, 255, 255), 'type': 'arc', 'shield': False, 'chain_length': 60},
 
     'rapier': {'image_path': 'graphics/weapons/rapier/full.png', 'missile': False, 'width': 32, 
                'height': 32, 'movable': True, 'speed_modifier': 1, 'range': 100, 'dispersion': 0,
-                 'initial_color': (255, 255, 255), 'final_color': (255, 255, 255), 'type': 'bar', 'shield': False, 'chain_length': 60, 'animation': False},
+                 'initial_color': (255, 255, 255), 'final_color': (255, 255, 255), 'type': 'bar', 'shield': False, 'chain_length': 60},
 
     'sai': {'image_path': 'graphics/weapons/sai/full.png', 'missile': False, 'width': 32,
              'height': 32, 'movable': True, 'speed_modifier': 1, 'range': 100, 'dispersion': 0, 
-             'initial_color': (255, 255, 255), 'final_color': (255, 255, 255), 'type': 'bar', 'shield': False, 'chain_length': 60, 'animation': False},
+             'initial_color': (255, 255, 255), 'final_color': (255, 255, 255), 'type': 'bar', 'shield': False, 'chain_length': 60},
 
     'slash': {
         'image_path': "None", 'missile': True, 'width': 16, 'height': 16, 'movable': True,
         'speed_modifier': 0.2, 'range': 100, 'dispersion': 0, 'initial_color': (255, 255, 255),
-          'final_color': (255, 255, 255), 'type': 'cone', 'shield': False, 'chain_length': 60, 'animation': False},
+          'final_color': (255, 255, 255), 'type': 'cone', 'shield': False, 'chain_length': 60},
 
     'buckler': {'image_path': 'graphics/weapons/wood_buckler/Wood_Buckler.png', 'missile': False, 'width': 32,
                 'height': 5, 'movable': False, 'speed_modifier': 1, 'range': 0, 'dispersion': 0,
-              'initial_color': (255, 255, 255), 'final_color': (255, 255, 255), 'type': 'bar', 'shield': True, 'chain_length': 30, 'animation': False},
-
-    'vertical_slash': {'image_path': 'graphics//attacks//4', 'missile': False, 'width': 32,
-                'height': 5, 'movable': False, 'speed_modifier': 1, 'range': 0, 'dispersion': 0,
-                'initial_color': (255, 255, 255), 'final_color': (255, 255, 255), 'type': 'bar', 'shield': False, 'chain_length': 30, 'animation': True}}
+                'initial_color': (255, 255, 255), 'final_color': (255, 255, 255), 'type': 'bar', 'shield': True, 'chain_length': 30}}
 
 # INVENTORY
 
@@ -138,8 +136,8 @@ GOLD = (255,215,0)
 
 #game settings/options
 BGCOLOR = DARKGREY
-STATPOSX = int(50)
-UIHEIGTH = int(225)
-INVTILESIZE = int(28)
-GRIDWIDTH = int(WIDTH / 24)
-GRIDHEIGHT = int(HEIGHT / 24)
+STATPOSX = 50
+UIHEIGTH = int(350*IMG_SCALE)
+INVTILESIZE = 28
+GRIDWIDTH = int(WIDTH / TILE_SIZE)
+GRIDHEIGHT = int(HEIGHT / TILE_SIZE)

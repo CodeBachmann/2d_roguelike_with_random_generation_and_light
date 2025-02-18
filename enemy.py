@@ -23,7 +23,7 @@ class Enemy(Entity):
 		self.rect = self.image.get_rect(topleft = pos)
 		self.hitbox = self.rect.inflate(0,-10)
 		self.obstacle_sprites = obstacle_sprites
-		self.view_radius = 130
+		self.view_radius = 100
 		self.player_rect_center = None
 
 		# stats
@@ -31,13 +31,12 @@ class Enemy(Entity):
 		monster_info = monster_data[self.monster_name]
 		self.health = monster_info['health']
 		self.exp = monster_info['exp']
-		self.speed = int(monster_info['speed'] / 3)
+		self.speed = monster_info['speed'] * IMG_SCALE
 		self.attack_damage = monster_info['damage']
 		self.resistance = monster_info['resistance']
-		self.attack_radius = monster_info['attack_radius']
-		self.notice_radius = monster_info['notice_radius'] 
-		self.attack_type = 'sword'
-		self.offset = pygame.math.Vector2(0,0)
+		self.attack_radius = monster_info['attack_radius'] * IMG_SCALE
+		self.notice_radius = monster_info['notice_radius'] * IMG_SCALE
+		self.attack_type = monster_info['attack_type']
 
 		# player interaction
 		self.can_attack = True
@@ -62,15 +61,14 @@ class Enemy(Entity):
 		self.death_sound.set_volume(0.6)
 		self.hit_sound.set_volume(0.6)
 		self.attack_sound.set_volume(0.6)
-		
 
 	def import_graphics(self,name):
 		self.animations = {'idle':[],'move':[],'attack':[]}
 		main_path = f'graphics/monsters/{name}/'
 		for animation in self.animations.keys():
 			self.animations[animation] = import_folder(main_path + animation)
-			for x, img in enumerate(self.animations[animation]):
-
+			for x, i in enumerate(self.animations[animation]):
+				img = pygame.transform.scale(i, (int(i.get_width() * IMG_SCALE), int(i.get_height() * IMG_SCALE)))
 				self.animations[animation][x] = img
 
 	def get_player_distance_direction(self):
@@ -100,7 +98,7 @@ class Enemy(Entity):
 	def actions(self):
 		if self.status == 'attack':
 			self.attack_time = pygame.time.get_ticks()
-			self.create_enemy_projectile()
+			self.damage_player(self.attack_damage,self.attack_type)
 			self.attack_sound.play()
 		elif self.status == 'move':
 			self.direction = self.get_player_distance_direction()[1]
@@ -140,7 +138,7 @@ class Enemy(Entity):
 		if self.health <= 0:
 			self.create_lootbag(self.rect.center, 't1', self.id, 4)
 			self.kill()
-			self.trigger_death_particles(self.rect.center, self.monster_name)
+			self.trigger_death_particles(self.rect.center,self.monster_name)
 			self.add_exp(self.exp)
 			self.death_sound.play()
 
@@ -157,7 +155,4 @@ class Enemy(Entity):
 		self.animate()
 		self.cooldowns()
 		self.check_death()
-
-	def create_enemy_projectile(self):
-		self.create_projectile(name = self.attack_type, entity_type = self.sprite_type, rect = self.rect, offset = self.offset,  creator_id = self.id, target_pos = self.player_rect_center, damage = self.attack_damage)
 

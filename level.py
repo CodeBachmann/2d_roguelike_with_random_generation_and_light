@@ -51,6 +51,7 @@ class Level:
                         pos=(0, 0),
                         groups=[self.visible_sprites],
                         obstacle_sprites=self.obstacle_sprites,
+                        lootable_sprites=self.obstacle_sprites,
                         background=None,
                         projectile_group=self.visible_sprites,
                         create_projectile=self.create_projectile,
@@ -195,8 +196,17 @@ class Level:
                     self.light.add_torch(x, y)
                     cont += 1
 
-    def create_projectile(self, name, entity_type, rect, offset, creator_id, damage = 0, target_pos=None):
-        Projectile(self.visible_sprites, self.obstacle_sprites, self.visible_sprites, entity_type, rect, offset, name = name, creator_id = creator_id, damage = damage, target_pos=target_pos)
+    def create_projectile(self, name, entity_type, rect, offset, creator_id, damage = 0):
+        Projectile(self.visible_sprites, self.obstacle_sprites, self.visible_sprites, entity_type, rect, offset, name = name, creator_id = creator_id, damage = damage)
+
+    def new(self):
+        self.inventory.addItemInv(helmet_armor)
+        self.inventory.addItemInv(hp_potion)
+        self.inventory.addItemInv(sword_steel)
+        self.inventory.addItemInv(sword_wood)
+        self.inventory.addItemInv(chest_armor)
+        self.inventory.addItemInv(upg_helmet_armor)
+        self.inventory.addItemInv(upg_chest_armor)
 
     def add_loot(self):
         for item in self.player.loot:
@@ -222,7 +232,7 @@ class Level:
         self.inventory.draw(self.display_surface)
     
     def create_lootbag(self, pos, tier, id, quantity):
-        LootBag([self.visible_sprites, self.lootable_sprites], pos, tier, id, quantity)
+        loot = LootBag([self.visible_sprites, self.lootable_sprites], pos, tier, id, quantity)
     
     def check_for_loot(self):
         for loot in self.lootable_sprites:
@@ -253,6 +263,7 @@ class Level:
                         pos=(0, 0),
                         groups=[self.visible_sprites],
                         obstacle_sprites=self.obstacle_sprites,
+                        lootable_sprites=self.obstacle_sprites,
                         background=None,
                         projectile_group=self.visible_sprites,
                         create_projectile= self.create_projectile,
@@ -287,27 +298,23 @@ class YSortCameraGroup(pygame.sprite.Group):
         self.display_surface.fill((0, 0, 0))  # Clear the screen
 
         # Draws the background
-        background_offset = self.offset.x, self.offset.y
+        background_offset = self.offset.x - TILE_SIZE/2, self.offset.y - TILE_SIZE/2
         self.display_surface.blit(player.background, (-background_offset[0], -background_offset[1]))
 
         # Draw the scene (sprites, background, etc.)
         for sprite in sorted(self.sprites(), key=lambda sprite: sprite.rect.centery):
-            if sprite.sprite_type not in ['invisible_wall']:
-                offset_pos = sprite.rect.center - self.offset + pygame.math.Vector2(sprite.rect.width // 4, sprite.rect.height //4 )
+            if sprite.sprite_type not in ["invisible_wall"]:
+                offset_pos = sprite.rect.center - self.offset
                 if sprite.sprite_type == 'enemy':
                     sprite.player_rect_center = player.rect.center
-                    sprite.offset = player.offset
                 if sprite.sprite_type == 'projectile':
-                    projectile_pivot = Vector2(sprite.rect.width // 8, sprite.rect.height // 8)
-                    offset_pos = sprite.rect.topleft - self.offset
+                    offset_pos = sprite.rect.center - self.offset
                     if sprite.shield:
-                        sprite.pivot = pygame.math.Vector2(player.rect.centerx + player.rect.width // 2 + player.rect.width // 4, player.rect.centery + player.rect.height // 2 + player.rect.height // 4)
+                        sprite.pivot = pygame.math.Vector2(player.rect.centerx, player.rect.centery)
                         if not MOUSE_BUTTONS[2]:
                             sprite.kill()
                     
-                self.display_surface.blit(sprite.image, offset_pos)
-                
-                red_dot_pos = offset_pos + pygame.math.Vector2(sprite.rect.width // 2, sprite.rect.height // 2)
-                pygame.draw.circle(self.display_surface, (255, 0, 0), red_dot_pos, 5) 
+                self.display_surface.blit(sprite.image, offset_pos) 
+                   
 
         light.cast_light(player)
